@@ -1,0 +1,81 @@
+Programa	::=	Class* DecVar* Function* Main
+
+Class		::=	'class' 'id' ('hamon' 'id')? BodyClass
+
+BodyClass	::=	'{' DecVarClass* FunctionClass* '}'
+
+DecVarClass	::=	Access DecVar
+
+FunctionClass	::= 'func' Access (Type | 'stand' | 'id') 'id' Parameters Body
+
+Function	::= 'func' (Type | 'stand' | 'id') 'id' Parameters Body
+
+Parameters	::= '(' ('ref'? (Type | 'id') 'id') (',' 'ref'? (Type | 'id') 'id')* ')'
+
+Main		::= 'public' 'stand' 'jojo' '(' ')' Body
+
+Body		::= '{' DecVar* Action* '}'
+
+Action		::= Assign
+			|	Input
+			|	Output
+			|	Condition
+			|	While
+			|	(Vari2 ';')
+			|	Return
+
+DecVar		::= Type DecVar2 (',' DecVar2)* ';'
+DecVar2		::= 'id' ('[' cte_int ']')? ('.' 'id' ('[' cte_int ']')?)*
+
+Var 		::= 'id' ('[' Expression ']')? ('.' 'id' ('[' Expression ']')?)*
+FunCall		::= (Vari2 '.')? 'id' '(' Expression (',' Expression)* ')' ';'
+
+Vari2       ::= 'id' (
+                    |   ( '(' Expression (',' Expression)* ')' )
+                    |   ( ('[' Expression ']') ('.' Vari2)? )
+                    |   ( '.' Vari2))
+
+
+
+Assign		::=	Var '=' (Expression | 'new' 'id' '(' ')') ';'
+
+Input		::= 'gets' '(' Var ')' ';'
+
+Output		::= 'prints' '(' Expression ')' ';'
+
+Condition	::= 'if' '(' Expression ')' '{' Action* '}' ('else if' '(' Expression ')' '{' Action* '}')* ('else' '{' Action* '}')?
+
+While		::= 'while' '(' Expression ')' '{' Action* '}'
+
+Return		::= 'zadust' Expression? ';'
+
+Expression 			::= 'ExpressionNot' (('<' | '>' | '==' | '<=' | '>=' | '!=') 'ExpressionNot')?
+
+ExpressionNot		::= '!'* ExpressionOr
+
+ExpressionOr 		::= ExpressionAnd ('||' ExpressionAnd)*
+
+ExpressionAnd		::= ExpressionAS ('&&' ExpressionAS)*
+
+ExpressionAS 		::= ExpressionMD (('+'|'-') ExpressionMD)*
+
+ExpressionMD 		::= ExpressionL (('*' | '/' | '%') ExpressionL)*
+
+ExpressionL 		::= '(' Expression ')' 
+					| ('+'|'-')? (FunCall | Var | Const)
+
+Const				::= cte_int
+					|	cte_real
+					|	cte_string
+					|	cte_bool
+
+
+Access		::= 'public'
+			|	'private'
+			|	
+
+
+Type		::=	'int'
+			|	'real'
+			|	'bool'
+			|	'string'
