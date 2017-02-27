@@ -21,21 +21,24 @@ Action		::= Assign
 			|	Output
 			|	Condition
 			|	While
-			|	(Vari2 ';')
+			|	Funcall
 			|	Return
 
 DecVar		::= Type DecVar2 (',' DecVar2)* ';'
 DecVar2		::= 'id' ('[' cte_int ']')? ('.' 'id' ('[' cte_int ']')?)*
 
-Var 		::= 'id' ('[' Expression ']')? ('.' 'id' ('[' Expression ']')?)*
-FunCall		::= (Vari2 '.')? 'id' '(' Expression (',' Expression)* ')' ';'
-
-Vari2       ::= 'id' (
+Var         ::= 'id' (
                     |   ( '(' Expression (',' Expression)* ')' )
-                    |   ( ('[' Expression ']') ('.' Vari2)? )
-                    |   ( '.' Vari2))
+                    |   ( ('[' Expression ']') ('.' Var)? )
+                    |   ( '.' Var))
 
 
+Var2        ::= 'id' (
+                    |   ('[' Expression ']' ('.' Var2)? )
+                    |   ( '.' Var2) )
+
+
+Funcall		::= 'id' ('[' Expression ']')? ('.' 'id'  ('[' Expression ']')? )* '(' Expression (',' Expression)* ')' ';'
 
 Assign		::=	Var '=' (Expression | 'new' 'id' '(' ')') ';'
 
@@ -43,7 +46,7 @@ Input		::= 'gets' '(' Var ')' ';'
 
 Output		::= 'prints' '(' Expression ')' ';'
 
-Condition	::= 'if' '(' Expression ')' '{' Action* '}' ('else if' '(' Expression ')' '{' Action* '}')* ('else' '{' Action* '}')?
+Condition	::= 'if' '(' Expression ')' '{' Action* '}' ('else' 'if' '(' Expression ')' '{' Action* '}')* ('else' '{' Action* '}')?
 
 While		::= 'while' '(' Expression ')' '{' Action* '}'
 
@@ -62,12 +65,12 @@ ExpressionAS 		::= ExpressionMD (('+'|'-') ExpressionMD)*
 ExpressionMD 		::= ExpressionL (('*' | '/' | '%') ExpressionL)*
 
 ExpressionL 		::= '(' Expression ')' 
-					| ('+'|'-')? (FunCall | Var | Const)
+					| ('+'|'-')? (Var | Funcall | Const)
 
-Const				::= cte_int
-					|	cte_real
-					|	cte_string
-					|	cte_bool
+Const				::= 'cte_int'
+					|	'cte_real'
+					|	'cte_string'
+					|	'cte_bool'
 
 
 Access		::= 'public'
