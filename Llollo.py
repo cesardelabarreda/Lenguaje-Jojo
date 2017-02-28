@@ -1,6 +1,7 @@
 import ply.lex as lex
 
 reserved = {
+   'else if' : 'ELSEIF'
    'if' : 'IF',
    'else' : 'ELSE',
    'while' : 'WHILE',
@@ -30,19 +31,27 @@ reserved = {
 
 
 tokens = [
-   'PARI',
-   'PARD',
-   'LLAVEI',
-   'LLAVED',
-   'CORCHI',
-   'CORCHD',
-   'COMA',
-   'PUNTOYCOMA',
-   'PUNTO',
-   'COMP',
+   'PARA',
+   'PARC',
+   'LLAVEA',
+   'LLAVEC',
+   'CORCHA',
+   'CORCHC',
+   'COLON',
+   'SEMICOLON',
+   'DOT',
+   'LESSTHAN',
+   'GREATERTHAN',
+   'EQUALS',
+   'LESSEQUALS',
+   'GREATEREQUALS',
+   'NOTEQUALS',
+   'SUM',
+   'SUBS',
+   'MULT',
+   'DIV',
+   'MOD',
    'AND',
-   'SUMRES',
-   'MULDIV',
    'NOT',
    'OR',
    'IGUAL',   
@@ -54,42 +63,53 @@ tokens = [
 ] + list(reserved.values())
 
 
-t_PARI  	  	= r'\('
-t_PARD  	  	= r'\)'
-t_LLAVEI	 	= r'{'
-t_LLAVED	 	= r'}'
-t_CORCHI 		= r'\['
-t_CORCHD 		= r'\]'
-t_COMA 			= r','
-t_PUNTOYCOMA 	= r';'
-t_PUNTO 		= r'.'
-t_COMP 			= r'[\<|\>|==|\<=|\>=|\<=|!=]'
-t_AND 			= r'&&'
-t_SUMRES 		= r'[\+|-]'
-t_MULDIV 		= r'[\*|\/|%]'
-t_NOT 			= r'!'
-t_OR 			= r'\|\|'
-t_IGUAL 		= r'='
-t_CTES 			= r'\".*\"'
+t_PARA  	  	= r'\('
+t_PARC  	  	= r'\)'
+t_LLAVEA      = r'{'
+t_LLAVEC      = r'}'
+t_CORCHA      = r'\['
+t_CORCHC      = r'\]'
+t_COLON 			= r','
+t_SEMICOLON 	= r';'
+t_DOT         = r'.'
+t_LESSTHAN    = r'<'
+t_GREATERTHAN = r'>'
+t_EQUALS      = r'=='
+t_LESSEQUALS  = r'<='
+t_GREATEREQUALS =r'>='
+t_NOTEQUALS   = r'!='
+t_ADD         = r'\+'
+t_SUBS        = r'\-'
+t_MULT        = r'\*'
+t_DIV         = r'\/'
+t_MOD         = r'\%'
+t_AND         = r'&&'
+t_NOT         = r'!'
+t_OR 			    = r'\|\|'
+t_EQUAL 		  = r'='
 
 
-def t_CTER(t):
-    r'([0-9]+[.])[0-9]+'
+def t_CTE_REAL(t):
+    r'([\+|-]?[0-9]+[\.])[0-9]+'
     t.value = float(t.value)
     return t
 
-def t_CTEI(t):
-    r'\d+'
+def t_CTE_INT(t):
+    r'[\+|-]?\d+'
     t.value = int(t.value)
     return t
 
-def t_CTEB(t):
-    r'[true | false]'
+def t_CTE_BOOL(t):
+    r'true|false'
     t.value = bool(t.value)
     return t
 
+def t_CTE_STR(t):
+    r'\"(\\.|[^"])*\"'
+    return t
+
 def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    r'[a-zA-Z](_?[a-zA-Z0-9])*'
     t.type = reserved.get(t.value,'ID')
     return t
 
