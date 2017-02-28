@@ -48,7 +48,6 @@ def p_decvarclass_t(t):
 def p_function_t(t):
 	'''function 	: FUNC typereturn ID parameters bodyclass'''
 
-Parameters	::= '(' ('ref'? (Type | 'id') 'id') (',' 'ref'? (Type | 'id') 'id')* ')'
 
 
 def p_main_t(t):
@@ -70,7 +69,10 @@ def p_action_t(t):
 				| funcall
 				| return '''
 
-def p
+def p_
+
+Parameters	::= '(' ('ref'? (Type | 'id') 'id') (',' 'ref'? (Type | 'id') 'id')* ')'
+
 
 DecVar		::= Type DecVar2 (',' DecVar2)* ';'
 DecVar2		::= 'id' ('[' cte_int ']')? ('.' 'id' ('[' cte_int ']')?)*
@@ -82,7 +84,25 @@ Var        	::= 'id' (
 
 Funcall		::= 'id' ('[' Expression ']')? ('.' 'id'  ('[' Expression ']')? )* '(' Expression (',' Expression)* ')' ';'
 
-Assign		::=	Var '=' (Expression | 'new' 'id' '(' ')') ';'
+
+
+def p_condition_1(t):
+	'''condition 	: IF PARA expression PARC LLAVEA actionStar LLAVEC conditionElseIf conditionElse'''
+
+def p_conditionElseIf_1(t):
+	'''conditionElseIf 	: ELSEIF PARA expression PARC LLAVEA actionStar LLAVEC conditionElseIf
+						| '''
+
+def p_conditionElse_1(t):
+	'''conditionElse 	: ELSE LLAVEA actionStar LLAVEC
+						| '''
+
+def p_assign_1(t):
+	'''assign 	: var EQUAL assignExpID SEMICOL'''
+
+def p_assignExpID_1(t):
+	'''assignExpID 	: expression
+					| NEW ID PARA PARC'''
 
 def p_input_1(t):
 	'''input 	: GETS PARA var PARC SEMICOL'''
@@ -90,30 +110,43 @@ def p_input_1(t):
 def p_output_1(t):
 	'''output 	: PRINTS PARA expression PARC SEMICOL'''
 
-Condition	::= 'if' '(' Expression ')' '{' Action* '}' ('else' 'if' '(' Expression ')' '{' Action* '}')* ('else' '{' Action* '}')?
 
-While		::= 'while' '(' Expression ')' '{' Action* '}'
+def p_while_1(t):
+	'''while 	: WHILE PARA expression PARC LLAVEA actionStar LLAVEC'''
 
-Return		::= 'zadust' Expression? ';'
+def p_return_1(t):
+	'''return 	: ZADUST expressionPos SEMICOL'''
 
-Expression 			::= 'ExpressionNot' (('<' | '>' | '==' | '<=' | '>=' | '!=') 'ExpressionNot')?
+def p_expressionPos_1(t):
+	'''expressionPos 	: expression
+						| '''
 
-def p_expressionNOT_1(t):
-	'''expressionNOT 	: simbolExclamationStar expressionOR'''
-
-def p_expressionOR_1(t):
-	'''expressionOR 	: expressionAND expressionORStar'''
+def p_expression_1(t):
+	'''expression 	: expressionAND expressionORStar'''
 
 def p_expressionORStar_1(t):
 	'''expressionORStar 	: OR expressionAND expressionORStar
 							| '''
 
 def p_expressionAND_1(t):
-	'''expressionAND 	: expressionAS expressionANDStar'''
+	'''expressionAND 	: expressionNOT expressionANDStar'''
 
 def p_expressionANDStar_1(t):
-	'''expressionANDStar 	: AND expressionAS expressionANDStar
+	'''expressionANDStar 	: AND expressionNOT expressionANDStar
 							| '''
+
+def p_expressionNOT_1(t):
+	'''expressionNOT 	: simbolExclamationStar expressionCompare'''
+
+
+def p_expressionCompare_1(t):
+	'''expressionCompare 	: expressionAS expressionComparePos
+							| '''
+
+def p_expressionComparePos_1(t):
+	'''expressionComparePos : simbolCompare expressionAS
+							| '''
+
 
 def p_expressionAS_1(t):
 	'''expressionAS 	: expressionMDM expressionASStar'''
@@ -136,9 +169,9 @@ def p_expresionL_1(t):
 
 def p_simbolCompare_1(t):
 	'''simbolCompare 	: LESS
-						| LESSTHAN
+						| LESSEQUALS
 						| GREATER
-						| GREATERTHAN
+						| GREATEREQUALS
 						| EQUALS
 						| NOTEQUALS '''
 
@@ -147,13 +180,13 @@ def p_simbolExclamationStar_1(t):
 								| '''
 
 def p_simbolMDM_1(t):
-	'''simbolMDM 	: MULTIPLICATION
-					| DIVISION
+	'''simbolMDM 	: MULT
+					| DIV
 					| MOD '''
 
 def p_simbolAS_1(t):
 	'''simbolAS 	: ADD
-					| SUBSTRACTION'''
+					| SUBS'''
 
 def p_simbolASPoss_1(t):
 	'''simbolASPoss : simbolAS
