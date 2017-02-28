@@ -27,15 +27,9 @@ Action		::= Assign
 DecVar		::= Type DecVar2 (',' DecVar2)* ';'
 DecVar2		::= 'id' ('[' cte_int ']')? ('.' 'id' ('[' cte_int ']')?)*
 
-Var         ::= 'id' (
-                    |   ( '(' Expression (',' Expression)* ')' )
-                    |   ( ('[' Expression ']') ('.' Var)? )
-                    |   ( '.' Var))
-
-
-Var2        ::= 'id' (
-                    |   ('[' Expression ']' ('.' Var2)? )
-                    |   ( '.' Var2) )
+Var        	::= 'id' (
+                    |   ('[' Expression ']' ('.' Var)? )
+                    |   ( '.' Var) )
 
 
 Funcall		::= 'id' ('[' Expression ']')? ('.' 'id'  ('[' Expression ']')? )* '(' Expression (',' Expression)* ')' ';'
