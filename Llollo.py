@@ -1,7 +1,7 @@
 import ply.lex as lex
 
 reserved = {
-   'else if' : 'ELSEIF'
+   'elseif' : 'ELSEIF',
    'if' : 'IF',
    'else' : 'ELSE',
    'while' : 'WHILE',
@@ -46,7 +46,7 @@ tokens = [
    'LESSEQUALS',
    'GREATEREQUALS',
    'NOTEQUALS',
-   'SUM',
+   'ADD',
    'SUBS',
    'MULT',
    'DIV',
@@ -54,23 +54,23 @@ tokens = [
    'AND',
    'NOT',
    'OR',
-   'IGUAL',   
-   'CTEI',
-   'CTER',
-   'CTES',
-   'CTEB',
+   'EQUAL',   
+   'CTE_INT',
+   'CTE_REAL',
+   'CTE_STR',
+   'CTE_BOOL',
    'ID',
 ] + list(reserved.values())
 
 
-t_PARA  	  	= r'\('
-t_PARC  	  	= r'\)'
+t_PARA        = r'\('
+t_PARC        = r'\)'
 t_LLAVEA      = r'{'
 t_LLAVEC      = r'}'
 t_CORCHA      = r'\['
 t_CORCHC      = r'\]'
-t_COLON 			= r','
-t_SEMICOLON 	= r';'
+t_COLON       = r','
+t_SEMICOLON   = r';'
 t_DOT         = r'.'
 t_LESSTHAN    = r'<'
 t_GREATERTHAN = r'>'
@@ -85,8 +85,8 @@ t_DIV         = r'\/'
 t_MOD         = r'\%'
 t_AND         = r'&&'
 t_NOT         = r'!'
-t_OR 			    = r'\|\|'
-t_EQUAL 		  = r'='
+t_OR          = r'\|\|'
+t_EQUAL       = r'='
 
 
 def t_CTE_REAL(t):
@@ -128,4 +128,3 @@ def t_error(t):
 
 
 lexer = lex.lex()
-
