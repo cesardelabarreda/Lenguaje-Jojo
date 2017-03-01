@@ -11,25 +11,25 @@ def p_classStar_1(t):
 	'''classStar	: class classStar
 					| '''
 
-def p_class_t(t):
+def p_class_1(t):
 	'''class 	: CLASS ID extends bodyclass'''
 
-def p_extends_t(t):
+def p_extends_1(t):
 	'''extends 	: HAMON ID
 				| '''
 
-def p_bodyclass_t(t):
+def p_bodyclass_1(t):
 	'''bodyclass 	: LLAVEA decVarClassStar functionClassStar LLAVEC'''
 
-def p_decVarClassStar_t(t):
+def p_decVarClassStar_1(t):
 	'''decVarClassStar 	: decvarclass decVarClassStar
 						| '''
 
-def p_functionClassStar_t(t):
+def p_functionClassStar_1(t):
 	'''functionClassStar 	: functionClass functionClassStar
 							| '''
 
-def p_functionClass_t(t):
+def p_functionClass_1(t):
 	'''functionClass 	: FUNC access typereturn ID parameters bodyclass'''
 
 
@@ -41,26 +41,26 @@ def p_functionStar_1(t):
 	'''functionStar 	: function functionStar
 						| '''
 
-def p_decvarclass_t(t):
+def p_decvarclass_1(t):
 	'''decvarclass 	: access decvar'''
 
 
-def p_function_t(t):
+def p_function_1(t):
 	'''function 	: FUNC typereturn ID parameters bodyclass'''
 
 
 
-def p_main_t(t):
+def p_main_1(t):
 	'''main 	: PUBLIC STAND JOJO PARA PARC body'''
 
-def p_body_t(t):
+def p_body_1(t):
 	'''body 	: PARA decVarStar actionStar PARC'''
 
-def p_actionStar_t(t):
+def p_actionStar_1(t):
 	'''actionStar 	: action actionStar
-				| '''
+					| '''
 
-def p_action_t(t):
+def p_action_1(t):
 	'''action 	: assign
 				| input
 				| output
@@ -69,13 +69,24 @@ def p_action_t(t):
 				| funcall
 				| return '''
 
-def p_
 
 Parameters	::= '(' ('ref'? (Type | 'id') 'id') (',' 'ref'? (Type | 'id') 'id')* ')'
 
 
-DecVar		::= Type DecVar2 (',' DecVar2)* ';'
 DecVar2		::= 'id' ('[' cte_int ']')? ('.' 'id' ('[' cte_int ']')?)*
+
+def p_decVar_1(t):
+	'''decVar 	: type decVar2 decVarStar SEMICOL'''
+
+def p_decVarStar_1(t):
+	'''decVarStar 	: COLON decVar2 decVarStar
+					| '''
+
+def p_decVar2_1(t):
+	'''decVar2 	: ID corchPos decVar2Star'''
+
+
+def p_decVar2_1(t)
 
 Var        	::= 'id' (
                     |   ('[' Expression ']' ('.' Var)? )
@@ -83,7 +94,6 @@ Var        	::= 'id' (
 
 
 Funcall		::= 'id' ('[' Expression ']')? ('.' 'id'  ('[' Expression ']')? )* '(' Expression (',' Expression)* ')' ';'
-
 
 
 def p_condition_1(t):
@@ -209,9 +219,9 @@ def p_const_1(t):
 				| CTE_BOOL'''
 
 def p_access_1(t):
-	'''type : PUBLIC 
-			| PRIVATE
-			| '''
+	'''access 	: PUBLIC 
+				| PRIVATE
+				| '''
 
 def p_type_1(t):
 	'''type : INT 
