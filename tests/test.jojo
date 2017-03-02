@@ -1,7 +1,4 @@
 
-int varGlobal1;
-bool varGlobal2;
-
 class chef {
 	public int chefesoide;
 	public string nombre;
@@ -38,6 +35,8 @@ class chefe hamon chef {
 	public int ultimo;
 }
 
+int varGlobal1;
+bool varGlobal2;
 
 func stand sumas(ref int v1, ref real v2) {
 	real v3;
@@ -74,11 +73,13 @@ func real min(real v1, real v2) {
 public stand jojo() {
 	int v1, v1_1;
 	real v2;
-	chefe v5 = new chefe()
+	chefe v5;
 	bool arr[5];
 	int ind;
 
 	ind = 0;
+	v5 = new chefe();
+	
 	while (ind < 5) {
 		arr[ind] = false;
 		ind = ind + 1;

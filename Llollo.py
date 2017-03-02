@@ -1,7 +1,6 @@
 import ply.lex as lex
 
 reserved = {
-   'elseif' : 'ELSEIF',
    'if' : 'IF',
    'else' : 'ELSE',
    'while' : 'WHILE',
@@ -71,13 +70,14 @@ t_CORCHA      = r'\['
 t_CORCHC      = r'\]'
 t_COLON       = r','
 t_SEMICOLON   = r';'
-t_DOT         = r'.'
+t_DOT         = r'\.'
+t_LESSEQUALS  = r'<='
+t_GREATEREQUALS = r'>='
 t_LESSTHAN    = r'<'
 t_GREATERTHAN = r'>'
 t_EQUALS      = r'=='
-t_LESSEQUALS  = r'<='
-t_GREATEREQUALS =r'>='
 t_NOTEQUALS   = r'!='
+t_EQUAL       = r'='
 t_ADD         = r'\+'
 t_SUBS        = r'\-'
 t_MULT        = r'\*'
@@ -86,7 +86,7 @@ t_MOD         = r'\%'
 t_AND         = r'&&'
 t_NOT         = r'!'
 t_OR          = r'\|\|'
-t_EQUAL       = r'='
+
 
 
 def t_CTE_REAL(t):

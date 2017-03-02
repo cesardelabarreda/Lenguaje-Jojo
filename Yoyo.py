@@ -9,44 +9,44 @@ def p_programa_1(t):
 
 def p_classStar_1(t):
   '''classStar  : class classStar
-          | '''
+                | '''
 
 def p_class_1(t):
   '''class  : CLASS ID extends bodyclass'''
 
 def p_extends_1(t):
   '''extends  : HAMON ID
-        | '''
+              | '''
 
 def p_bodyclass_1(t):
   '''bodyclass  : LLAVEA decVarClassStar functionClassStar LLAVEC'''
 
 def p_decVarClassStar_1(t):
-  '''decVarClassStar  : decvarclass decVarClassStar
-            | '''
+  '''decVarClassStar  : decVarclass decVarClassStar
+                      | '''
 
 def p_functionClassStar_1(t):
   '''functionClassStar  : functionClass functionClassStar
-              | '''
+                        | '''
 
 def p_functionClass_1(t):
-  '''functionClass  : FUNC access typereturn ID parameters bodyclass'''
+  '''functionClass  : FUNC access typeReturn ID parameters body'''
 
 
 def p_decVarStar_1(t):
-  '''decVarStar   : decvar decVarStar
-          | '''
+  '''decVarStar   : decVar decVarStar
+                  | '''
 
 def p_functionStar_1(t):
   '''functionStar   : function functionStar
-            | '''
+                    | '''
 
-def p_decvarclass_1(t):
-  '''decvarclass  : access decvar'''
+def p_decVarclass_1(t):
+  '''decVarclass  : access decVar'''
 
 
 def p_function_1(t):
-  '''function   : FUNC typereturn ID parameters body'''
+  '''function   : FUNC typeReturn ID parameters body'''
 
 def p_main_1(t):
   '''main   : PUBLIC STAND JOJO PARA PARC body'''
@@ -56,90 +56,93 @@ def p_body_1(t):
 
 def p_actionStar_1(t):
   '''actionStar   : action actionStar
-        | '''
+                  | '''
 
 def p_action_1(t):
   '''action   : assign
-        | input
-        | output
-        | condition
-        | while
-        | funcall
-        | return '''
+              | input
+              | output
+              | condition
+              | while
+              | funCall SEMICOLON
+              | return '''
 
 def p_paramters_1(t):
-  '''parameters : PARA parametersStar'''
+  '''parameters : PARA parametersPos PARC'''
+
+def p_parametersPos_1(t):
+  '''parametersPos  : ref typeDec ID parametersStar
+                    | '''
 
 def p_parametersStar_1(t):
-  '''parametersStar : ref typeparam ID COLON parametersStar
-        | ref typeparam ID PARC'''
+  '''parametersStar : COLON ref typeDec ID parametersStar
+                    | '''
 
 def p_ref_1(t):
   ''' ref : REF
-        | '''
+          | '''
 
-def p_typeparam_1(t):
-  ''' typeparam : type
-        | ID'''
+def p_decVar_1(t):
+  '''decVar : typeDec decVar2 decVarColonStar SEMICOLON'''
 
-def p_decvar_1(t):
-  ''' decvar : type decvarStar'''
+def p_decVarColonStar_1(t):
+  '''decVarColonStar   : COLON decVar2 decVarColonStar
+                  | '''
 
-def p_decvarStar_1(t):
-  ''' decvarStar : decvar2 COLON decvarStar
-        | decvar2 SEMICOLON'''
+def p_decVar2_1(t):
+  '''decVar2  : ID corchetesPosCte decVar2Star'''
 
-def p_decvar2_1(t):
-  ''' decvar2 : ID decvar2Int DOT decvar2
-        | ID decvar2Int decvar2
-        | '''
-
-def p_decvar2Int_1(t):
-  ''' decvar2Int : CORCHA CTE_INT CORCHC
-        | '''
-
+def p_decVar2Star_1(t):
+  '''decVar2Star  : DOT ID corchetesPosCte decVar2Star
+                  | '''
 
 def p_var_1(t):
-  ''' var : ID varexp DOT var
-        | ID varexp var
-        | '''
+  '''var  : ID corchetesPosExp varDotPos'''
 
-def p_varexp_1(t):
-  ''' varexp : CORCHA expression CORCHC
-        | '''
+def p_varDotPos_1(t):
+  '''varDotPos  : DOT var
+                | '''
 
-def p_funcall_1(t):
-  ''' funcall : funidStar funparamStar SEMICOLON'''
+def p_corchetesPosExp_1(t):
+  '''corchetesPosExp  : CORCHA expression CORCHC
+                      | '''
 
-def p_funidStar_1(t):
-  ''' funidStar : ID funexp DOT funidStar
-        | ID funexp PARA'''
+def p_corchetesPosCte_1(t):
+  '''corchetesPosCte  : CORCHA CTE_INT CORCHC
+                      | '''
 
-def p_funexp_1(t):
-  ''' funexp : CORCHA expression CORCHC
-        | '''
+def p_funCall_1(t):
+  '''funCall  : ID corchetesPosExp funCallStar PARA funCallParams PARC'''
 
-def p_funparamStar_1(t):
-  ''' funparamStar : expression COLON funparamStar
-        | expression PARC'''
+def p_funCallStar_1(t):
+  '''funCallStar  : DOT ID corchetesPosExp funCallStar
+                  | '''
+
+def p_funCallParams_1(t):
+  '''funCallParams  : expression funCallParamsStar
+                    | '''
+
+def p_funCallParamsStar_1(t):
+  '''funCallParamsStar  : COLON expression
+                        | '''
 
 def p_condition_1(t):
-  '''condition  : IF PARA expression PARC LLAVEA actionStar LLAVEC conditionElseIf conditionElse'''
-
-def p_conditionElseIf_1(t):
-  '''conditionElseIf  : ELSEIF PARA expression PARC LLAVEA actionStar LLAVEC conditionElseIf
-            | '''
+  '''condition  : IF PARA expression PARC LLAVEA actionStar LLAVEC conditionElse'''
 
 def p_conditionElse_1(t):
-  '''conditionElse  : ELSE LLAVEA actionStar LLAVEC
-            | '''
+  '''conditionElse    : ELSE conditionElsePos
+                      | '''
+
+def p_conditionElsePos_1(t):
+  '''conditionElsePos   : IF PARA expression PARC LLAVEA actionStar LLAVEC conditionElse
+                        | LLAVEA actionStar LLAVEC'''
 
 def p_assign_1(t):
   '''assign   : var EQUAL assignExpID SEMICOLON'''
 
 def p_assignExpID_1(t):
   '''assignExpID  : expression
-          | NEW ID PARA PARC'''
+                  | NEW ID PARA PARC'''
 
 def p_input_1(t):
   '''input  : GETS PARA var PARC SEMICOLON'''
@@ -156,21 +159,21 @@ def p_return_1(t):
 
 def p_expressionPos_1(t):
   '''expressionPos  : expression
-            | '''
+                    | '''
 
 def p_expression_1(t):
   '''expression   : expressionAND expressionORStar'''
 
 def p_expressionORStar_1(t):
   '''expressionORStar   : OR expressionAND expressionORStar
-              | '''
+                        | '''
 
 def p_expressionAND_1(t):
   '''expressionAND  : expressionNOT expressionANDStar'''
 
 def p_expressionANDStar_1(t):
   '''expressionANDStar  : AND expressionNOT expressionANDStar
-              | '''
+                        | '''
 
 def p_expressionNOT_1(t):
   '''expressionNOT  : simbolExclamationStar expressionCompare'''
@@ -178,11 +181,11 @@ def p_expressionNOT_1(t):
 
 def p_expressionCompare_1(t):
   '''expressionCompare  : expressionAS expressionComparePos
-              | '''
+                        | '''
 
 def p_expressionComparePos_1(t):
   '''expressionComparePos : simbolCompare expressionAS
-              | '''
+                          | '''
 
 
 def p_expressionAS_1(t):
@@ -190,74 +193,74 @@ def p_expressionAS_1(t):
 
 def p_expressionASStar_1(t):
   '''expressionASStar : simbolAS expressionMDM expressionASStar
-            | '''
+                      | '''
 
 def p_expressionMDM_1(t):
   '''expressionMDM  : expressionL expressionMDMStar'''
 
 def p_expressionMDMStar_1(t):
   '''expressionMDMStar  : simbolMDM expressionL expressionMDMStar
-              | '''
+                        | '''
 
 def p_expresionL_1(t):
   '''expressionL  : PARA expression PARC
-          | simbolASPoss value'''
+                  | simbolASPoss value'''
 
 
 def p_simbolCompare_1(t):
   '''simbolCompare  : LESSTHAN
-            | LESSEQUALS
-            | GREATERTHAN
-            | GREATEREQUALS
-            | EQUALS
-            | NOTEQUALS '''
+                    | LESSEQUALS
+                    | GREATERTHAN
+                    | GREATEREQUALS
+                    | EQUALS
+                    | NOTEQUALS '''
 
 def p_simbolExclamationStar_1(t):
   '''simbolExclamationStar  : NOT simbolExclamationStar
-                | '''
+                            | '''
 
 def p_simbolMDM_1(t):
   '''simbolMDM  : MULT
-          | DIV
-          | MOD '''
+                | DIV
+                | MOD '''
 
 def p_simbolAS_1(t):
   '''simbolAS   : ADD
-          | SUBS'''
+                | SUBS'''
 
 def p_simbolASPoss_1(t):
   '''simbolASPoss : simbolAS
-          | '''
+                  | '''
 
 def p_value_1(t):
   '''value  : var 
-        | funcall 
-        | const'''
-
-def p_typereturn_1(t):
-  '''typereturn   : type
-          | STAND 
-          | ID'''
+            | funCall 
+            | const'''
 
 def p_const_1(t):
   '''const  : CTE_INT 
-        | CTE_REAL 
-        | CTE_STR
-        | CTE_BOOL'''
+            | CTE_REAL 
+            | CTE_STR
+            | CTE_BOOL'''
 
 def p_access_1(t):
   '''access : PUBLIC 
-      | PRIVATE
-      | '''
+            | PRIVATE
+            | '''
+
+def p_typeReturn_1(t):
+  '''typeReturn   : typeDec
+                  | STAND'''
+
+def p_typeDec_1(t):
+  '''typeDec  : type
+              | ID'''
 
 def p_type_1(t):
   '''type : INT 
-      | REAL
-      | BOOL 
-      | STRING'''
-
-def p_empty_1(t):
-  ''' empty : '''
+          | REAL
+          | BOOL 
+          | STRING'''
 
 #def p_error(t):
 #    print "Illegal character '%s'" % t.value[0]
@@ -266,11 +269,6 @@ def p_empty_1(t):
 
 parser = yacc.yacc()
 
-
-#fFile = input('Archivo: ')
-#sContenido = open(fFile).read()
-#yacc.parse(sContenido)
-#print("\n\n***** Ejecucion terminada. *****\n\n")
 
 if __name__ == '__main__':
   if (len(sys.argv) > 1):
