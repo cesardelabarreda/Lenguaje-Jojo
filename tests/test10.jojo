@@ -1,5 +1,7 @@
 func bool ejemplo2(int var1, int var2) {
-	bool trileano1;
+	@@@
+		bool trileano1;
+	@@@
 
 	ejemplo2(a);
 	trileano1 = 5 + 5;
@@ -8,7 +10,9 @@ func bool ejemplo2(int var1, int var2) {
 }
 
 public stand jojo() {
-	int variable;
+	@@@
+		int variable;
+	@@@
 
 	variable = 5 + 5;
 
