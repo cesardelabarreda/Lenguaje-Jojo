@@ -1,9 +1,11 @@
 
 
 class Jotaro {
-	private string star, platinum[50];
-	public int joestar;
-	real ora;
+	@@@
+		private string star, platinum[50];
+		public int joestar;
+		real ora;
+	@@@
 
 	func public stand jot() {
 
@@ -14,14 +16,15 @@ class Jotaro {
 	}
 }
 
-
-int dio, main, hand;
-real cesar, caesar, zepeli;
-
+@@@
+	int dio, main, hand;
+	real cesar, caesar, zepeli;
+@@@
 
 func bool ejemplo2(int var1, int var2) {
-	bool trileano1;
-
+	@@@
+		bool trileano1;
+	@@@
 
 	zadust trileano1;
 }

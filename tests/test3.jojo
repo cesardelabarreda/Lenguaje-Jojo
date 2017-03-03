@@ -1,10 +1,12 @@
-
-int dio, main, hand;
-real cesar, caesar, zepeli;
+@@@
+	int dio, main, hand;
+	real cesar, caesar, zepeli;
+@@@
 
 func stand ejemplo() {
-	bool trileano1;
-
+	@@@
+		bool trileano1;
+	@@@
 
 	zadust;
 }

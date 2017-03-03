@@ -5,7 +5,11 @@ from Llollo import tokens
 # Reglas gramaticales
 
 def p_programa_1(t):
-  '''programa : classStar decVarStar functionStar main'''
+  '''programa : classStar decVarPos functionStar main'''
+
+def p_decVarPos_1(t):
+  '''decVarPos  : VARIABLES decVar decVarStar VARIABLES
+                | '''
 
 def p_classStar_1(t):
   '''classStar  : class classStar
@@ -19,7 +23,11 @@ def p_extends_1(t):
               | '''
 
 def p_bodyclass_1(t):
-  '''bodyclass  : LLAVEA decVarClassStar functionClassStar LLAVEC'''
+  '''bodyclass  : LLAVEA decVarClassPos functionClassStar LLAVEC'''
+
+def p_decVarClassPos_1(t):
+  '''decVarClassPos   : VARIABLES decVarclass decVarClassStar VARIABLES
+                      | '''
 
 def p_decVarClassStar_1(t):
   '''decVarClassStar  : decVarclass decVarClassStar
@@ -52,7 +60,7 @@ def p_main_1(t):
   '''main   : PUBLIC STAND JOJO PARA PARC body'''
 
 def p_body_1(t):
-  '''body   : LLAVEA decVarStar actionStar LLAVEC'''
+  '''body   : LLAVEA decVarPos actionStar LLAVEC'''
 
 def p_actionStar_1(t):
   '''actionStar   : action actionStar
@@ -86,8 +94,8 @@ def p_decVar_1(t):
   '''decVar : typeDec decVar2 decVarColonStar SEMICOLON'''
 
 def p_decVarColonStar_1(t):
-  '''decVarColonStar   : COLON decVar2 decVarColonStar
-                  | '''
+  '''decVarColonStar  : COLON decVar2 decVarColonStar
+                      | '''
 
 def p_decVar2_1(t):
   '''decVar2  : ID corchetesPosCte decVar2Star'''
