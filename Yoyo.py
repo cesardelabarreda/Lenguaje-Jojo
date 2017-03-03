@@ -30,7 +30,7 @@ def p_functionClassStar_1(t):
                         | '''
 
 def p_functionClass_1(t):
-  '''functionClass  : FUNC access typereturn ID parameters body'''
+  '''functionClass  : FUNC access typeReturn ID parameters body'''
 
 
 def p_decVarStar_1(t):
@@ -46,7 +46,7 @@ def p_decVarclass_1(t):
 
 
 def p_function_1(t):
-  '''function   : FUNC typereturn ID parameters body'''
+  '''function   : FUNC typeReturn ID parameters body'''
 
 def p_main_1(t):
   '''main   : PUBLIC STAND JOJO PARA PARC body'''
@@ -64,30 +64,26 @@ def p_action_1(t):
               | output
               | condition
               | while
-              | funCall
+              | funCall SEMICOLON
               | return '''
 
 def p_paramters_1(t):
   '''parameters : PARA parametersPos PARC'''
 
 def p_parametersPos_1(t):
-  '''parametersPos  : ref typeParam ID parametersStar
+  '''parametersPos  : ref typeDec ID parametersStar
                     | '''
 
 def p_parametersStar_1(t):
-  '''parametersStar : COLON ref typeParam ID parametersStar
+  '''parametersStar : COLON ref typeDec ID parametersStar
                     | '''
 
 def p_ref_1(t):
   ''' ref : REF
           | '''
 
-def p_typeParam_1(t):
-  ''' typeParam : type
-                | ID'''
-
 def p_decVar_1(t):
-  '''decVar : type decVar2 decVarColonStar SEMICOLON'''
+  '''decVar : typeDec decVar2 decVarColonStar SEMICOLON'''
 
 def p_decVarColonStar_1(t):
   '''decVarColonStar   : COLON decVar2 decVarColonStar
@@ -116,7 +112,7 @@ def p_corchetesPosCte_1(t):
                       | '''
 
 def p_funCall_1(t):
-  '''funCall  : ID corchetesPosExp funCallStar PARA funCallParams PARC SEMICOLON'''
+  '''funCall  : ID corchetesPosExp funCallStar PARA funCallParams PARC'''
 
 def p_funCallStar_1(t):
   '''funCallStar  : DOT ID corchetesPosExp funCallStar
@@ -241,11 +237,6 @@ def p_value_1(t):
             | funCall 
             | const'''
 
-def p_typereturn_1(t):
-  '''typereturn   : type
-                  | STAND 
-                  | ID'''
-
 def p_const_1(t):
   '''const  : CTE_INT 
             | CTE_REAL 
@@ -256,6 +247,14 @@ def p_access_1(t):
   '''access : PUBLIC 
             | PRIVATE
             | '''
+
+def p_typeReturn_1(t):
+  '''typeReturn   : typeDec
+                  | STAND'''
+
+def p_typeDec_1(t):
+  '''typeDec  : type
+              | ID'''
 
 def p_type_1(t):
   '''type : INT 

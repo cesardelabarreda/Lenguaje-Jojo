@@ -4,7 +4,7 @@ SET "TESTS=tests\"
 SET "ERRORS=logs\errors\"
 SET "LOG_MASTER=logs\LOG.txt"
 
-SET /A "CANT_TESTS = 7"
+SET /A "CANT_TESTS = 10"
 SET /A "TESTS_FAILED = 0"
 
 
@@ -23,7 +23,6 @@ COPY nul %LOGS%LOG.txt > nul
 ECHO. >> %LOG_MASTER%
 for /l %%i in (1, 1, %CANT_TESTS%) do (
 	for %%a in (%ERRORS%%error%%%i.txt) do (
-		ECHO %%~za
 		IF %%~za NEQ  0 (
 			ECHO *************** Test %%i *************** >> %LOG_MASTER%
 			COPY /b %LOG_MASTER% + %ERRORS%error%%i.txt  %LOG_MASTER%
@@ -31,15 +30,13 @@ for /l %%i in (1, 1, %CANT_TESTS%) do (
 			ECHO. >> %LOG_MASTER%
 			ECHO. >> %LOG_MASTER%
 
-			DEL temp.txt
-
 			SET /A "TESTS_FAILED += 1"
 		)
 	)
 )
 
 
-:: IF EXIST %ERRORS% 	RMDIR /Q /S %ERRORS%
+IF EXIST %ERRORS% 	RMDIR /Q /S %ERRORS%
 
 SET /A "TESTS_PASSED = %CANT_TESTS% - %TESTS_FAILED%"
 ECHO. >> %LOG_MASTER%
