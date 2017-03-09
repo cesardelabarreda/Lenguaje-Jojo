@@ -8,19 +8,54 @@ def p_programa_1(t):
   '''programa : classStar decVarPos functionStar main'''
 
 def p_decVarPos_1(t):
-  '''decVarPos  : VARIABLES decVar decVarStar VARIABLES
+  '''decVarPos  : VARIABLES globalScope decVar decVarStar VARIABLES
                 | '''
+
+def p_globalScope_1(t):
+  '''globalScope : '''
+  global scope
+  scope = "global"
 
 def p_classStar_1(t):
-  '''classStar  : class classStar
-                | '''
+  '''classStar  : classOn class classStar
+                | classOff'''
+
+def p_classOn_1(t):
+  '''classOn  : '''
+  global bClass
+  bClass = True
+
+def p_classOff_1(t):
+  '''classOff  : '''
+  global bClass
+  bClass = False
 
 def p_class_1(t):
-  '''class  : CLASS ID extends bodyclass'''
+  '''class  : CLASS ID scopeClass extends bodyclass'''
+
+def p_scopeClass_1(t):
+  ''' scopeClass : '''
+  global className
+  className = t[-1]
+  if className not in classTab:
+    classTab[className] = {}
+  else:
+    print('Clase "%s" ya existente' % (className))
 
 def p_extends_1(t):
-  '''extends  : HAMON ID
+  '''extends  : HAMON ID scopeHamon 
               | '''
+
+def p_scopeHamon_1(t):
+  ''' scopeHamon : '''
+  hamon = t[-2]
+  herencia = t[-1]
+  global className
+  if herencia in classTab:
+    classTab[className][hamon]=herencia
+  else:
+    print('Clase "%s" no declarada' % (herencia))
+
 
 def p_bodyclass_1(t):
   '''bodyclass  : LLAVEA decVarClassPos functionClassStar LLAVEC'''
@@ -38,7 +73,7 @@ def p_functionClassStar_1(t):
                         | '''
 
 def p_functionClass_1(t):
-  '''functionClass  : FUNC access typeReturn ID parameters body'''
+  '''functionClass  : FUNC access typeReturn ID defScope parameters body'''
 
 
 def p_decVarStar_1(t):
@@ -54,10 +89,23 @@ def p_decVarclass_1(t):
 
 
 def p_function_1(t):
-  '''function   : FUNC typeReturn ID parameters body'''
+  '''function   : FUNC typeReturn ID defScope parameters body'''
+  
+
+def p_defScope_1(t):
+  '''defScope : '''
+  global scope
+  scope= t[-1]
+  global bClass
+  if bClass:
+    classTab[className][scope]={}
+    classTab[className][scope]["tipo"] = t[-2]
+  else:
+    varTab[scope] = {}
+    varTab[scope]["tipo"] = t[-2]
 
 def p_main_1(t):
-  '''main   : PUBLIC STAND JOJO PARA PARC body'''
+  '''main   : PUBLIC STAND JOJO defScope PARA PARC body'''
 
 def p_body_1(t):
   '''body   : LLAVEA decVarPos actionStar LLAVEC'''
@@ -79,19 +127,37 @@ def p_paramters_1(t):
   '''parameters : PARA parametersPos PARC'''
 
 def p_parametersPos_1(t):
-  '''parametersPos  : ref typeDec ID parametersStar
+  '''parametersPos  : ref typeDec ID funVarTab parametersStar
                     | '''
 
 def p_parametersStar_1(t):
-  '''parametersStar : COLON ref typeDec ID parametersStar
+  '''parametersStar : COLON ref typeDec ID funVarTab parametersStar
                     | '''
+
+def p_funcVarTab_1(t):
+  '''funVarTab : '''
+  variable = t[-1]
+  tipo = t[-2]
+  if variable not in varTab['global'] and variable not in varTab.get(scope,[]):
+    global bClass
+    if bClass:
+      classTab[className][variable] = tipo
+    else:
+      varTab[scope][variable]  = tipo
+  else:
+    print('Variable "%s" ya existe' % (variable))
 
 def p_ref_1(t):
   ''' ref : REF
           | '''
 
 def p_decVar_1(t):
-  '''decVar : typeDec decVar2 decVarColonStar SEMICOLON'''
+  '''decVar : typeDec tipoVar decVar2 decVarColonStar SEMICOLON'''
+
+def p_tipoVar_1(t):
+  '''tipoVar :  '''
+  global tipo
+  tipo = t[-1]
 
 def p_decVarColonStar_1(t):
   '''decVarColonStar  : COLON decVar2 decVarColonStar
@@ -99,6 +165,16 @@ def p_decVarColonStar_1(t):
 
 def p_decVar2_1(t):
   '''decVar2  : ID corchetesPosCte decVar2Star'''
+  variable = t[1]
+  global tipo
+  if variable not in varTab['global'] and variable not in varTab.get(scope,[]):
+    global bClass
+    if bClass:
+      classTab[className][variable] = tipo
+    else:
+      varTab[scope][variable]  = tipo
+  else:
+    print('Variable "%s" ya existe' % (variable))
 
 def p_decVar2Star_1(t):
   '''decVar2Star  : DOT ID corchetesPosCte decVar2Star
@@ -259,20 +335,33 @@ def p_access_1(t):
 def p_typeReturn_1(t):
   '''typeReturn   : typeDec
                   | STAND'''
+  t[0]=t[1]
 
 def p_typeDec_1(t):
   '''typeDec  : type
               | ID'''
+  t[0]=t[1]
 
 def p_type_1(t):
   '''type : INT 
           | REAL
           | BOOL 
           | STRING'''
+  t[0]=t[1]
 
 #def p_error(t):
 #    print "Illegal character '%s'" % t.value[0]
 #    print(t.lexer.lineno)
+
+
+varTab = {}
+varTab["global"] = {}
+classTab = {}
+tipo = ""
+scope = "global"
+bClass = False
+classTab = {}
+className = ""
 
 
 parser = yacc.yacc()
