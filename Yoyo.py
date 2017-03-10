@@ -5,10 +5,10 @@ from Llollo import tokens
 # Reglas gramaticales
 
 def p_programa_1(t):
-  '''programa : classStar decVarPos functionStar main'''
+  '''programa : classStar globalScope decVarPos functionStar main'''
 
 def p_decVarPos_1(t):
-  '''decVarPos  : VARIABLES globalScope decVar decVarStar VARIABLES
+  '''decVarPos  : VARIABLES  decVar decVarStar VARIABLES
                 | '''
 
 def p_globalScope_1(t):
@@ -58,7 +58,19 @@ def p_scopeHamon_1(t):
 
 
 def p_bodyclass_1(t):
-  '''bodyclass  : LLAVEA decVarClassPos functionClassStar LLAVEC'''
+  '''bodyclass  : LLAVEA decVarClassPos funcOn functionClassStar funcOff LLAVEC'''
+
+def p_funcOn_1(t):
+  '''funcOn  : '''
+  global bFunc
+  bFunc = True
+
+def p_funcOff_1(t):
+  '''funcOff  : '''
+  global bFunc
+  bFunc = False
+
+
 
 def p_decVarClassPos_1(t):
   '''decVarClassPos   : VARIABLES decVarclass decVarClassStar VARIABLES
@@ -95,14 +107,19 @@ def p_function_1(t):
 def p_defScope_1(t):
   '''defScope : '''
   global scope
-  scope= t[-1]
+  scope = t[-1]
   global bClass
   if bClass:
-    classTab[className][scope]={}
-    classTab[className][scope]["tipo"] = t[-2]
+
+    if classTab.get(className, {}).get("methods", {}) == {}:
+      classTab[className]["methods"] = {}
+
+    if classTab.get(className, {}).get("methods", {}).get(scope, {})== {}:
+      classTab[className]["methods"][scope]={}
+    classTab[className]["methods"][scope]["type"] = t[-2]
   else:
     varTab[scope] = {}
-    varTab[scope]["tipo"] = t[-2]
+    varTab[scope]["type"] = t[-2]
 
 def p_main_1(t):
   '''main   : PUBLIC STAND JOJO defScope PARA PARC body'''
@@ -137,15 +154,33 @@ def p_parametersStar_1(t):
 def p_funcVarTab_1(t):
   '''funVarTab : '''
   variable = t[-1]
+  global tipo
   tipo = t[-2]
-  if variable not in varTab['global'] and variable not in varTab.get(scope,[]):
-    global bClass
-    if bClass:
-      classTab[className][variable] = tipo
+  global scope
+  global bClass
+  if variable not in varTab.get(scope, {}).get("vars", {}) and not bClass:
+    if varTab.get(scope, {}).get("vars", {}) == {}:
+      
+      varTab[scope]["vars"] = {}
+    varTab[scope]["vars"][variable]  = tipo
+    if varTab.get(scope, {}).get("param", {}) == {}:
+      varTab[scope]["param"] = {}
+      varTab[scope]["param"] = [tipo]
     else:
-      varTab[scope][variable]  = tipo
+      varTab[scope]["param"].append(tipo)
   else:
-    print('Variable "%s" ya existe' % (variable))
+    if variable not in classTab.get(className, {}).get("methods", {}).get(scope, {}).get("vars", {}) and bClass:
+      if classTab.get(className, {}).get("methods", {}).get(scope, {}).get("vars", {}) == {}:
+        classTab[className]["methods"][scope]["vars"] = {}
+      classTab[className]["methods"][scope]["vars"][variable] = tipo
+      if classTab.get(className, {}).get("methods", {}).get(scope, {}).get("param", {}) == {}:
+        classTab[className]["methods"][scope]["param"] = {}
+        classTab[className]["methods"][scope]["param"] = [tipo]
+      else:
+        classTab[className]["methods"][scope]["param"].append(tipo)
+
+    else:
+      print('Variable "%s" ya existe' % (variable))
 
 def p_ref_1(t):
   ''' ref : REF
@@ -166,15 +201,25 @@ def p_decVarColonStar_1(t):
 def p_decVar2_1(t):
   '''decVar2  : ID corchetesPosCte decVar2Star'''
   variable = t[1]
+  global scope
   global tipo
-  if variable not in varTab['global'] and variable not in varTab.get(scope,[]):
-    global bClass
-    if bClass:
-      classTab[className][variable] = tipo
-    else:
-      varTab[scope][variable]  = tipo
+  global bClass
+  if variable not in varTab.get(scope, {}).get("vars", {}) and not bClass:
+    if varTab.get(scope, {}).get("vars", {}) == {}:
+      varTab[scope]["vars"] = {}
+    varTab[scope]["vars"][variable]  = tipo
   else:
-    print('Variable "%s" ya existe' % (variable))
+    if variable not in classTab.get(className, {}).get("vars", {}) and bClass and not bFunc:
+      if classTab.get(className, {}).get("vars", {}) == {}:
+        classTab[className]["vars"] = {}
+      classTab[className]["vars"][variable] = tipo
+    else:
+      if variable not in classTab.get(className, {}).get("methods", {}).get(scope, {}).get("vars", {}) and bClass and bFunc:
+        if classTab.get(className, {}).get("methods", {}).get(scope, {}).get("vars", {}) == {}:
+          classTab[className]["methods"][scope]["vars"] = {}
+        classTab[className]["methods"][scope]["vars"][variable] = tipo
+      else:
+        print('Variable "%s" ya existe' % (variable))
 
 def p_decVar2Star_1(t):
   '''decVar2Star  : DOT ID corchetesPosCte decVar2Star
@@ -358,8 +403,9 @@ varTab = {}
 varTab["global"] = {}
 classTab = {}
 tipo = ""
-scope = "global"
+scope = ""
 bClass = False
+bFunc = False
 classTab = {}
 className = ""
 
@@ -377,6 +423,10 @@ if __name__ == '__main__':
       yacc.parse(info, tracking=True)
 
       print("Compilacion Finalizada")
+
+      print varTab
+      print "AQUI"
+      print classTab
 
     except EOFError:
         print(EOFError)
