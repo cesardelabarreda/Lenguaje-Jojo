@@ -1,65 +1,63 @@
 import ply.lex as lex
 
 reserved = {
-   'if' : 'IF',
-   'else' : 'ELSE',
-   'while' : 'WHILE',
-   'true' : 'TRUE',
-   'false' : 'FALSE',
-   'neutral' : 'NEUTRAL',
-   'int' : 'INT',
-   'real' : 'REAL',
-   'string' : 'STRING',
-   'bool' : 'BOOL',
-   'tril' : 'TRIL',
-   'stand' : 'STAND',
-   'public' : 'PUBLIC',
-   'private' : 'PRIVATE',
-   'func' : 'FUNC',
-   'class' : 'CLASS',
-   'jojo' : 'JOJO',
-   'size' : 'SIZE',
-   'gets' : 'GETS',
-   'prints' : 'PRINTS',
-   'new' : 'NEW', 
-   'zadust' : 'ZADUST',
-   'ref' : 'REF',
-   'hamon' : 'HAMON',
-   'zawarudo' : 'ZAWARUDO',  
+  'if' : 'IF',
+  'else' : 'ELSE',
+  'while' : 'WHILE',
+  'neutral' : 'NEUTRAL',
+  'int' : 'INT',
+  'real' : 'REAL',
+  'string' : 'STRING',
+  'bool' : 'BOOL',
+  'tril' : 'TRIL',
+  'stand' : 'STAND',
+  'public' : 'PUBLIC',
+  'private' : 'PRIVATE',
+  'func' : 'FUNC',
+  'class' : 'CLASS',
+  'jojo' : 'JOJO',
+  'size' : 'SIZE',
+  'gets' : 'GETS',
+  'prints' : 'PRINTS',
+  'new' : 'NEW', 
+  'zadust' : 'ZADUST',
+  'ref' : 'REF',
+  'hamon' : 'HAMON',
+  'zawarudo' : 'ZAWARUDO',  
 }
 
 
 tokens = [
-   'PARA',
-   'PARC',
-   'LLAVEA',
-   'LLAVEC',
-   'CORCHA',
-   'CORCHC',
-   'COLON',
-   'SEMICOLON',
-   'DOT',
-   'LESSTHAN',
-   'GREATERTHAN',
-   'EQUALS',
-   'LESSEQUALS',
-   'GREATEREQUALS',
-   'NOTEQUALS',
-   'ADD',
-   'SUBS',
-   'MULT',
-   'DIV',
-   'MOD',
-   'AND',
-   'NOT',
-   'OR',
-   'EQUAL',   
-   'CTE_INT',
-   'CTE_REAL',
-   'CTE_STR',
-   'CTE_BOOL',
-   'ID',
-   'VARIABLES',
+  'PARA',
+  'PARC',
+  'LLAVEA',
+  'LLAVEC',
+  'CORCHA',
+  'CORCHC',
+  'COLON',
+  'SEMICOLON',
+  'DOT',
+  'LESSTHAN',
+  'GREATERTHAN',
+  'EQUALS',
+  'LESSEQUALS',
+  'GREATEREQUALS',
+  'NOTEQUALS',
+  'ADD',
+  'SUBS',
+  'MULT',
+  'DIV',
+  'MOD',
+  'AND',
+  'NOT',
+  'OR',
+  'EQUAL',   
+  'CTE_INT',
+  'CTE_REAL',
+  'CTE_STR',
+  'CTE_BOOL',
+  'ID',
+  'VARIABLES',
 ] + list(reserved.values())
 
 
@@ -92,41 +90,40 @@ t_VARIABLES     = r'@@@'
 
 
 def t_CTE_REAL(t):
-    r'([\+|-]?[0-9]+[\.])[0-9]+'
-    t.value = float(t.value)
-    return t
+  r'([\+|-]?[0-9]+[\.])[0-9]+'
+  t.value = float(t.value)
+  return t
 
 def t_CTE_INT(t):
-    r'[\+|-]?\d+'
-    t.value = int(t.value)
-    return t
+  r'[\+|-]?\d+'
+  t.value = int(t.value)
+  return t
 
 def t_CTE_BOOL(t):
-    r'true|false'
-    t.value = bool(t.value)
-    return t
+  r'true|false'
+  t.value = bool(t.value)
+  return t
 
 def t_CTE_STR(t):
-    r'\"(\\.|[^"])*\"'
-    return t
+  r'\"(\\.|[^"])*\"'
+  return t
 
 def t_ID(t):
-    r'[a-zA-Z](_?[a-zA-Z0-9])*'
-    t.type = reserved.get(t.value,'ID')
-    return t
+  r'[a-zA-Z](_?[a-zA-Z0-9])*'
+  t.type = reserved.get(t.value,'ID')
+  return t
 
 
 def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
-
+  r'\n+'
+  t.lexer.lineno += len(t.value)
 
 t_ignore  = ' \t'
 
 
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
+  print("Illegal character '%s'" % t.value[0])
+  t.lexer.skip(1)
 
 
 lexer = lex.lex()
