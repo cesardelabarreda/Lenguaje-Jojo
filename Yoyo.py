@@ -309,13 +309,11 @@ def p_expressionNOT_1(t):
 
 
 def p_expressionCompare_1(t):
-  '''expressionCompare  : expressionAS expressionComparePos
-                        | '''
+  '''expressionCompare  : expressionAS expressionComparePos'''
 
 def p_expressionComparePos_1(t):
   '''expressionComparePos : simbolCompare expressionAS
                           | '''
-
 
 def p_expressionAS_1(t):
   '''expressionAS   : expressionMDM expressionASStar'''
@@ -424,9 +422,9 @@ if __name__ == '__main__':
 
       print("Compilacion Finalizada")
 
-      print varTab
-      print "AQUI"
-      print classTab
+      print (varTab)
+      print ("AQUI")
+      print (classTab)
 
     except EOFError:
         print(EOFError)
