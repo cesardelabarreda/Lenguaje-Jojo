@@ -1,9 +1,12 @@
 
 from Funcion import Function
 
-class dicFunction:
+class DicFunction:
     def __init__(self):
-        self.functions = {}
+        f = Function()
+        self.functions = {
+            "_Global" : f,
+            }
 
     def empty(self):
         return self.functions == {}
@@ -50,10 +53,10 @@ class dicFunction:
         self.functions[functionId] = func
         return 1
 
-    def insertVar(self, functionId, varId):
+    def insertVar(self, functionId, varId, varType):
         if self.existsFunction(functionId) == 0:
             return 0
-        return self.functions[functionId].insertVar(varId)
+        return self.functions[functionId].insertVar(varId, varType)
 
     def insertParam(self, functionId, paramType):
         if self.existsFunction(functionId) == 0:

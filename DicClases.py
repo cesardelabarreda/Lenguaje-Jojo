@@ -1,7 +1,7 @@
 
-from Metodo import Method
+from Clase import Class
 
-class dicClass:
+class DicClass:
     def __init__(self):
         self.classes = {}
 
@@ -37,19 +37,37 @@ class dicClass:
             return 1
         return self.existsAtribute(classId, atributeId)
 
+    def insertHamon(self, classId, classHamon):
+        if self.existsClass(classId) == 0:
+            return 0
+        if self.existsClass(classHamon) == 0:
+            return 0
+        return self.classes[classId].insertHamon(classHamon)
+
+    def insertClass(self, classId):
+        if self.existsClass(classId):
+            return 0
+
+        clas = Class()
+        self.classes[classId] = clas
+
     def insertMethod(self, classId, methodId, methodRetType = 0, methodEncap = 0):
         if self.existsClass(classId) == 0:
             return 0
         return self.classes[classId].insertMethod(methodId, methodRetType, methodEncap)
 
-    def insertVar(self, classId, methodId, varId):
+    def insertVar(self, classId, methodId, varId, varType):
         if self.existsClass(classId) == 0:
             return 0
-        return self.classes[classId].insertVar(methodId, varId)
+        return self.classes[classId].insertVar(methodId, varId, varType)
 
     def insertParam(self, classId, methodId, paramType):
         if self.existsClass(classId) == 0:
             return 0
         return self.classes[classId].insertParam(methodId, paramType)
 
+    def insertAtribute(self, classId, atrId, atrType):
+        if self.existsClass(classId) == 0:
+            return 0
+        return self.classes[classId].insertAtribute(atrId, atrType)
     

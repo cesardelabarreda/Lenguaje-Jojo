@@ -42,6 +42,9 @@ class Class:
             if atr.atrEncap == 1:
                 del self.atributes[atr]
 
+    def existsHamon(self, classHamon):
+        return classHamon in self.classes
+
     def existsMethod(self, methodId):
         return methodId in self.methods
 
@@ -54,6 +57,12 @@ class Class:
                 return 1
         return self.existsAtribute(varId)
 
+    def insertHamon(self, classHamon):
+        if self.existsHamon(classHamon):
+            return 0
+        self.classes.append(classHamon)
+        return 1
+
     def insertMethod(self, methodId, methodRetType = 0, methodEncap = 0):
         if self.existsMethod(methodId):
             return 0
@@ -62,14 +71,21 @@ class Class:
         self.methods[methodId] = meth
         return 1
 
-    def insertVar(self, methodId, varId):
+    def insertVar(self, methodId, varId, varType):
         if self.existsMethod(methodId) == 0:
             return 0
-        return self.methods[methodId].insertVar(varId)
+        return self.methods[methodId].insertVar(varId, varType)
 
-    def insertParam(self, methodId, paramType):
+    def insertParam(self, methodId, paramType = 0):
         if self.existsMethod(methodId) == 0:
             return 0
         return self.methods[methodId].insertParam(paramType)
 
+    def insertAtribute(self, atrId, atrType = 0, atrEncap = 0):
+        if self.existsAtribute(atrId):
+            return 0
+
+        atr = Atribute(atrType, atrEncap)
+        self.atributes[atrId] = atr
+        return 1
     
