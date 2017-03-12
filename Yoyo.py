@@ -1,7 +1,13 @@
 import sys
 import ply.yacc as yacc
 from Llollo import tokens
+from DicClases import DicClass
+from DicFunc import DicFunction
+from TypesToInts import TypeToInt
 
+dictionaryClass = DicClass()
+dictionaryFunction = DicFunction()
+typeConv = TypeToInt()
 # Reglas gramaticales
 
 def p_programa_1(t):
@@ -14,7 +20,7 @@ def p_decVarPos_1(t):
 def p_globalScope_1(t):
   '''globalScope : '''
   global scope
-  scope = "global"
+  scope = "_Global"
 
 def p_classStar_1(t):
   '''classStar  : classOn class classStar
@@ -37,9 +43,8 @@ def p_scopeClass_1(t):
   ''' scopeClass : '''
   global className
   className = t[-1]
-  if className not in classTab:
-    classTab[className] = {}
-  else:
+
+  if dictionaryClass.insertClass(className) == 0:
     print('Clase "%s" ya existente' % (className))
 
 def p_extends_1(t):
@@ -51,9 +56,8 @@ def p_scopeHamon_1(t):
   hamon = t[-2]
   herencia = t[-1]
   global className
-  if herencia in classTab:
-    classTab[className][hamon]=herencia
-  else:
+
+  if dictionaryClass.insertHamon(className, herencia) == 0:
     print('Clase "%s" no declarada' % (herencia))
 
 
@@ -73,8 +77,13 @@ def p_funcOff_1(t):
 
 
 def p_decVarClassPos_1(t):
-  '''decVarClassPos   : VARIABLES decVarclass decVarClassStar VARIABLES
+  '''decVarClassPos   : VARIABLES defScopeVarClass decVarclass decVarClassStar VARIABLES
                       | '''
+
+def p_defScopeVarClass_1(t):
+  '''defScopeVarClass   : '''
+  global scope
+  scope = "_Atributes"
 
 def p_decVarClassStar_1(t):
   '''decVarClassStar  : decVarclass decVarClassStar
@@ -85,8 +94,16 @@ def p_functionClassStar_1(t):
                         | '''
 
 def p_functionClass_1(t):
-  '''functionClass  : FUNC access typeReturn ID defScope parameters body'''
+  '''functionClass  : FUNC access typeReturn ID defScopeClass parameters body'''
 
+def p_defScopeClass_1(t):
+  '''defScopeClass : '''
+  global scope
+  scope = t[-1]
+  global bClass
+
+  if dictionaryClass.insertMethod(className, scope, typeConv.convert(t[-2]), typeConv.convert(t[-3])) == 0:
+    print('Metodo "%s" ya declarado' % (scope))
 
 def p_decVarStar_1(t):
   '''decVarStar   : decVar decVarStar
@@ -109,17 +126,9 @@ def p_defScope_1(t):
   global scope
   scope = t[-1]
   global bClass
-  if bClass:
 
-    if classTab.get(className, {}).get("methods", {}) == {}:
-      classTab[className]["methods"] = {}
-
-    if classTab.get(className, {}).get("methods", {}).get(scope, {})== {}:
-      classTab[className]["methods"][scope]={}
-    classTab[className]["methods"][scope]["type"] = t[-2]
-  else:
-    varTab[scope] = {}
-    varTab[scope]["type"] = t[-2]
+  if dictionaryFunction.insertFunction(scope, typeConv.convert(t[-2])) == 0:
+    print('Funcion "%s" ya declarada' % (scope))
 
 def p_main_1(t):
   '''main   : PUBLIC STAND JOJO defScope PARA PARC body'''
@@ -158,29 +167,17 @@ def p_funcVarTab_1(t):
   tipo = t[-2]
   global scope
   global bClass
-  if variable not in varTab.get(scope, {}).get("vars", {}) and not bClass:
-    if varTab.get(scope, {}).get("vars", {}) == {}:
-      
-      varTab[scope]["vars"] = {}
-    varTab[scope]["vars"][variable]  = tipo
-    if varTab.get(scope, {}).get("param", {}) == {}:
-      varTab[scope]["param"] = {}
-      varTab[scope]["param"] = [tipo]
-    else:
-      varTab[scope]["param"].append(tipo)
-  else:
-    if variable not in classTab.get(className, {}).get("methods", {}).get(scope, {}).get("vars", {}) and bClass:
-      if classTab.get(className, {}).get("methods", {}).get(scope, {}).get("vars", {}) == {}:
-        classTab[className]["methods"][scope]["vars"] = {}
-      classTab[className]["methods"][scope]["vars"][variable] = tipo
-      if classTab.get(className, {}).get("methods", {}).get(scope, {}).get("param", {}) == {}:
-        classTab[className]["methods"][scope]["param"] = {}
-        classTab[className]["methods"][scope]["param"] = [tipo]
-      else:
-        classTab[className]["methods"][scope]["param"].append(tipo)
 
-    else:
+  tipoC = typeConv.convert(tipo)
+
+  if bClass:
+    if dictionaryClass.insertVar(className, scope, variable, tipoC) == 0:
       print('Variable "%s" ya existe' % (variable))
+    dictionaryClass.insertParam(className, scope, tipoC)
+  else:
+    if dictionaryFunction.insertVar(scope, variable, tipoC) == 0:
+      print('Variable "%s" ya existe' % (variable))
+    dictionaryFunction.insertParam(scope, tipoC)
 
 def p_ref_1(t):
   ''' ref : REF
@@ -204,22 +201,20 @@ def p_decVar2_1(t):
   global scope
   global tipo
   global bClass
-  if variable not in varTab.get(scope, {}).get("vars", {}) and not bClass:
-    if varTab.get(scope, {}).get("vars", {}) == {}:
-      varTab[scope]["vars"] = {}
-    varTab[scope]["vars"][variable]  = tipo
-  else:
-    if variable not in classTab.get(className, {}).get("vars", {}) and bClass and not bFunc:
-      if classTab.get(className, {}).get("vars", {}) == {}:
-        classTab[className]["vars"] = {}
-      classTab[className]["vars"][variable] = tipo
-    else:
-      if variable not in classTab.get(className, {}).get("methods", {}).get(scope, {}).get("vars", {}) and bClass and bFunc:
-        if classTab.get(className, {}).get("methods", {}).get(scope, {}).get("vars", {}) == {}:
-          classTab[className]["methods"][scope]["vars"] = {}
-        classTab[className]["methods"][scope]["vars"][variable] = tipo
-      else:
+
+  tipoC = typeConv.convert(tipo)
+
+  if bClass:
+    if scope == "_Atributes":
+      if dictionaryClass.insertAtribute(className, variable, tipoC) == 0:
         print('Variable "%s" ya existe' % (variable))
+    else:
+      if dictionaryClass.insertVar(className, scope, variable, tipoC) == 0:
+        print('Variable "%s" ya existe' % (variable))
+  else:
+    if dictionaryFunction.insertVar(scope, variable, tipoC) == 0:
+      print('Variable "%s" ya existe' % (variable))
+        
 
 def p_decVar2Star_1(t):
   '''decVar2Star  : DOT ID corchetesPosCte decVar2Star
@@ -422,7 +417,7 @@ if __name__ == '__main__':
 
       print("Compilacion Finalizada")
 
-      print (varTab)
+      print (dictionaryClass.classes)
       print ("AQUI")
       print (classTab)
 
