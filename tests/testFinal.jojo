@@ -79,6 +79,17 @@ func real min(real v1, real v2) {
 	zadust v2;
 }
 
+func int trabajaTodo() {
+	@@@
+		chefe c;
+	@@@
+
+
+
+	c.chefesoide = 5;
+	zadust c.chefesoide;
+}
+
 
 
 public stand jojo() {
@@ -89,6 +100,7 @@ public stand jojo() {
 		bool arr[5];
 		int ind;
 	@@@
+	int v2;
 
 	ind = 0;
 	v5 = new chefe();

@@ -128,6 +128,8 @@ def p_defScope_1(t):
   global bClass
 
   if dictionaryFunction.insertFunction(scope, typeConv.convert(t[-2])) == 0:
+    print('"%s"' % (bClass))
+    print('"%s"' % (t[-2]) )
     print('Funcion "%s" ya declarada' % (scope))
 
 def p_main_1(t):
@@ -387,9 +389,9 @@ def p_type_1(t):
           | STRING'''
   t[0]=t[1]
 
-#def p_error(t):
-#    print "Illegal character '%s'" % t.value[0]
-#    print(t.lexer.lineno)
+def p_error(t):
+    print ("Illegal token '%s' at line %s" % (t.value, t.lexer.lineno))
+    sys.exit()
 
 
 varTab = {}
