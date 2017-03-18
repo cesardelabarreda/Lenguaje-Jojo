@@ -63,4 +63,9 @@ class DicFunction:
             return 0
         return self.functions[functionId].insertParam(paramType)
 
+    def __repr__(self):
+        return "%s" %(str(self.functions))
+
+    def __str__(self):
+        return "%s" %(str(self.functions))
     

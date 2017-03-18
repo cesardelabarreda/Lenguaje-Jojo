@@ -89,3 +89,8 @@ class Class:
         self.atributes[atrId] = atr
         return 1
     
+    def __repr__(self):
+        return "Atributes: %s\n\nMethods: %s\n\nClasses: %s\n\n\n\n" %(str(self.atributes), str(self.methods), str(self.classes))
+
+    def __str__(self):
+        return "Atributes: %s\n\nMethods: %s\n\nClasses: %s\n\n\n\n" %(str(self.atributes), str(self.methods), str(self.classes))

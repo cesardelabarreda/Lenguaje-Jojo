@@ -6,5 +6,8 @@ class Atribute(Variable):
 		Variable.__init__(self, atrTipo)
 		self.encap = atrEncap
 
+	def __repr__(self):
+		return "Tipo-%s Encap:-%s" %(str(self.tipo), str(self.encap))
+
 	def __str__(self):
-		return "%s %s" %(str(self.tipo), str(self.scope))
+		return "Tipo-%s Encap:-%s" %(str(self.tipo), str(self.encap))

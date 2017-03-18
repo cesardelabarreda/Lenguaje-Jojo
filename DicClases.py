@@ -71,3 +71,8 @@ class DicClass:
             return 0
         return self.classes[classId].insertAtribute(atrId, atrType)
     
+    def __repr__(self):
+        return "%s" %(str(self.classes))
+
+    def __str__(self):
+        return "%s" %(str(self.classes))

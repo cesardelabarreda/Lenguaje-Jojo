@@ -49,4 +49,10 @@ class Function:
 		self.params.append(paramType)
 		return 1
 
+	def __repr__(self):
+		return "Vars: %s\nParams: %s\nretType: %s\n\n" %(str(self.vars), str(self.params), str(self.retType))
+
+	def __str__(self):
+		return "Vars: %s\nParams: %s\nretType: %s\n\n" %(str(self.vars), str(self.params), str(self.retType))
+
 	
