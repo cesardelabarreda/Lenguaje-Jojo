@@ -419,9 +419,10 @@ if __name__ == '__main__':
 
       print("Compilacion Finalizada")
 
-      print (dictionaryClass.classes)
+      dictionaryClass
+      print (dictionaryClass)
       print ("AQUI")
-      print (classTab)
+      print (dictionaryFunction)
 
     except EOFError:
         print(EOFError)

@@ -100,7 +100,6 @@ public stand jojo() {
 		bool arr[5];
 		int ind;
 	@@@
-	int v2;
 
 	ind = 0;
 	v5 = new chefe();
