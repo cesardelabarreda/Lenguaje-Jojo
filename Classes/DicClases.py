@@ -24,7 +24,7 @@ class DicClass:
         if self.classes[classId].existsAtribute(atributeId):
             return 1
        
-        for clas in self.classes[classId]:
+        for clas in self.classes[classId].classes:
             if self.existsAtribute(clas, atributeId) == 1:
                 return 1
         return 0
@@ -35,7 +35,7 @@ class DicClass:
 
         if self.classes[classId].existsVariable(methodId, varId):
             return 1
-        return self.existsAtribute(classId, atributeId)
+        return self.existsAtribute(classId, varId)
 
     def insertHamon(self, classId, classHamon):
         if self.existsClass(classId) == 0:

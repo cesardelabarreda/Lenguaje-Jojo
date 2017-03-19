@@ -6,6 +6,7 @@ from Classes.DicFunc import DicFunction
 from Classes.CuboSemantico import TypeToInt
 from Classes.CuboSemantico import SemanticCube
 from Classes.Error import Error
+from Classes.Stack import Stack
 
 dictionaryClass = DicClass()
 dictionaryFunction = DicFunction()
@@ -225,6 +226,19 @@ def p_decVar2Star_1(t):
 
 def p_var_1(t):
   '''var  : ID corchetesPosExp varDotPos'''
+  
+
+  pID.push(t[1])
+  if bClass:
+    vartype = dictionaryClass.getVariableType(sClassName, sScope, t[1])
+    if vartype != -1:
+      pTypes.push(vartype)
+        
+  else:
+    if dictionaryFunction.existsFunction(sScope):
+      if dictionaryFunction.existsVar(sScope, t[1]) == 1:
+        pTypes.push(dictionaryFunction.functions[sScope].vars[t[1]].tipo)   
+
 
 def p_varDotPos_1(t):
   '''varDotPos  : DOT var
@@ -240,6 +254,15 @@ def p_corchetesPosCte_1(t):
 
 def p_funCall_1(t):
   '''funCall  : ID corchetesPosExp funCallStar PARA funCallParams PARC'''
+  
+  pID.push(t[1])
+  if bClass:
+    method = dictionaryClass.classes[sClassName].existsMethod(sScope)
+    if method != None:
+      pTypes.push(method.retType)
+  else:
+    if dictionaryFunction.existsFunction(sScope):
+      pTypes.push(dictionaryFunction.functions[sScope].retType)
 
 def p_funCallStar_1(t):
   '''funCallStar  : DOT ID corchetesPosExp funCallStar
@@ -265,7 +288,22 @@ def p_conditionElsePos_1(t):
                         | LLAVEA actionStar LLAVEC'''
 
 def p_assign_1(t):
-  '''assign   : var EQUAL assignExpID SEMICOLON'''
+  '''assign   : var equal assignExpID SEMICOLON'''
+  ro = pID.pop()
+  rt = pTypes.pop()
+  lo = pID.pop()
+  lt = pTypes.pop()
+  oper = typeConv.convert(pOper.pop())
+  res_type = semanticCube.exists(lt,rt,oper)
+  global iTempCont
+  if res_type != -1:
+    aCuadr.append([oper, ro, '-', lo])
+  else:
+    print "Type missmatch error"
+
+def p_equal_1(t):
+  '''equal : EQUAL'''
+  pOper.push(t[1])
 
 def p_assignExpID_1(t):
   '''assignExpID  : expression
@@ -284,6 +322,9 @@ def p_while_1(t):
 def p_return_1(t):
   '''return   : ZADUST expressionPos SEMICOLON'''
 
+  aCuadr.append(['RETURN', pID.pop(),'-','-'])
+  pTypes.pop() 
+
 def p_expressionPos_1(t):
   '''expressionPos  : expression
                     | '''
@@ -292,15 +333,39 @@ def p_expression_1(t):
   '''expression   : expressionAND expressionORStar'''
 
 def p_expressionORStar_1(t):
-  '''expressionORStar   : OR expressionAND expressionORStar
+  '''expressionORStar   : or expressionAND checkOR expressionORStar
                         | '''
+
+def p_checkOR_1(t):
+  '''checkOR : '''
+  if pOper.top() == '||':
+    print 'Aqui'
+    asociIzq()
+
+
+def p_or_1(t):
+  '''or : OR'''
+  pOper.push(t[1])                        
 
 def p_expressionAND_1(t):
   '''expressionAND  : expressionNOT expressionANDStar'''
 
+
 def p_expressionANDStar_1(t):
-  '''expressionANDStar  : AND expressionNOT expressionANDStar
+  '''expressionANDStar  : and expressionNOT checkAND expressionANDStar
                         | '''
+
+def p_checkAND_1(t):
+  '''checkAND : '''
+  if pOper.top() == '&&':
+    print 'Aqui'
+    asociIzq()
+
+
+def p_and_1(t):
+  '''and : AND'''
+  pOper.push(t[1])  
+
 
 def p_expressionNOT_1(t):
   '''expressionNOT  : simbolExclamationStar expressionCompare'''
@@ -310,26 +375,67 @@ def p_expressionCompare_1(t):
   '''expressionCompare  : expressionAS expressionComparePos'''
 
 def p_expressionComparePos_1(t):
-  '''expressionComparePos : simbolCompare expressionAS
-                          | '''
+  '''expressionComparePos : simbolCompare expressionAS checkCompare
+                          | '''   
+
+def p_checkCompare_1(t):
+  '''checkCompare : '''
+  relOper = {'<','<=','>','>=','==', '!='}
+  if pOper.top() in relOper:
+    print 'Aqui'
+    print pOper.items
+    print pID.items
+    print pTypes.items
+    asociIzq()
+
 
 def p_expressionAS_1(t):
   '''expressionAS   : expressionMDM expressionASStar'''
 
 def p_expressionASStar_1(t):
-  '''expressionASStar : simbolAS expressionMDM expressionASStar
+  '''expressionASStar : simbolAS expressionMDM checkAS expressionASStar
                       | '''
+
+def p_checkAS_1(t):
+  '''checkAS  : '''
+  if pOper.top() == '+' or pOper.top() == '-':
+    print 'Aqui'
+    print pOper.items
+    asociIzq()
+
+
+
 
 def p_expressionMDM_1(t):
   '''expressionMDM  : expressionL expressionMDMStar'''
 
 def p_expressionMDMStar_1(t):
-  '''expressionMDMStar  : simbolMDM expressionL expressionMDMStar
+  '''expressionMDMStar  : simbolMDM expressionL checkMDM expressionMDMStar
                         | '''
 
+
+def p_checkMDM_1(t):
+  '''checkMDM  : '''
+  if pOper.top() == '*' or pOper.top() == '/' or pOper.top() == '%':
+    print 'Aqui'
+    print pOper.items
+    asociIzq()
+
+
 def p_expresionL_1(t):
-  '''expressionL  : PARA expression PARC
+  '''expressionL  : para expression parc
                   | simbolASPoss value'''
+
+
+def p_para_1(t):
+  '''para  : PARA '''
+  pOper.push('(')
+
+def p_parc_1(t):
+  '''parc  : PARC'''
+  while pOper.top()!='(':
+    asociIzq()
+  pOper.pop()
 
 
 def p_simbolCompare_1(t):
@@ -339,23 +445,48 @@ def p_simbolCompare_1(t):
                     | GREATEREQUALS
                     | EQUALS
                     | NOTEQUALS '''
+  pOper.push(t[1])
 
 def p_simbolExclamationStar_1(t):
-  '''simbolExclamationStar  : NOT simbolExclamationStar
+  '''simbolExclamationStar  : not simbolExclamationStar checkNOT
                             | '''
+
+# Falta checar el Not en cubo semantico
+def p_checkNOT_1(t):
+  '''checkNOT : '''
+  if pOper.top() == '!':
+    ro = pID.pop()
+    rt = pTypes.pop()
+    oper = typeConv.convert(pOper.pop())
+#    res_type = semanticCube.exists(rt,oper)
+#   if res_type != -1:
+    aCuadr.append([oper, ro, '-', ro])
+#    else:
+#      print "Type missmatch error"
+
+
+def p_not_1(t):
+  '''not : NOT'''
+  pOper.push(t[1])  
+
 
 def p_simbolMDM_1(t):
   '''simbolMDM  : MULT
                 | DIV
                 | MOD '''
+  pOper.push(t[1])
+  print t[1]
 
 def p_simbolAS_1(t):
   '''simbolAS   : ADD
                 | SUBS'''
+  pOper.push(t[1])
+  print t[1]
 
 def p_simbolASPoss_1(t):
   '''simbolASPoss : simbolAS
                   | '''
+
 
 def p_value_1(t):
   '''value  : var 
@@ -363,10 +494,36 @@ def p_value_1(t):
             | const'''
 
 def p_const_1(t):
-  '''const  : CTE_INT 
-            | CTE_REAL 
-            | CTE_STR
-            | CTE_BOOL'''
+  '''const  : CTE_INT cte_int 
+            | CTE_REAL cte_real
+            | CTE_STR cte_str
+            | CTE_BOOL cte_bool'''
+  t[0] = t[1]
+
+def p_cte_int_1(t):
+  '''cte_int  : '''
+
+  pID.push(t[-1])
+  pTypes.push(0)
+
+def p_cte_real_1(t):
+  '''cte_real  : '''
+
+  pID.push(t[-1])
+  pTypes.push(1)
+
+def p_cte_str_1(t):
+  '''cte_str  : '''
+
+  pID.push(t[-1])
+  pTypes.push(3)
+
+def p_cte_bool_1(t):
+  '''cte_bool  : '''
+
+  pID.push(t[-1])
+  pTypes.push(2)
+
 
 def p_accessPos_1(t):
   '''accessPos  : access 
@@ -413,6 +570,25 @@ def p_error(t):
     errorHandling.printError(0, sError, t.lexer.lineno)
     sys.exit()
 
+def asociIzq():
+    ro = pID.pop()
+    rt = pTypes.pop()
+    lo = pID.pop()
+    lt = pTypes.pop()
+    oper = typeConv.convert(pOper.pop())
+    res_type = semanticCube.exists(lt,rt,oper)
+    global iTempCont
+    if res_type != -1:
+      iTempCont +=1
+      result = iTempCont
+      aCuadr.append([oper, lo, ro, result])
+      pID.push(result)
+      pTypes.push(res_type)
+    else:
+      print "Type mismatch error"
+
+
+
 
 sTipo = ""
 sScope = ""
@@ -421,6 +597,21 @@ sClassName = ""
 bClass = False
 bFunc = False
 
+global aCuadr
+global pSaltos
+global pOper
+global pTypes
+global pID
+global iTempCont
+
+pSaltos = Stack()
+pOper = Stack()
+pTypes = Stack()
+pID  = Stack()
+
+aCuadr  = []
+
+iTempCont = 0
 
 parser = yacc.yacc()
 
@@ -438,6 +629,10 @@ if __name__ == '__main__':
 
       #print (dictionaryClass)
       #print (dictionaryFunction)
+      print aCuadr
+      print pOper.items
+      print pID.items
+      print pTypes.items
 
     except EOFError:
         print(EOFError)

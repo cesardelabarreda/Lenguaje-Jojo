@@ -53,7 +53,7 @@ class Class:
 
     def existsVariable(self, methodId, varId):
         if self.existsMethod(methodId):
-            if self.methods[methods].existsVar(varId):
+            if self.methods[methodId].existsVar(varId):
                 return 1
         return self.existsAtribute(varId)
 

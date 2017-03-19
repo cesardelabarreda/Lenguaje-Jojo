@@ -10,6 +10,7 @@ class Error:
 			"Redefinicion de Metodo ya existente.", 		 # 4
 			"Redefinicion de Clase ya existente.",		   # 5	
       "Se intento heredar de Clase no declarada.", # 6
+      "Error sintactico, Tipo de datos no compatibles", #7
   	]
     
 

@@ -209,5 +209,6 @@ class SemanticCube:
   def exists(self, opLeft, opRight, op):
     if opLeft in self.cube:
       if op in self.cube[opLeft]:
-        return opRight in self.cube[opLeft][op]
-    return False
+        if opRight in self.cube[opLeft][op]:
+            return self.cube[opLeft][op][opRight]
+    return -1
