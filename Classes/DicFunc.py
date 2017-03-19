@@ -63,6 +63,11 @@ class DicFunction:
             return 0
         return self.functions[functionId].insertParam(varId, paramType)
 
+    def getVariableType(self, functionId, varId):
+        if self.existsFunction(functionId) == 0:
+            return -1
+        return self.functions[functionId].getVariableType(varId)
+
     def __repr__(self):
         return "%s" %(str(self.functions))
 

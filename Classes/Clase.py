@@ -51,10 +51,14 @@ class Class:
     def existsAtribute(self, atributeId):
         return atributeId in self.atributes
 
-    def existsVariable(self, methodId, varId):
+    def existsMethodVariable(self, methodId, varId):
         if self.existsMethod(methodId):
-            if self.methods[methods].existsVar(varId):
-                return 1
+            return self.methods[methodId].existsVar(varId)
+        return 0
+
+    def existsVariable(self, methodId, varId):
+        if self.existsMethodVariable(methodId, varId):
+            return 1
         return self.existsAtribute(varId)
 
     def insertHamon(self, classHamon):
@@ -89,6 +93,16 @@ class Class:
         self.atributes[atrId] = atr
         return 1
     
+    def getAtributeType(self, atributeId):
+        if self.existsAtribute(atributeId) == 0:
+            return -1
+        return self.atributes[atributeId].tipo
+
+    def getVarType(self, methodId, varId):
+        if self.existsMethod(methodId) == 0:
+            return -1
+        return self.methods[methodId].getVariableType(varId)
+
     def __repr__(self):
         return "Atributes: %s\n\nMethods: %s\n\nClasses: %s\n\n\n\n" %(str(self.atributes), str(self.methods), str(self.classes))
 
