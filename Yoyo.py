@@ -257,9 +257,9 @@ def p_funCall_1(t):
   
   pID.push(t[1])
   if bClass:
-    method = dictionaryClass.classes[sClassName].existsMethod(sScope)
-    if method != None:
-      pTypes.push(method.retType)
+    method = dictionaryClass.classes[sClassName].existsMethod(t[1])
+    if method != 0:
+      pTypes.push(dictionaryClass.classes[sClassName].methods[t[1]].retType)
   else:
     if dictionaryFunction.existsFunction(sScope):
       pTypes.push(dictionaryFunction.functions[sScope].retType)
@@ -289,6 +289,7 @@ def p_conditionElsePos_1(t):
 
 def p_assign_1(t):
   '''assign   : var equal assignExpID SEMICOLON'''
+
   ro = pID.pop()
   rt = pTypes.pop()
   lo = pID.pop()
@@ -299,7 +300,8 @@ def p_assign_1(t):
   if res_type != -1:
     aCuadr.append([oper, ro, '-', lo])
   else:
-    print "Type missmatch error"
+    print "Type mismatch error"
+    sys.exit()
 
 def p_equal_1(t):
   '''equal : EQUAL'''
@@ -339,7 +341,6 @@ def p_expressionORStar_1(t):
 def p_checkOR_1(t):
   '''checkOR : '''
   if pOper.top() == '||':
-    print 'Aqui'
     asociIzq()
 
 
@@ -358,7 +359,6 @@ def p_expressionANDStar_1(t):
 def p_checkAND_1(t):
   '''checkAND : '''
   if pOper.top() == '&&':
-    print 'Aqui'
     asociIzq()
 
 
@@ -382,10 +382,6 @@ def p_checkCompare_1(t):
   '''checkCompare : '''
   relOper = {'<','<=','>','>=','==', '!='}
   if pOper.top() in relOper:
-    print 'Aqui'
-    print pOper.items
-    print pID.items
-    print pTypes.items
     asociIzq()
 
 
@@ -399,8 +395,6 @@ def p_expressionASStar_1(t):
 def p_checkAS_1(t):
   '''checkAS  : '''
   if pOper.top() == '+' or pOper.top() == '-':
-    print 'Aqui'
-    print pOper.items
     asociIzq()
 
 
@@ -417,8 +411,6 @@ def p_expressionMDMStar_1(t):
 def p_checkMDM_1(t):
   '''checkMDM  : '''
   if pOper.top() == '*' or pOper.top() == '/' or pOper.top() == '%':
-    print 'Aqui'
-    print pOper.items
     asociIzq()
 
 
@@ -475,13 +467,11 @@ def p_simbolMDM_1(t):
                 | DIV
                 | MOD '''
   pOper.push(t[1])
-  print t[1]
 
 def p_simbolAS_1(t):
   '''simbolAS   : ADD
                 | SUBS'''
   pOper.push(t[1])
-  print t[1]
 
 def p_simbolASPoss_1(t):
   '''simbolASPoss : simbolAS
@@ -586,6 +576,7 @@ def asociIzq():
       pTypes.push(res_type)
     else:
       print "Type mismatch error"
+      sys.exit()
 
 
 

@@ -46,24 +46,21 @@ class Class:
         return classHamon in self.classes
 
     def existsMethod(self, methodId):
-        return methodId in self.methods
+        if methodId in self.methods:
+            return methodId in self.methods
+        return 0
 
     def existsAtribute(self, atributeId):
         return atributeId in self.atributes
 
     def existsMethodVariable(self, methodId, varId):
         if self.existsMethod(methodId):
-<<<<<<< HEAD
-            if self.methods[methodId].existsVar(varId):
-                return 1
-=======
             return self.methods[methodId].existsVar(varId)
         return 0
 
     def existsVariable(self, methodId, varId):
         if self.existsMethodVariable(methodId, varId):
             return 1
->>>>>>> refs/remotes/origin/Googles
         return self.existsAtribute(varId)
 
     def insertHamon(self, classHamon):

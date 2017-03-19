@@ -44,7 +44,7 @@ class DicClass:
         if self.classes[classId].existsAtribute(atributeId):
             return self.classes[classId].getAtributeType(atributeId)
        
-        for clas in self.classes[classId]:
+        for clas in self.classes[classId].classes:
             if self.existsAtribute(clas, atributeId) == 1:
                 return 1
         return 0
