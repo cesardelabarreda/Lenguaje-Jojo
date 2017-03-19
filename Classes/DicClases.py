@@ -37,6 +37,28 @@ class DicClass:
             return 1
         return self.existsAtribute(classId, varId)
 
+    def getAtributeType(self, classId, atributeId):
+        if self.existsClass(classId) == 0:
+            return 0
+
+        if self.classes[classId].existsAtribute(atributeId):
+            return self.classes[classId].getAtributeType(atributeId)
+       
+        for clas in self.classes[classId]:
+            if self.existsAtribute(clas, atributeId) == 1:
+                return 1
+        return 0
+
+
+    def getVariableType(self, classId, methodId, varId):
+        if self.existsClass(classId) == 0:
+            return -1
+
+        if self.classes[classId].existsMethodVariable(methodId, varId):
+            return self.classes[classId].getVarType(methodId, varId)
+        return self.getAtributeType(classId, varId)
+
+
     def insertHamon(self, classId, classHamon):
         if self.existsClass(classId) == 0:
             return 0

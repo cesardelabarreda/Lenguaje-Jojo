@@ -52,6 +52,11 @@ class Function:
 		self.params.append(paramType)
 		return 1
 
+	def getVariableType(self, varId):
+		if self.existsVar(varId) == 0:
+			return -1
+		return self.vars[varId].tipo
+
 	def __repr__(self):
 		return "Vars: %s\nParams: %s\nretType: %s\n\n" %(str(self.vars), str(self.params), str(self.retType))
 
