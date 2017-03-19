@@ -51,7 +51,7 @@ class DicClass:
         clas = Class()
         self.classes[classId] = clas
 
-    def insertMethod(self, classId, methodId, methodRetType = 0, methodEncap = 0):
+    def insertMethod(self, classId, methodId, methodRetType, methodEncap):
         if self.existsClass(classId) == 0:
             return 0
         return self.classes[classId].insertMethod(methodId, methodRetType, methodEncap)
@@ -61,15 +61,15 @@ class DicClass:
             return 0
         return self.classes[classId].insertVar(methodId, varId, varType)
 
-    def insertParam(self, classId, methodId, paramType):
+    def insertParam(self, classId, methodId, varId, paramType):
         if self.existsClass(classId) == 0:
             return 0
-        return self.classes[classId].insertParam(methodId, paramType)
+        return self.classes[classId].insertParam(methodId, varId, paramType)
 
-    def insertAtribute(self, classId, atrId, atrType):
+    def insertAtribute(self, classId, atrId, atrType, atrEncap):
         if self.existsClass(classId) == 0:
             return 0
-        return self.classes[classId].insertAtribute(atrId, atrType)
+        return self.classes[classId].insertAtribute(atrId, atrType, atrEncap)
     
     def __repr__(self):
         return "%s" %(str(self.classes))

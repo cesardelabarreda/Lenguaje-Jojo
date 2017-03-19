@@ -1,6 +1,6 @@
 
 class Variable:
-	def __init__(self, varTipo = 0):
+	def __init__(self, varTipo ):
 		self.tipo = varTipo
 
 	def __repr__(self):

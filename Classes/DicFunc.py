@@ -3,7 +3,7 @@ from Funcion import Function
 
 class DicFunction:
     def __init__(self):
-        f = Function()
+        f = Function(4)
         self.functions = {
             "_Global" : f,
             }
@@ -45,7 +45,7 @@ class DicFunction:
             return 1
         return self.functions["_Global"].existsVar(varId)
 
-    def insertFunction(self, functionId, functionRetType = 0):
+    def insertFunction(self, functionId, functionRetType):
         if self.existsFunction(functionId):
             return 0
 
@@ -58,10 +58,10 @@ class DicFunction:
             return 0
         return self.functions[functionId].insertVar(varId, varType)
 
-    def insertParam(self, functionId, paramType):
+    def insertParam(self, functionId, varId, paramType):
         if self.existsFunction(functionId) == 0:
             return 0
-        return self.functions[functionId].insertParam(paramType)
+        return self.functions[functionId].insertParam(varId, paramType)
 
     def __repr__(self):
         return "%s" %(str(self.functions))

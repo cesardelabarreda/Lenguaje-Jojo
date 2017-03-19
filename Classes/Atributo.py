@@ -2,7 +2,7 @@
 from Variable import Variable
 
 class Atribute(Variable):
-	def __init__(self, atrTipo = 0, atrEncap = 0):
+	def __init__(self, atrTipo, atrEncap):
 		Variable.__init__(self, atrTipo)
 		self.encap = atrEncap
 

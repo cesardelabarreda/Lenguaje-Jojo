@@ -63,7 +63,7 @@ class Class:
         self.classes.append(classHamon)
         return 1
 
-    def insertMethod(self, methodId, methodRetType = 0, methodEncap = 0):
+    def insertMethod(self, methodId, methodRetType, methodEncap):
         if self.existsMethod(methodId):
             return 0
 
@@ -76,12 +76,12 @@ class Class:
             return 0
         return self.methods[methodId].insertVar(varId, varType)
 
-    def insertParam(self, methodId, paramType = 0):
+    def insertParam(self, methodId, varId, paramType):
         if self.existsMethod(methodId) == 0:
             return 0
-        return self.methods[methodId].insertParam(paramType)
+        return self.methods[methodId].insertParam(varId, paramType)
 
-    def insertAtribute(self, atrId, atrType = 0, atrEncap = 0):
+    def insertAtribute(self, atrId, atrType, atrEncap):
         if self.existsAtribute(atrId):
             return 0
 

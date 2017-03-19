@@ -1,7 +1,7 @@
 from Variable import Variable
 
 class Function:
-	def __init__(self, funcRetType = 0):
+	def __init__(self, funcRetType):
 		self.vars = {}
 		self.params = []
 		self.retType = funcRetType
@@ -37,7 +37,7 @@ class Function:
 	def existsVar(self, varId):
 		return varId in self.vars
 
-	def insertVar(self, varId, varType = 0):
+	def insertVar(self, varId, varType):
 		if self.existsVar(varId):
 			return 0
 
@@ -45,7 +45,10 @@ class Function:
 		self.vars[varId] = var
 		return 1
 
-	def insertParam(self, paramType):
+	def insertParam(self, varId, paramType):
+		if self.insertVar(varId, paramType) == 0:
+			return 0
+
 		self.params.append(paramType)
 		return 1
 
