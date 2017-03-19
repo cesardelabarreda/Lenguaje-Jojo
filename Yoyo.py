@@ -1,13 +1,18 @@
 import sys
 import ply.yacc as yacc
 from Llollo import tokens
-from DicClases import DicClass
-from DicFunc import DicFunction
-from TypesToInts import TypeToInt
+from Classes.DicClases import DicClass
+from Classes.DicFunc import DicFunction
+from Classes.CuboSemantico import TypeToInt
+from Classes.CuboSemantico import SemanticCube
+from Classes.Error import Error
 
 dictionaryClass = DicClass()
 dictionaryFunction = DicFunction()
 typeConv = TypeToInt()
+semanticCube = SemanticCube()
+errorHandling = Error()
+
 # Reglas gramaticales
 
 def p_programa_1(t):
@@ -19,8 +24,8 @@ def p_decVarPos_1(t):
 
 def p_globalScope_1(t):
   '''globalScope : '''
-  global scope
-  scope = "_Global"
+  global sScope
+  sScope = "_Global"
 
 def p_classStar_1(t):
   '''classStar  : classOn class classStar
@@ -41,11 +46,12 @@ def p_class_1(t):
 
 def p_scopeClass_1(t):
   ''' scopeClass : '''
-  global className
-  className = t[-1]
+  global sClassName
+  sClassName = t[-1]
 
-  if dictionaryClass.insertClass(className) == 0:
-    print('Clase "%s" ya existente' % (className))
+  if dictionaryClass.insertClass(sClassName) == 0:
+    sError = "Clase: " + sClassName
+    errorHandling.printError(5, sError, t.lexer.lineno)
 
 def p_extends_1(t):
   '''extends  : HAMON ID scopeHamon 
@@ -53,13 +59,12 @@ def p_extends_1(t):
 
 def p_scopeHamon_1(t):
   ''' scopeHamon : '''
-  hamon = t[-2]
   herencia = t[-1]
-  global className
+  global sClassName
 
-  if dictionaryClass.insertHamon(className, herencia) == 0:
-    print('Clase "%s" no declarada' % (herencia))
-
+  if dictionaryClass.insertHamon(sClassName, herencia) == 0:
+    sError = sClassName + " intenta heredar de " + herencia
+    errorHandling.printError(6, sError, t.lexer.lineno)
 
 def p_bodyclass_1(t):
   '''bodyclass  : LLAVEA decVarClassPos funcOn functionClassStar funcOff LLAVEC'''
@@ -74,16 +79,14 @@ def p_funcOff_1(t):
   global bFunc
   bFunc = False
 
-
-
 def p_decVarClassPos_1(t):
   '''decVarClassPos   : VARIABLES defScopeVarClass decVarclass decVarClassStar VARIABLES
                       | '''
 
 def p_defScopeVarClass_1(t):
   '''defScopeVarClass   : '''
-  global scope
-  scope = "_Atributes"
+  global sScope
+  sScope = "_Atributes"
 
 def p_decVarClassStar_1(t):
   '''decVarClassStar  : decVarclass decVarClassStar
@@ -94,16 +97,16 @@ def p_functionClassStar_1(t):
                         | '''
 
 def p_functionClass_1(t):
-  '''functionClass  : FUNC access typeReturn ID defScopeClass parameters body'''
+  '''functionClass  : FUNC accessPos typeReturn ID defScopeClass parameters body'''
 
 def p_defScopeClass_1(t):
   '''defScopeClass : '''
-  global scope
-  scope = t[-1]
-  global bClass
+  global sScope
+  sScope = t[-1]
 
-  if dictionaryClass.insertMethod(className, scope, typeConv.convert(t[-2]), typeConv.convert(t[-3])) == 0:
-    print('Metodo "%s" ya declarado' % (scope))
+  if dictionaryClass.insertMethod(sClassName, sScope, typeConv.convert(t[-2]), typeConv.convert(t[-3])) == 0:
+    sError = "Metodo: " + sScope
+    errorHandling.printError(4, sError, t.lexer.lineno)
 
 def p_decVarStar_1(t):
   '''decVarStar   : decVar decVarStar
@@ -114,7 +117,7 @@ def p_functionStar_1(t):
                     | '''
 
 def p_decVarclass_1(t):
-  '''decVarclass  : access decVar'''
+  '''decVarclass  : accessPos decVar'''
 
 
 def p_function_1(t):
@@ -123,14 +126,12 @@ def p_function_1(t):
 
 def p_defScope_1(t):
   '''defScope : '''
-  global scope
-  scope = t[-1]
-  global bClass
+  global sScope
+  sScope = t[-1]
 
-  if dictionaryFunction.insertFunction(scope, typeConv.convert(t[-2])) == 0:
-    print('"%s"' % (bClass))
-    print('"%s"' % (t[-2]) )
-    print('Funcion "%s" ya declarada' % (scope))
+  if dictionaryFunction.insertFunction(sScope, typeConv.convert(t[-2])) == 0:
+    sError = "Funcion: " + sScope
+    errorHandling.printError(3, sError, t.lexer.lineno)
 
 def p_main_1(t):
   '''main   : PUBLIC STAND JOJO defScope PARA PARC body'''
@@ -165,33 +166,28 @@ def p_parametersStar_1(t):
 def p_funcVarTab_1(t):
   '''funVarTab : '''
   variable = t[-1]
-  global tipo
-  tipo = t[-2]
-  global scope
+  global sTipo
+  global sScope
   global bClass
 
-  tipoC = typeConv.convert(tipo)
+  iTipo = typeConv.convert(sTipo)
 
   if bClass:
-    if dictionaryClass.insertVar(className, scope, variable, tipoC) == 0:
-      print('Variable "%s" ya existe' % (variable))
-    dictionaryClass.insertParam(className, scope, tipoC)
+    if dictionaryClass.insertParam(sClassName, sScope, variable, iTipo) == 0:
+      sError = "Variable: " + variable
+      errorHandling.printError(2, sError, t.lexer.lineno)
   else:
-    if dictionaryFunction.insertVar(scope, variable, tipoC) == 0:
-      print('Variable "%s" ya existe' % (variable))
-    dictionaryFunction.insertParam(scope, tipoC)
+    if dictionaryFunction.insertParam(sScope, variable, iTipo) == 0:
+      sError = "Variable: " + variable
+      errorHandling.printError(2, sError, t.lexer.lineno)
+
 
 def p_ref_1(t):
   ''' ref : REF
           | '''
 
 def p_decVar_1(t):
-  '''decVar : typeDec tipoVar decVar2 decVarColonStar SEMICOLON'''
-
-def p_tipoVar_1(t):
-  '''tipoVar :  '''
-  global tipo
-  tipo = t[-1]
+  '''decVar : typeDec decVar2 decVarColonStar SEMICOLON'''
 
 def p_decVarColonStar_1(t):
   '''decVarColonStar  : COLON decVar2 decVarColonStar
@@ -200,22 +196,27 @@ def p_decVarColonStar_1(t):
 def p_decVar2_1(t):
   '''decVar2  : ID corchetesPosCte decVar2Star'''
   variable = t[1]
-  global scope
-  global tipo
+  global sAccess
+  global sScope
+  global sTipo
   global bClass
 
-  tipoC = typeConv.convert(tipo)
+  iTipo = typeConv.convert(sTipo)
+  iAccess = typeConv.convert(sAccess)
 
   if bClass:
-    if scope == "_Atributes":
-      if dictionaryClass.insertAtribute(className, variable, tipoC) == 0:
-        print('Variable "%s" ya existe' % (variable))
+    if sScope == "_Atributes":
+      if dictionaryClass.insertAtribute(sClassName, variable, iTipo, iAccess) == 0:
+        sError = "Atributo: " + variable
+        errorHandling.printError(1, sError, t.lexer.lineno)
     else:
-      if dictionaryClass.insertVar(className, scope, variable, tipoC) == 0:
-        print('Variable "%s" ya existe' % (variable))
+      if dictionaryClass.insertVar(sClassName, sScope, variable, iTipo) == 0:
+        sError = "Variable: " + variable
+        errorHandling.printError(2, sError, t.lexer.lineno)
   else:
-    if dictionaryFunction.insertVar(scope, variable, tipoC) == 0:
-      print('Variable "%s" ya existe' % (variable))
+    if dictionaryFunction.insertVar(sScope, variable, iTipo) == 0:
+      sError = "Variable: " + variable
+      errorHandling.printError(2, sError, t.lexer.lineno)
         
 
 def p_decVar2Star_1(t):
@@ -367,20 +368,36 @@ def p_const_1(t):
             | CTE_STR
             | CTE_BOOL'''
 
+def p_accessPos_1(t):
+  '''accessPos  : access 
+                | accessEmtpy'''
+
+def p_accessEmtpy_1(t):
+  '''accessEmtpy  : '''
+  global sAccess
+  sAccess = "public"
+
+
 def p_access_1(t):
   '''access : PUBLIC 
-            | PRIVATE
-            | '''
+            | PRIVATE'''
+  t[0]=t[1]
+  global sAccess
+  sAccess=t[0]
 
 def p_typeReturn_1(t):
   '''typeReturn   : typeDec
                   | STAND'''
   t[0]=t[1]
+  global sTipo
+  sTipo = t[0]
 
 def p_typeDec_1(t):
   '''typeDec  : type
               | ID'''
   t[0]=t[1]
+  global sTipo
+  sTipo = t[0]
 
 def p_type_1(t):
   '''type : INT 
@@ -388,21 +405,21 @@ def p_type_1(t):
           | BOOL 
           | STRING'''
   t[0]=t[1]
+  global sTipo
+  sTipo = t[0]
 
 def p_error(t):
-    print ("Illegal token '%s' at line %s" % (t.value, t.lexer.lineno))
+    sError = "Token: " + t.value
+    errorHandling.printError(0, sError, t.lexer.lineno)
     sys.exit()
 
 
-varTab = {}
-varTab["global"] = {}
-classTab = {}
-tipo = ""
-scope = ""
+sTipo = ""
+sScope = ""
+sAccess = ""
+sClassName = ""
 bClass = False
 bFunc = False
-classTab = {}
-className = ""
 
 
 parser = yacc.yacc()
@@ -419,10 +436,8 @@ if __name__ == '__main__':
 
       print("Compilacion Finalizada")
 
-      dictionaryClass
-      print (dictionaryClass)
-      print ("AQUI")
-      print (dictionaryFunction)
+      #print (dictionaryClass)
+      #print (dictionaryFunction)
 
     except EOFError:
         print(EOFError)
