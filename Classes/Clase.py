@@ -46,7 +46,9 @@ class Class:
         return classHamon in self.classes
 
     def existsMethod(self, methodId):
-        return methodId in self.methods
+        if methodId in self.methods:
+            return methodId in self.methods
+        return 0
 
     def existsAtribute(self, atributeId):
         return atributeId in self.atributes
