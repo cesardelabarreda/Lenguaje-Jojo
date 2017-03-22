@@ -28,12 +28,6 @@ class Function:
 		self.clearVars()
 		self.clearParams()
 
-	def deleteVar(self, varId):
-		if self.existsVar(varId) == 0:
-			return 0
-		del self.vars[varId]
-		return 1
-
 	def existsVar(self, varId):
 		return varId in self.vars
 
@@ -56,6 +50,12 @@ class Function:
 		if self.existsVar(varId) == 0:
 			return -1
 		return self.vars[varId].tipo
+
+	def deleteVar(self, varId):
+		if self.existsVar(varId) == 0:
+			return 0
+		del self.vars[varId]
+		return 1
 
 	def __repr__(self):
 		return "Vars: %s\nParams: %s\nretType: %s\n\n" %(str(self.vars), str(self.params), str(self.retType))
