@@ -6,7 +6,8 @@ from Classes.DicFunc import DicFunction
 from Classes.CuboSemantico import TypeToInt
 from Classes.CuboSemantico import SemanticCube
 from Classes.Error import Error
-from Classes.Stack import Stack
+from Classes.DataStructures.Stack import Stack
+from Classes.DataStructures.Queue import Queue
 
 dictionaryClass = DicClass()
 dictionaryFunction = DicFunction()
@@ -227,17 +228,22 @@ def p_decVar2Star_1(t):
 def p_var_1(t):
   '''var  : ID corchetesPosExp varDotPos'''
   
-
-  pID.push(t[1])
+  vartype = 0
+  sVariable = t[1]
+  pID.push(sVariable)
   if bClass:
-    vartype = dictionaryClass.getVariableType(sClassName, sScope, t[1])
-    if vartype != -1:
-      pTypes.push(vartype)
-        
+    vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
   else:
-    if dictionaryFunction.existsFunction(sScope):
-      if dictionaryFunction.existsVar(sScope, t[1]) == 1:
-        pTypes.push(dictionaryFunction.functions[sScope].vars[t[1]].tipo)   
+    vartype = dictionaryFunction.getVariableType(sScope, sVariable)
+  
+  print ("Variable: " + sVariable + " tipo: " + str(vartype))
+  if vartype == -1:
+    sError = "Variable: " + sVariable
+    errorHandling.printError(8, sError, t.lexer.lineno)
+    sys.exit()
+  
+  pTypes.push(vartype)
+    
 
 
 def p_varDotPos_1(t):
@@ -297,10 +303,14 @@ def p_assign_1(t):
   oper = typeConv.convert(pOper.pop())
   res_type = semanticCube.exists(lt,rt,oper)
   global iTempCont
+
+  print (str(lt) + " " + str(oper) + " " + str(rt) + " ")
+
   if res_type != -1:
     aCuadr.append([oper, ro, '-', lo])
   else:
-    print "Type mismatch error"
+    print "Type mismatch error 309" 
+    print t.lexer.lineno
     sys.exit()
 
 def p_equal_1(t):
@@ -341,7 +351,7 @@ def p_expressionORStar_1(t):
 def p_checkOR_1(t):
   '''checkOR : '''
   if pOper.top() == '||':
-    asociIzq()
+    asociIzq(t)
 
 
 def p_or_1(t):
@@ -359,7 +369,7 @@ def p_expressionANDStar_1(t):
 def p_checkAND_1(t):
   '''checkAND : '''
   if pOper.top() == '&&':
-    asociIzq()
+    asociIzq(t)
 
 
 def p_and_1(t):
@@ -382,7 +392,7 @@ def p_checkCompare_1(t):
   '''checkCompare : '''
   relOper = {'<','<=','>','>=','==', '!='}
   if pOper.top() in relOper:
-    asociIzq()
+    asociIzq(t)
 
 
 def p_expressionAS_1(t):
@@ -395,7 +405,7 @@ def p_expressionASStar_1(t):
 def p_checkAS_1(t):
   '''checkAS  : '''
   if pOper.top() == '+' or pOper.top() == '-':
-    asociIzq()
+    asociIzq(t)
 
 
 
@@ -411,7 +421,7 @@ def p_expressionMDMStar_1(t):
 def p_checkMDM_1(t):
   '''checkMDM  : '''
   if pOper.top() == '*' or pOper.top() == '/' or pOper.top() == '%':
-    asociIzq()
+    asociIzq(t)
 
 
 def p_expresionL_1(t):
@@ -426,7 +436,7 @@ def p_para_1(t):
 def p_parc_1(t):
   '''parc  : PARC'''
   while pOper.top()!='(':
-    asociIzq()
+    asociIzq(t)
   pOper.pop()
 
 
@@ -492,7 +502,6 @@ def p_const_1(t):
 
 def p_cte_int_1(t):
   '''cte_int  : '''
-
   pID.push(t[-1])
   pTypes.push(0)
 
@@ -556,27 +565,30 @@ def p_type_1(t):
   sTipo = t[0]
 
 def p_error(t):
-    sError = "Token: " + t.value
+    sError = "Token: " + str(t.value)
     errorHandling.printError(0, sError, t.lexer.lineno)
     sys.exit()
 
-def asociIzq():
-    ro = pID.pop()
-    rt = pTypes.pop()
-    lo = pID.pop()
-    lt = pTypes.pop()
-    oper = typeConv.convert(pOper.pop())
-    res_type = semanticCube.exists(lt,rt,oper)
-    global iTempCont
-    if res_type != -1:
-      iTempCont +=1
-      result = iTempCont
-      aCuadr.append([oper, lo, ro, result])
-      pID.push(result)
-      pTypes.push(res_type)
-    else:
-      print "Type mismatch error"
-      sys.exit()
+def asociIzq(t):
+  ro = pID.pop()
+  rt = pTypes.pop()
+  lo = pID.pop()
+  lt = pTypes.pop()
+  oper = typeConv.convert(pOper.pop())
+  res_type = semanticCube.exists(lt,rt,oper)
+  print (str(lt) + " " + str(oper) + " " + str(rt) + " ")
+
+  global iTempCont
+  if res_type != -1:
+    iTempCont +=1
+    result = iTempCont
+    aCuadr.append([oper, lo, ro, result])
+    pID.push(result)
+    pTypes.push(res_type)
+  else:
+    print "Type mismatch error 586"
+    print t.lexer.lineno
+    sys.exit()
 
 
 
@@ -594,6 +606,7 @@ global pOper
 global pTypes
 global pID
 global iTempCont
+global queVarId
 
 pSaltos = Stack()
 pOper = Stack()
@@ -620,10 +633,10 @@ if __name__ == '__main__':
 
       #print (dictionaryClass)
       #print (dictionaryFunction)
-      print aCuadr
-      print pOper.items
-      print pID.items
-      print pTypes.items
+      print (aCuadr)
+      print (pOper.items)
+      print (pID.items)
+      print (pTypes.items)
 
     except EOFError:
         print(EOFError)
