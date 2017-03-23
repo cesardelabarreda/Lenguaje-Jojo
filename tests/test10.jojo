@@ -4,7 +4,7 @@ func bool ejemplo2(int var1, int var2) {
 	@@@
 
 	ejemplo2(a);
-	trileano1 = 5 + 5;
+	trileano1 = true;
 
 	zadust trileano1;
 }

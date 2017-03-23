@@ -1,0 +1,42 @@
+
+@@@
+	int MAXN;
+	int primes[1000], f[1000], pc;
+@@@
+
+func stand EratosthenesON() {
+	@@@
+		int i, j;
+	@@@
+
+	i = 2;
+	while (i < MAXN) {
+		if (f[i] == 0) {
+			primes[pc] = i;
+			f[i] = i;
+			pc = pc + 1;
+		}
+
+		j = 0;
+		while (j < pc && i * primes[j] < MAXN && primes[j] <= f[i]) {
+			f[i*primes[j]] = primes[j];
+			j = j + 1;
+		}            
+		i = i + 1;
+	}
+}
+
+
+public stand jojo() {
+	@@@
+		int i;
+	@@@
+	MAXN = 1000;
+	EratosthenesON();
+
+	i = 0;
+	while (i < pc) {
+		prints(primes[i]);
+		i = i + 1;
+	}
+}

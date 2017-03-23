@@ -8,19 +8,6 @@ class chef {
 		private bool veryVeryImportante;
 	@@@
 
-	func public void chef() {
-		chefesoide = (((8) * (1 + 15)));
-		nombre = "Dio" + funcionConString(2);
-	}
-
-	func public real getValorImportante() {
-		zadust valorImportante;
-	}
-
-	func public stand setValorImportante(real valorImportante1) {
-		veryVeryImportante = valorImportante1;
-	}
-
 	func string funcionConString(int v) {
 		@@@
 			string s;
@@ -34,6 +21,21 @@ class chef {
 
 		zadust s;
 	}
+
+	func public void chef() {
+		chefesoide = (((8) * (1 + 15)));
+		nombre = "Dio";
+	}
+
+	func public real getValorImportante() {
+		zadust valorImportante;
+	}
+
+	func public stand setValorImportante(bool valorImportante1) {
+		veryVeryImportante = valorImportante1;
+	}
+
+	
 }
 
 class chefe hamon chef {
@@ -58,10 +60,10 @@ func stand sumas(ref int v1, ref real v2) {
 		v2 = v3;
 	}
 
-	if (v3 % 2 == 1) {
+	if (v3 - 2 == 1) {
 		v3 = v3 - 1;
 	}
-	else if (v3 % 3 == 2) {
+	else if (v3 + 3 == 2) {
 		v3 = v3 - 2;
 	}
 	else {
@@ -85,9 +87,6 @@ func int trabajaTodo() {
 	@@@
 
 
-
-	c.chefesoide = 5;
-	zadust c.chefesoide;
 }
 
 
@@ -102,7 +101,6 @@ public stand jojo() {
 	@@@
 
 	ind = 0;
-	v5 = new chefe();
 	
 	while (ind < 5) {
 		arr[ind] = false;

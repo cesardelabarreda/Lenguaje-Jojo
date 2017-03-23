@@ -1,18 +1,22 @@
 import sys
+import pprint
 import ply.yacc as yacc
 from Llollo import tokens
 from Classes.DicClases import DicClass
 from Classes.DicFunc import DicFunction
 from Classes.CuboSemantico import TypeToInt
 from Classes.CuboSemantico import SemanticCube
+from Classes.cuadruplo import Quadruple
 from Classes.Error import Error
-from Classes.Stack import Stack
+from Classes.DataStructures.Stack import Stack
+from Classes.DataStructures.Queue import Queue
 
 dictionaryClass = DicClass()
 dictionaryFunction = DicFunction()
 typeConv = TypeToInt()
 semanticCube = SemanticCube()
 errorHandling = Error()
+quads = Quadruple()
 
 # Reglas gramaticales
 
@@ -20,7 +24,7 @@ def p_programa_1(t):
   '''programa : classStar globalScope decVarPos functionStar main'''
 
 def p_decVarPos_1(t):
-  '''decVarPos  : VARIABLES  decVar decVarStar VARIABLES
+  '''decVarPos  : VARIABLES decVar decVarStar VARIABLES
                 | '''
 
 def p_globalScope_1(t):
@@ -227,17 +231,24 @@ def p_decVar2Star_1(t):
 def p_var_1(t):
   '''var  : ID corchetesPosExp varDotPos'''
   
+  vartype = 0
+  sVariable = t[1]
+  pID.push(sVariable)
 
-  pID.push(t[1])
   if bClass:
-    vartype = dictionaryClass.getVariableType(sClassName, sScope, t[1])
-    if vartype != -1:
-      pTypes.push(vartype)
-        
+    vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
   else:
-    if dictionaryFunction.existsFunction(sScope):
-      if dictionaryFunction.existsVar(sScope, t[1]) == 1:
-        pTypes.push(dictionaryFunction.functions[sScope].vars[t[1]].tipo)   
+    vartype = dictionaryFunction.getVariableType(sScope, sVariable)
+  
+  print ("Variable: " + sVariable + " tipo: " + str(vartype))
+  if vartype == -1:
+    sError = "Variable: " + sVariable
+    errorHandling.printError(8, sError, t.lexer.lineno)
+    sys.exit()
+  
+  pTypes.push(vartype)
+  stID.push([sVariable, vartype])
+    
 
 
 def p_varDotPos_1(t):
@@ -254,15 +265,20 @@ def p_corchetesPosCte_1(t):
 
 def p_funCall_1(t):
   '''funCall  : ID corchetesPosExp funCallStar PARA funCallParams PARC'''
-  
-  pID.push(t[1])
+  sVariable = t[1]
   if bClass:
-    method = dictionaryClass.classes[sClassName].existsMethod(t[1])
-    if method != 0:
-      pTypes.push(dictionaryClass.classes[sClassName].methods[t[1]].retType)
+    vartype = dictionaryClass.getMethodReturnType(sClassName, t[1])
   else:
-    if dictionaryFunction.existsFunction(sScope):
-      pTypes.push(dictionaryFunction.functions[sScope].retType)
+    vartype = dictionaryFunction.getFunctionReturnType(sScope)
+
+  if vartype == -1:
+    sError = "Variable: " + sVariable
+    errorHandling.printError(8, sError, t.lexer.lineno)
+    sys.exit()
+  
+  pID.push(sVariable)
+  pTypes.push(vartype)
+  stID.push([sVariable, vartype])
 
 def p_funCallStar_1(t):
   '''funCallStar  : DOT ID corchetesPosExp funCallStar
@@ -297,11 +313,16 @@ def p_assign_1(t):
   oper = typeConv.convert(pOper.pop())
   res_type = semanticCube.exists(lt,rt,oper)
   global iTempCont
-  if res_type != -1:
-    aCuadr.append([oper, ro, '-', lo])
-  else:
-    print "Type mismatch error"
+
+  print (str(lt) + " " + str(oper) + " " + str(rt) + " ")
+
+  if res_type == -1:
+    print "Type mismatch error 309" 
+    print t.lexer.lineno
     sys.exit()
+  
+  aCuadr.append([oper, ro, '-', lo])
+    
 
 def p_equal_1(t):
   '''equal : EQUAL'''
@@ -325,6 +346,7 @@ def p_return_1(t):
   '''return   : ZADUST expressionPos SEMICOLON'''
 
   aCuadr.append(['RETURN', pID.pop(),'-','-'])
+  quads.append('RETURN', None, None, None)
   pTypes.pop() 
 
 def p_expressionPos_1(t):
@@ -341,7 +363,7 @@ def p_expressionORStar_1(t):
 def p_checkOR_1(t):
   '''checkOR : '''
   if pOper.top() == '||':
-    asociIzq()
+    asociIzq(t)
 
 
 def p_or_1(t):
@@ -359,7 +381,7 @@ def p_expressionANDStar_1(t):
 def p_checkAND_1(t):
   '''checkAND : '''
   if pOper.top() == '&&':
-    asociIzq()
+    asociIzq(t)
 
 
 def p_and_1(t):
@@ -382,7 +404,7 @@ def p_checkCompare_1(t):
   '''checkCompare : '''
   relOper = {'<','<=','>','>=','==', '!='}
   if pOper.top() in relOper:
-    asociIzq()
+    asociIzq(t)
 
 
 def p_expressionAS_1(t):
@@ -395,7 +417,7 @@ def p_expressionASStar_1(t):
 def p_checkAS_1(t):
   '''checkAS  : '''
   if pOper.top() == '+' or pOper.top() == '-':
-    asociIzq()
+    asociIzq(t)
 
 
 
@@ -411,13 +433,12 @@ def p_expressionMDMStar_1(t):
 def p_checkMDM_1(t):
   '''checkMDM  : '''
   if pOper.top() == '*' or pOper.top() == '/' or pOper.top() == '%':
-    asociIzq()
+    asociIzq(t)
 
 
 def p_expresionL_1(t):
-  '''expressionL  : para expression parc
+  '''expressionL  : simbolASPoss para expression parc
                   | simbolASPoss value'''
-
 
 def p_para_1(t):
   '''para  : PARA '''
@@ -425,8 +446,9 @@ def p_para_1(t):
 
 def p_parc_1(t):
   '''parc  : PARC'''
-  while pOper.top()!='(':
-    asociIzq()
+  if pOper.top() != '(':
+    print("SOMETHING JUST WENT WRONG IN p_parc_1")
+    sys.exit()
   pOper.pop()
 
 
@@ -474,8 +496,15 @@ def p_simbolAS_1(t):
   pOper.push(t[1])
 
 def p_simbolASPoss_1(t):
-  '''simbolASPoss : simbolAS
+  '''simbolASPoss : simbolAS guardaSigno
                   | '''
+
+def p_guardaSigno_1(t):
+  '''guardaSigno  : '''
+  global bSigno
+  
+  if pOper.pop() == '-':
+    bSigno = False
 
 
 def p_value_1(t):
@@ -492,7 +521,6 @@ def p_const_1(t):
 
 def p_cte_int_1(t):
   '''cte_int  : '''
-
   pID.push(t[-1])
   pTypes.push(0)
 
@@ -556,27 +584,30 @@ def p_type_1(t):
   sTipo = t[0]
 
 def p_error(t):
-    sError = "Token: " + t.value
+    sError = "Token: " + str(t.value)
     errorHandling.printError(0, sError, t.lexer.lineno)
     sys.exit()
 
-def asociIzq():
-    ro = pID.pop()
-    rt = pTypes.pop()
-    lo = pID.pop()
-    lt = pTypes.pop()
-    oper = typeConv.convert(pOper.pop())
-    res_type = semanticCube.exists(lt,rt,oper)
-    global iTempCont
-    if res_type != -1:
-      iTempCont +=1
-      result = iTempCont
-      aCuadr.append([oper, lo, ro, result])
-      pID.push(result)
-      pTypes.push(res_type)
-    else:
-      print "Type mismatch error"
-      sys.exit()
+def asociIzq(t):
+  ro = pID.pop()
+  rt = pTypes.pop()
+  lo = pID.pop()
+  lt = pTypes.pop()
+  oper = typeConv.convert(pOper.pop())
+  res_type = semanticCube.exists(lt,rt,oper)
+  print (str(lt) + " " + str(oper) + " " + str(rt) + " ")
+
+  global iTempCont
+  if res_type != -1:
+    iTempCont +=1
+    result = iTempCont
+    aCuadr.append([oper, lo, ro, result])
+    pID.push(result)
+    pTypes.push(res_type)
+  else:
+    print "Type mismatch error 586"
+    print t.lexer.lineno
+    sys.exit()
 
 
 
@@ -587,6 +618,7 @@ sAccess = ""
 sClassName = ""
 bClass = False
 bFunc = False
+bSigno = True
 
 global aCuadr
 global pSaltos
@@ -594,11 +626,15 @@ global pOper
 global pTypes
 global pID
 global iTempCont
+global queVarId
+global bSigno
 
 pSaltos = Stack()
 pOper = Stack()
 pTypes = Stack()
 pID  = Stack()
+
+stID = Stack()
 
 aCuadr  = []
 
@@ -620,10 +656,11 @@ if __name__ == '__main__':
 
       #print (dictionaryClass)
       #print (dictionaryFunction)
-      print aCuadr
-      print pOper.items
-      print pID.items
-      print pTypes.items
+      pprint.pprint(aCuadr)
+      print (pOper.items)
+      pprint.pprint (stID.items)
+      print (pID.items)
+      print (pTypes.items)
 
     except EOFError:
         print(EOFError)

@@ -1,0 +1,15 @@
+func int factorial(int n) {
+	if (n == 0)	{ zadust 1; }
+
+	zadust n * factorial(n - 1);
+}
+
+
+public stand jojo() {
+	@@@
+		int n;
+	@@@
+
+	gets(n);
+	prints(factorial(n));
+}

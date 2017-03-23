@@ -1,0 +1,10 @@
+public stand jojo() {
+	@@@
+		int a, b;
+	@@@
+
+	gets(a);
+	gets(b);
+
+	prints(a + b);
+}
