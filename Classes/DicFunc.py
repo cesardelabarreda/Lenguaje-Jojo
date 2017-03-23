@@ -69,8 +69,13 @@ class DicFunction:
 
   def getVariableType(self, functionId, varId):
     if self.existsFunction(functionId) == 0:
-        return -1
+      return -1
     return self.functions[functionId].getVariableType(varId)
+
+  def getFunctionReturnType(self, functionId):
+    if self.existsFunction(functionId) == 0:
+      return -1
+    return self.functions[functionId].retType 
 
   def __repr__(self):
     return "%s" %(str(self.functions))

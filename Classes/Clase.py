@@ -118,6 +118,11 @@ class Class:
 			return -1
 		return self.methods[methodId].getVariableType(varId)
 
+	def getMethodType(self, methodId):
+		if self.existsMethod(methodId) == 0:
+			return -1
+		return self.methods[methodId].atrType
+
 	def __repr__(self):
 		return "Atributes: %s\n\nMethods: %s\n\nClasses: %s\n\n\n\n" %(str(self.atributes), str(self.methods), str(self.classes))
 
