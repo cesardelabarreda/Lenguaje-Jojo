@@ -1,10 +1,12 @@
 import sys
+import pprint
 import ply.yacc as yacc
 from Llollo import tokens
 from Classes.DicClases import DicClass
 from Classes.DicFunc import DicFunction
 from Classes.CuboSemantico import TypeToInt
 from Classes.CuboSemantico import SemanticCube
+from Classes.cuadruplo import Quadruple
 from Classes.Error import Error
 from Classes.DataStructures.Stack import Stack
 from Classes.DataStructures.Queue import Queue
@@ -14,6 +16,7 @@ dictionaryFunction = DicFunction()
 typeConv = TypeToInt()
 semanticCube = SemanticCube()
 errorHandling = Error()
+quads = Quadruple()
 
 # Reglas gramaticales
 
@@ -21,7 +24,7 @@ def p_programa_1(t):
   '''programa : classStar globalScope decVarPos functionStar main'''
 
 def p_decVarPos_1(t):
-  '''decVarPos  : VARIABLES  decVar decVarStar VARIABLES
+  '''decVarPos  : VARIABLES decVar decVarStar VARIABLES
                 | '''
 
 def p_globalScope_1(t):
@@ -231,6 +234,7 @@ def p_var_1(t):
   vartype = 0
   sVariable = t[1]
   pID.push(sVariable)
+
   if bClass:
     vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
   else:
@@ -243,6 +247,7 @@ def p_var_1(t):
     sys.exit()
   
   pTypes.push(vartype)
+  stID.push([sVariable, vartype])
     
 
 
@@ -260,15 +265,20 @@ def p_corchetesPosCte_1(t):
 
 def p_funCall_1(t):
   '''funCall  : ID corchetesPosExp funCallStar PARA funCallParams PARC'''
-  
-  pID.push(t[1])
+  sVariable = t[1]
   if bClass:
-    method = dictionaryClass.classes[sClassName].existsMethod(t[1])
-    if method != 0:
-      pTypes.push(dictionaryClass.classes[sClassName].methods[t[1]].retType)
+    vartype = dictionaryClass.getMethodReturnType(sClassName, t[1])
   else:
-    if dictionaryFunction.existsFunction(sScope):
-      pTypes.push(dictionaryFunction.functions[sScope].retType)
+    vartype = dictionaryFunction.getFunctionReturnType(sScope)
+
+  if vartype == -1:
+    sError = "Variable: " + sVariable
+    errorHandling.printError(8, sError, t.lexer.lineno)
+    sys.exit()
+  
+  pID.push(sVariable)
+  pTypes.push(vartype)
+  stID.push([sVariable, vartype])
 
 def p_funCallStar_1(t):
   '''funCallStar  : DOT ID corchetesPosExp funCallStar
@@ -306,12 +316,13 @@ def p_assign_1(t):
 
   print (str(lt) + " " + str(oper) + " " + str(rt) + " ")
 
-  if res_type != -1:
-    aCuadr.append([oper, ro, '-', lo])
-  else:
+  if res_type == -1:
     print "Type mismatch error 309" 
     print t.lexer.lineno
     sys.exit()
+  
+  aCuadr.append([oper, ro, '-', lo])
+    
 
 def p_equal_1(t):
   '''equal : EQUAL'''
@@ -335,6 +346,7 @@ def p_return_1(t):
   '''return   : ZADUST expressionPos SEMICOLON'''
 
   aCuadr.append(['RETURN', pID.pop(),'-','-'])
+  quads.append('RETURN', None, None, None)
   pTypes.pop() 
 
 def p_expressionPos_1(t):
@@ -425,9 +437,8 @@ def p_checkMDM_1(t):
 
 
 def p_expresionL_1(t):
-  '''expressionL  : para expression parc
+  '''expressionL  : simbolASPoss para expression parc
                   | simbolASPoss value'''
-
 
 def p_para_1(t):
   '''para  : PARA '''
@@ -435,8 +446,9 @@ def p_para_1(t):
 
 def p_parc_1(t):
   '''parc  : PARC'''
-  while pOper.top()!='(':
-    asociIzq(t)
+  if pOper.top() != '(':
+    print("SOMETHING JUST WENT WRONG IN p_parc_1")
+    sys.exit()
   pOper.pop()
 
 
@@ -484,8 +496,15 @@ def p_simbolAS_1(t):
   pOper.push(t[1])
 
 def p_simbolASPoss_1(t):
-  '''simbolASPoss : simbolAS
+  '''simbolASPoss : simbolAS guardaSigno
                   | '''
+
+def p_guardaSigno_1(t):
+  '''guardaSigno  : '''
+  global bSigno
+  
+  if pOper.pop() == '-':
+    bSigno = False
 
 
 def p_value_1(t):
@@ -599,6 +618,7 @@ sAccess = ""
 sClassName = ""
 bClass = False
 bFunc = False
+bSigno = True
 
 global aCuadr
 global pSaltos
@@ -607,11 +627,14 @@ global pTypes
 global pID
 global iTempCont
 global queVarId
+global bSigno
 
 pSaltos = Stack()
 pOper = Stack()
 pTypes = Stack()
 pID  = Stack()
+
+stID = Stack()
 
 aCuadr  = []
 
@@ -633,8 +656,9 @@ if __name__ == '__main__':
 
       #print (dictionaryClass)
       #print (dictionaryFunction)
-      print (aCuadr)
+      pprint.pprint(aCuadr)
       print (pOper.items)
+      pprint.pprint (stID.items)
       print (pID.items)
       print (pTypes.items)
 
