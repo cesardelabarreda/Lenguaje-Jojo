@@ -293,19 +293,51 @@ def p_funCallParamsStar_1(t):
                         | '''
 
 def p_condition_1(t):
-  '''condition  : IF PARA expression PARC LLAVEA actionStar LLAVEC conditionElse'''
+  '''condition  : IF PARA expression parcGTF LLAVEA actionStar LLAVEC conditionElse endif'''
+
+def p_parcGTF_1(t):
+  '''parcGTF  : PARC'''
+  exp_type = pTypes.pop()
+  if exp_type != 2:
+    errorHandling.printError(8, sError, t.lexer.lineno)
+    sys.exit()
+  else:
+    result = pID.pop()
+    aCuadr.append(['GotoF', result, '-', '-'])
+    global iCont
+    iCont += 1 
+    pSaltos.push(iCont)
+
+def p_endif_1(t):
+  '''endif  : '''
+  end = pSaltos.pop()
+  aCuadr[end][3]  = iCont+1
+
 
 def p_conditionElse_1(t):
-  '''conditionElse    : ELSE conditionElsePos
+  '''conditionElse    : else conditionElsePos
                       | '''
 
+def p_else_1(t):
+  '''else    : ELSE'''
+  aCuadr.append(['Goto', '-', '-', '-'])
+  global iCont
+  iCont += 1 
+  false = pSaltos.pop()
+  pSaltos.push(iCont)
+  aCuadr[false][3] = iCont+1
+
+
+
 def p_conditionElsePos_1(t):
-  '''conditionElsePos   : IF PARA expression PARC LLAVEA actionStar LLAVEC conditionElse
+  '''conditionElsePos   : IF PARA expression parcGTF LLAVEA actionStar LLAVEC conditionElse endif
                         | LLAVEA actionStar LLAVEC'''
 
 def p_assign_1(t):
   '''assign   : var equal assignExpID SEMICOLON'''
-
+  print aCuadr
+  print pOper.items
+  print pID.items
   ro = pID.pop()
   rt = pTypes.pop()
   lo = pID.pop()
@@ -322,6 +354,8 @@ def p_assign_1(t):
     sys.exit()
   
   aCuadr.append([oper, ro, '-', lo])
+  global iCont
+  iCont += 1
     
 
 def p_equal_1(t):
@@ -340,12 +374,24 @@ def p_output_1(t):
 
 
 def p_while_1(t):
-  '''while  : WHILE PARA expression PARC LLAVEA actionStar LLAVEC'''
+  '''while  : whilecondition PARA expression parcGTF LLAVEA actionStar LLAVEC'''
+  end = pSaltos.pop()
+  ret = pSaltos.pop()
+  aCuadr.append(['Goto', '-', '-', ret])
+  aCuadr[end][3] = iCont-1
+
+
+def p_whilecondition_1(t):
+  '''whilecondition  : WHILE'''
+  pSaltos.push(iCont)
+
 
 def p_return_1(t):
   '''return   : ZADUST expressionPos SEMICOLON'''
 
   aCuadr.append(['RETURN', pID.pop(),'-','-'])
+  global iCont
+  iCont += 1
   quads.append('RETURN', None, None, None)
   pTypes.pop() 
 
@@ -390,7 +436,7 @@ def p_and_1(t):
 
 
 def p_expressionNOT_1(t):
-  '''expressionNOT  : simbolExclamationStar expressionCompare'''
+  '''expressionNOT  : simbolExclamationStar expressionCompare '''
 
 
 def p_expressionCompare_1(t):
@@ -468,15 +514,25 @@ def p_simbolExclamationStar_1(t):
 # Falta checar el Not en cubo semantico
 def p_checkNOT_1(t):
   '''checkNOT : '''
+
   if pOper.top() == '!':
     ro = pID.pop()
     rt = pTypes.pop()
     oper = typeConv.convert(pOper.pop())
-#    res_type = semanticCube.exists(rt,oper)
-#   if res_type != -1:
-    aCuadr.append([oper, ro, '-', ro])
-#    else:
-#      print "Type missmatch error"
+    res_type = semanticCube.exists(rt, None, oper)
+    global iTempCont
+    if res_type != -1:
+      iTempCont +=1
+      result = iTempCont
+      aCuadr.append([oper, ro, '-', result])
+      global iCont
+      iCont += 1
+      pID.push(result)
+      pTypes.push(res_type)
+    else:
+      print "Type mismatch error 586"
+      print t.lexer.lineno
+      sys.exit()
 
 
 def p_not_1(t):
@@ -602,6 +658,8 @@ def asociIzq(t):
     iTempCont +=1
     result = iTempCont
     aCuadr.append([oper, lo, ro, result])
+    global iCont
+    iCont += 1
     pID.push(result)
     pTypes.push(res_type)
   else:
@@ -618,7 +676,6 @@ sAccess = ""
 sClassName = ""
 bClass = False
 bFunc = False
-bSigno = True
 
 global aCuadr
 global pSaltos
@@ -628,7 +685,10 @@ global pID
 global iTempCont
 global queVarId
 global bSigno
+global iCont
 
+iCont = -1
+bSigno = True
 pSaltos = Stack()
 pOper = Stack()
 pTypes = Stack()
@@ -653,6 +713,7 @@ if __name__ == '__main__':
       yacc.parse(info, tracking=True)
 
       print("Compilacion Finalizada")
+      print iCont
 
       #print (dictionaryClass)
       #print (dictionaryFunction)
