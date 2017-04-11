@@ -110,17 +110,17 @@ public stand jojo() {
 
 
 
-	gets_int(v1);
-	gets_real(v2);
+	gets(v1);
+	gets(v2);
 
 	sumas(v1, v2);
 
-	prints_int(v1);
-	prints_real(v2);
+	prints(v1);
+	prints(v2);
 
 	v5.chef();
-	prints_string(v5.nombre);
-	prints_real(v5.setValorImportante());
+	prints(v5.nombre);
+	prints(v5.setValorImportante());
 
 
 	ind = 0;

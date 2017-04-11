@@ -1,7 +1,9 @@
+from CuboSemantico import TypeConvertion
 from Variable import Variable
 
 class Function:
 	def __init__(self, funcRetType):
+		self.convert = TypeConvertion()
 		self.vars = {}
 		self.params = []
 		self.retType = funcRetType
@@ -51,16 +53,24 @@ class Function:
 			return -1
 		return self.vars[varId].tipo
 
+	def getReturnType(self):
+		return self.retType
+
 	def deleteVar(self, varId):
 		if self.existsVar(varId) == 0:
 			return 0
 		del self.vars[varId]
 		return 1
 
+	def pprint(self, sFunc):
+		print(" --- " + sFunc + " --- ")
+		print(str(self))
+		print(" ----------------- ")
+	
 	def __repr__(self):
-		return "Vars: %s\nParams: %s\nretType: %s\n\n" %(str(self.vars), str(self.params), str(self.retType))
+		return "Vars: %s\nParams: %s\nretType: %s" %(str(self.vars), str(self.params), str(self.convert.convertType(self.retType)))
 
 	def __str__(self):
-		return "Vars: %s\nParams: %s\nretType: %s\n\n" %(str(self.vars), str(self.params), str(self.retType))
+		return "Vars: %s\nParams: %s\nretType: %s" %(str(self.vars), str(self.params), str(self.convert.convertType(self.retType)))
 
 	

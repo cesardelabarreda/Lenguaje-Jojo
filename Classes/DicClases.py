@@ -84,7 +84,7 @@ class DicClass:
 			return iRet
 	 
 		for clas in self.classes[classId].classes:
-			iRet = self.classes.getAtributeType(clas, atributeId)
+			iRet = self.getAtributeType(clas, atributeId)
 			if iRet != -1:
 				return iRet
 		return -1
@@ -95,7 +95,6 @@ class DicClass:
 			return -1
 
 		iRet = self.classes[classId].getVarType(methodId, varId)
-		print(iRet)
 		if iRet != -1:
 			return iRet
 
@@ -105,15 +104,23 @@ class DicClass:
 		if self.existsClass(classId) == 0:
 			return -1
 
-		iRet = self.classes[classId].getMethodReturnType()
+		iRet = self.classes[classId].getMethodReturnType(methodId)
 		if iRet != -1:
 			return iRet
 
 		for clas in self.classes[classId].classes:
-			iRet = self.classes.getAtributeType(clas, methodId)
+			iRet = self.getAtributeType(clas, methodId)
 			if iRet != -1:
 				return iRet
 		return -1
+
+	def pprint(self):
+		iTam = self.size()
+		for clas in self.classes:
+		  self.classes[clas].pprint(clas)
+		  iTam = iTam - 1
+		  if iTam > 0:
+		  	print("\n")
 
 	def __repr__(self):
 		return "%s" %(str(self.classes))

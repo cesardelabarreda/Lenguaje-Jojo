@@ -12,6 +12,9 @@ class Jotaro {
 	}
 
 	func private real jota2(string sstar) {
+		@@@
+			real star;
+		@@@
 		zadust star;
 	}
 }
@@ -31,5 +34,5 @@ func bool ejemplo2(int var1, int var2) {
 
 public stand jojo() {
 	
-	zadust 0;
+	zadust;
 }

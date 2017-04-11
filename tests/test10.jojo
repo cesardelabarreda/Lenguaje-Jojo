@@ -1,9 +1,9 @@
-func bool ejemplo2(int var1, int var2) {
+func bool ejemplo2(int a) {
 	@@@
 		bool trileano1;
 	@@@
 
-	ejemplo2(a);
+	ejemplo2(a-1);
 	trileano1 = true;
 
 	zadust trileano1;
@@ -16,5 +16,5 @@ public stand jojo() {
 
 	variable = 5 + 5;
 
-	zadust 0;
+	zadust;
 }

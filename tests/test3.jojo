@@ -8,10 +8,10 @@ func stand ejemplo() {
 		bool trileano1;
 	@@@
 
-	zadust 0;
+	zadust;
 }
 
 public stand jojo() {
 	
-	zadust 0;
+	zadust;
 }
