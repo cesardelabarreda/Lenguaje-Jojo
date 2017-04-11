@@ -1,4 +1,3 @@
-
 from Funcion import Function
 
 class DicFunction:
@@ -68,14 +67,24 @@ class DicFunction:
     return self.functions[functionId].insertParam(varId, paramType)
 
   def getVariableType(self, functionId, varId):
-    if self.existsFunction(functionId) == 0:
-      return -1
-    return self.functions[functionId].getVariableType(varId)
+    if self.existsFunction(functionId):
+      tipo = self.functions[functionId].getVariableType(varId)
+      if tipo != -1:
+        return tipo
+    return self.functions["_Global"].getVariableType(varId)
 
   def getFunctionReturnType(self, functionId):
     if self.existsFunction(functionId) == 0:
       return -1
     return self.functions[functionId].retType 
+
+  def pprint(self):
+    iTam = self.size()
+    for func in self.functions:
+      self.functions[func].pprint(func)
+      iTam = iTam - 1
+      if iTam > 0:
+        print("\n")
 
   def __repr__(self):
     return "%s" %(str(self.functions))

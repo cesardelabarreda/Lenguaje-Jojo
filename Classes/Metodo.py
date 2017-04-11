@@ -6,7 +6,7 @@ class Method(Function):
 		self.encap = metEncap
 
 	def __repr__(self):
-		return "Vars: %s\nParams: %s\nretType: %s\nEncap: %s\n\n" %(str(self.vars), str(self.params), str(self.retType), str(self.encap))
+		return "Vars: %s\nParams: %s\nretType: %s\nEncap: %s" %(str(self.vars), str(self.params), str(self.retType), str(self.encap))
 
 	def __str__(self):
-		return "Vars: %s\nParams: %s\nretType: %s\nEncap: %s\n\n" %(str(self.vars), str(self.params), str(self.retType), str(self.encap))
+		return "Vars: %s\nParams: %s\nretType: %s\nEncap: %s" %(str(self.vars), str(self.params), str(self.retType), str(self.encap))

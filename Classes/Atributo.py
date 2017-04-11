@@ -7,7 +7,7 @@ class Atribute(Variable):
 		self.encap = atrEncap
 
 	def __repr__(self):
-		return "Tipo-%s Encap:-%s" %(str(self.tipo), str(self.encap))
+		return "Tipo-%s Encap-%s" %(str(self.convert.convertType(self.tipo)), str(self.convert.convertAccess(self.encap)))
 
 	def __str__(self):
-		return "Tipo-%s Encap:-%s" %(str(self.tipo), str(self.encap))
+		return "Tipo-%s Encap-%s" %(str(self.convert.convertType(self.tipo)), str(self.convert.convertAccess(self.encap)))

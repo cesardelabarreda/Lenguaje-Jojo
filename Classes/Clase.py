@@ -118,13 +118,26 @@ class Class:
 			return -1
 		return self.methods[methodId].getVariableType(varId)
 
-	def getMethodType(self, methodId):
+	def getMethodReturnType(self, methodId):
 		if self.existsMethod(methodId) == 0:
 			return -1
-		return self.methods[methodId].atrType
+		return self.methods[methodId].getReturnType()
+
+	def pprint(self, clas):
+		print(" ******* " + clas + " ******* ")
+		print("Atributes: " + str(self.atributes))
+
+		print("Methods: ")
+		for method in self.methods:
+			self.methods[method].pprint(method)
+			print("")
+
+		print("Classes: "), 
+		print(self.classes)
+		print(" ********************* ")
 
 	def __repr__(self):
-		return "Atributes: %s\n\nMethods: %s\n\nClasses: %s\n\n\n\n" %(str(self.atributes), str(self.methods), str(self.classes))
+		return "Atributes: %s\nMethods: %s\nClasses: %s\n" %(str(self.atributes), str(self.methods), str(self.classes))
 
 	def __str__(self):
-		return "Atributes: %s\n\nMethods: %s\n\nClasses: %s\n\n\n\n" %(str(self.atributes), str(self.methods), str(self.classes))
+		return "Atributes: %s\nMethods: %s\nClasses: %s\n" %(str(self.atributes), str(self.methods), str(self.classes))
