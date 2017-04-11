@@ -1,0 +1,52 @@
+ ******************************************************* 
+ *************** Compilacion Finalizada **************** 
+
+
+ ********** dictionaryClass ********** 
+ ************************************* 
+
+
+
+
+ ********** dictionaryFunctions ********** 
+ --- jojo --- 
+Vars: {}
+Params: []
+retType: stand
+ ----------------- 
+
+
+ --- _Global --- 
+Vars: {'dio': Tipo-int, 'zepeli': Tipo-real, 'hand': Tipo-int, 'caesar': Tipo-real, 'cesar': Tipo-real, 'main': Tipo-int}
+Params: []
+retType: stand
+ ----------------- 
+
+
+ --- ejemplo --- 
+Vars: {'trileano1': Tipo-bool}
+Params: []
+retType: stand
+ ----------------- 
+ ***************************************** 
+
+
+
+
+ ********** quads ********** 
+0	[ RETURN 	0 	None 	None 	]
+1	[ RETURN 	0 	None 	None 	]
+ ***************************************** 
+
+
+
+
+ ********** quads ********** 
+ ***************************************** 
+
+
+
+
+<Classes.Cuadruplo.Quadruple instance at 0x03693AF8>
+[]
+[]

@@ -4,5 +4,5 @@
 
 public stand jojo() {
 	
-	zadust 0;
+	zadust;
 }

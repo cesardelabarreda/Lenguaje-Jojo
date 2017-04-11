@@ -1,0 +1,57 @@
+ ******************************************************* 
+ *************** Compilacion con errores *************** 
+ *************** Compilacion Finalizada **************** 
+
+
+ ********** dictionaryClass ********** 
+ ************************************* 
+
+
+
+
+ ********** dictionaryFunctions ********** 
+ --- jojo --- 
+Vars: {'variable': Tipo-int}
+Params: []
+retType: stand
+ ----------------- 
+
+
+ --- ejemplo2 --- 
+Vars: {'a': Tipo-int, 'trileano1': Tipo-bool}
+Params: [0]
+retType: bool
+ ----------------- 
+
+
+ --- _Global --- 
+Vars: {}
+Params: []
+retType: stand
+ ----------------- 
+ ***************************************** 
+
+
+
+
+ ********** quads ********** 
+0	[ 2 	a 	1 	1 	]
+1	[ 0 	True 	None 	trileano1 	]
+2	[ RETURN 	trileano1 	None 	None 	]
+3	[ 1 	5 	5 	2 	]
+4	[ 0 	2 	None 	variable 	]
+5	[ RETURN 	0 	None 	None 	]
+ ***************************************** 
+
+
+
+
+ ********** quads ********** 
+ ***************************************** 
+
+
+
+
+<Classes.Cuadruplo.Quadruple instance at 0x02B1EAF8>
+[]
+[[1, 0], ['ejemplo2', 2]]

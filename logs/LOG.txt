@@ -1,0 +1,28 @@
+ 
+************ Generar tablas ************ 
+WARNING: Token 'ZAWARUDO' defined, but not used
+WARNING: Token 'TRIL' defined, but not used
+WARNING: Token 'SIZE' defined, but not used
+WARNING: Token 'NEUTRAL' defined, but not used
+WARNING: There are 4 unused tokens
+Generating LALR tables
+**************************************** 
+ 
+ 
+ 
+*************** Test Final *************** 
+ID-Error 1: Variable no declarada
+Variable: nombre
+Linea: 122
+
+ID-Error 2: Variable no declarada
+Variable: v5
+Linea: 122
+
+****************************************** 
+ 
+ 
+ 
+Tests: (10+1) 
+Tests passed: 10 
+Tests failed: 1 

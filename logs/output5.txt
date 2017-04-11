@@ -1,0 +1,72 @@
+ ******************************************************* 
+ *************** Compilacion Finalizada **************** 
+
+
+ ********** dictionaryClass ********** 
+ ******* Jotaro ******* 
+Atributes: {'platinum': Tipo-string Encap-private, 'joestar': Tipo-int Encap-public, 'star': Tipo-string Encap-private, 'ora': Tipo-real Encap-public}
+Methods: 
+ --- jota2 --- 
+Vars: {'sstar': Tipo-string}
+Params: [3]
+retType: 1
+Encap: 1
+ ----------------- 
+
+ --- jot --- 
+Vars: {}
+Params: []
+retType: 4
+Encap: 0
+ ----------------- 
+
+Classes:  []
+ ********************* 
+ ************************************* 
+
+
+
+
+ ********** dictionaryFunctions ********** 
+ --- jojo --- 
+Vars: {}
+Params: []
+retType: stand
+ ----------------- 
+
+
+ --- ejemplo2 --- 
+Vars: {'trileano1': Tipo-bool, 'var1': Tipo-int, 'var2': Tipo-int}
+Params: [0, 0]
+retType: bool
+ ----------------- 
+
+
+ --- _Global --- 
+Vars: {'dio': Tipo-int, 'zepeli': Tipo-real, 'hand': Tipo-int, 'caesar': Tipo-real, 'cesar': Tipo-real, 'main': Tipo-int}
+Params: []
+retType: stand
+ ----------------- 
+ ***************************************** 
+
+
+
+
+ ********** quads ********** 
+0	[ RETURN 	star 	None 	None 	]
+1	[ RETURN 	trileano1 	None 	None 	]
+2	[ RETURN 	0 	None 	None 	]
+ ***************************************** 
+
+
+
+
+ ********** quads ********** 
+ ***************************************** 
+
+
+
+
+<Classes.Cuadruplo.Quadruple instance at 0x02A23AF8>
+[]
+[]

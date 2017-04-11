@@ -1,0 +1,114 @@
+ ******************************************************* 
+ *************** Compilacion con errores *************** 
+ *************** Compilacion Finalizada **************** 
+
+
+ ********** dictionaryClass ********** 
+ ******* Joseph ******* 
+Atributes: {'joestar': Tipo-int Encap-public, 'over': Tipo-string Encap-private, 'drive': Tipo-string Encap-private, 'hhamon': Tipo-real Encap-public}
+Methods: 
+ --- jos --- 
+Vars: {}
+Params: []
+retType: 4
+Encap: 0
+ ----------------- 
+
+ --- jos2 --- 
+Vars: {'sstar': Tipo-string}
+Params: [3]
+retType: 1
+Encap: 1
+ ----------------- 
+
+Classes:  []
+ ********************* 
+
+
+ ******* Jotaro ******* 
+Atributes: {'platinum': Tipo-string Encap-private, 'star': Tipo-string Encap-private, 'joestar': Tipo-int Encap-public, 'jjj': Tipo-int Encap-public, 'nombre': Tipo-string Encap-private, 'ora': Tipo-real Encap-public}
+Methods: 
+ --- jota2 --- 
+Vars: {'sstar': Tipo-string}
+Params: [3]
+retType: 1
+Encap: 1
+ ----------------- 
+
+ --- jot --- 
+Vars: {'more': Tipo-int}
+Params: []
+retType: 4
+Encap: 0
+ ----------------- 
+
+Classes:  ['Joseph']
+ ********************* 
+ ************************************* 
+
+
+
+
+ ********** dictionaryFunctions ********** 
+ --- jojo --- 
+Vars: {'var1': Tipo-int, 'var3': Tipo-bool, 'var2': Tipo-int, 's3': Tipo-string, 's2': Tipo-string, 's1': Tipo-string, 'arr1': Tipo-int, 'nombre': Tipo-string}
+Params: []
+retType: stand
+ ----------------- 
+
+
+ --- ejemplo2 --- 
+Vars: {'trileano1': Tipo-int, 'var1': Tipo-int, 'var2': Tipo-int}
+Params: [0, 0]
+retType: bool
+ ----------------- 
+
+
+ --- _Global --- 
+Vars: {'dio': Tipo-int, 'zepeli': Tipo-real, 'hand': Tipo-int, 'caesar': Tipo-real, 'cesar': Tipo-real, 'main': Tipo-int}
+Params: []
+retType: stand
+ ----------------- 
+ ***************************************** 
+
+
+
+
+ ********** quads ********** 
+0	[ RETURN 	5.5 	None 	None 	]
+1	[ 0 	jjj 	None 	joestar 	]
+2	[ RETURN 	over 	None 	None 	]
+3	[ 1 	5 	5 	1 	]
+4	[ 0 	1 	None 	trileano1 	]
+5	[ 10 	trileano1 	1 	2 	]
+6	[ RETURN 	2 	None 	None 	]
+7	[ 6 	var1 	var2 	3 	]
+8	[ GOTOF 	3 	None 	None 	]
+9	[ GOTO 	None 	None 	None 	]
+10	[ GOTOF 	var3 	None 	None 	]
+11	[ 1 	s1 	s2 	4 	]
+12	[ 1 	4 	s3 	5 	]
+13	[ 1 	5 	"hola mundo" 	6 	]
+14	[ 0 	6 	None 	s1 	]
+15	[ 0 	"Dio" 	None 	nombre 	]
+16	[ RETURN 	0 	None 	None 	]
+ ***************************************** 
+
+
+
+
+ ********** quads ********** 
+ ***************************************** 
+
+
+
+
+<Classes.Cuadruplo.Quadruple instance at 0x02A93AF8>
+[]
+[['var1', 0],
+ ['var1', 0],
+ ['var2', 0],
+ ['ejemplo2', 4],
+ ['ejemplo2', 4],
+ ['Joseph', 4],
+ ['Jotaro', 4]]

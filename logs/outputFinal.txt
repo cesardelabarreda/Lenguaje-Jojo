@@ -1,0 +1,186 @@
+ ******************************************************* 
+ *************** Compilacion con errores *************** 
+ *************** Compilacion Finalizada **************** 
+
+
+ ********** dictionaryClass ********** 
+ ******* chef ******* 
+Atributes: {'nombre': Tipo-string Encap-public, 'boleano': Tipo-bool Encap-public, 'veryVeryImportante': Tipo-bool Encap-private, 'valorImportante': Tipo-real Encap-private, 'chefesoide': Tipo-int Encap-public}
+Methods: 
+ --- chef --- 
+Vars: {}
+Params: []
+retType: -1
+Encap: 0
+ ----------------- 
+
+ --- setValorImportante --- 
+Vars: {'valorImportante1': Tipo-bool}
+Params: [2]
+retType: 4
+Encap: 0
+ ----------------- 
+
+ --- getValorImportante --- 
+Vars: {}
+Params: []
+retType: 1
+Encap: 0
+ ----------------- 
+
+ --- funcionConString --- 
+Vars: {'s': Tipo-string, 'v': Tipo-int}
+Params: [0]
+retType: 3
+Encap: 0
+ ----------------- 
+
+Classes:  []
+ ********************* 
+
+
+ ******* chefe ******* 
+Atributes: {'ultimo': Tipo-int Encap-public}
+Methods: 
+Classes:  ['chef']
+ ********************* 
+ ************************************* 
+
+
+
+
+ ********** dictionaryFunctions ********** 
+ --- sumas --- 
+Vars: {'v1': Tipo-int, 'v2': Tipo-real, 'v3': Tipo-real}
+Params: [0, 1]
+retType: stand
+ ----------------- 
+
+
+ --- jojo --- 
+Vars: {'arr': Tipo-bool, 'v1_1': Tipo-int, 'v1': Tipo-int, 'v2': Tipo-real, 'v5': Tipo--1, 'ind': Tipo-int}
+Params: []
+retType: stand
+ ----------------- 
+
+
+ --- trabajaTodo --- 
+Vars: {'c': Tipo--1}
+Params: []
+retType: int
+ ----------------- 
+
+
+ --- _Global --- 
+Vars: {'varGlobal1': Tipo-int, 'varGlobal2': Tipo-bool}
+Params: []
+retType: stand
+ ----------------- 
+
+
+ --- min --- 
+Vars: {'v1': Tipo-real, 'v2': Tipo-real}
+Params: [1, 1]
+retType: real
+ ----------------- 
+ ***************************************** 
+
+
+
+
+ ********** quads ********** 
+0	[ 0 	"" 	None 	s 	]
+1	[ 3 	0 	0 	1 	]
+2	[ 1 	0 	1 	2 	]
+3	[ 8 	v 	2 	3 	]
+4	[ GOTOF 	3 	None 	7 	]
+5	[ 1 	s 	"a" 	4 	]
+6	[ 0 	4 	None 	s 	]
+7	[ 2 	v 	1 	5 	]
+8	[ 0 	5 	None 	v 	]
+9	[ GOTO 	None 	None 	0 	]
+10	[ RETURN 	s 	None 	None 	]
+11	[ 1 	1 	15 	6 	]
+12	[ 3 	8 	6 	7 	]
+13	[ 0 	7 	None 	chefesoide 	]
+14	[ 0 	"Dio" 	None 	nombre 	]
+15	[ RETURN 	valorImportante 	None 	None 	]
+16	[ 0 	valorImportante1 	None 	veryVeryImportante 	]
+17	[ 6 	v3 	30 	8 	]
+18	[ 12 	8 	True 	9 	]
+19	[ 14 	True 	None 	10 	]
+20	[ 14 	10 	None 	11 	]
+21	[ 14 	11 	None 	12 	]
+22	[ 14 	12 	None 	13 	]
+23	[ 12 	13 	True 	14 	]
+24	[ 7 	15 	51 	15 	]
+25	[ 12 	14 	15 	16 	]
+26	[ 13 	9 	16 	17 	]
+27	[ 14 	17 	None 	18 	]
+28	[ 11 	v1 	v2 	19 	]
+29	[ 13 	18 	19 	32 	]
+30	[ GOTOF 	20 	None 	None 	]
+31	[ 1 	v1 	v2 	21 	]
+32	[ 0 	21 	None 	v3 	]
+33	[ 0 	v2 	None 	v1 	]
+34	[ 0 	v3 	None 	v2 	]
+35	[ GOTO 	None 	None 	15 	]
+36	[ 2 	v3 	2 	40 	]
+37	[ 10 	22 	1 	23 	]
+38	[ GOTOF 	23 	None 	None 	]
+39	[ 2 	v3 	1 	48 	]
+40	[ 0 	24 	None 	v3 	]
+41	[ GOTO 	None 	None 	None 	]
+42	[ 1 	v3 	3 	46 	]
+43	[ 10 	25 	2 	26 	]
+44	[ GOTOF 	26 	None 	None 	]
+45	[ 2 	v3 	2 	48 	]
+46	[ 0 	27 	None 	v3 	]
+47	[ GOTO 	None 	None 	None 	]
+48	[ 2 	v3 	3 	28 	]
+49	[ 0 	28 	None 	v3 	]
+50	[ 0 	v3 	None 	52 	]
+51	[ 6 	v1 	v2 	29 	]
+52	[ GOTOF 	29 	None 	None 	]
+53	[ RETURN 	v1 	None 	None 	]
+54	[ RETURN 	v2 	None 	None 	]
+55	[ 0 	0 	None 	57 	]
+56	[ 6 	ind 	5 	30 	]
+57	[ GOTOF 	30 	None 	None 	]
+58	[ 0 	True 	None 	arr 	]
+59	[ 1 	ind 	1 	31 	]
+60	[ 0 	31 	None 	ind 	]
+61	[ GOTO 	None 	None 	53 	]
+62	[ 0 	True 	None 	63 	]
+63	[ 0 	0 	None 	ind 	]
+64	[ 6 	ind 	5 	32 	]
+65	[ GOTOF 	32 	None 	None 	]
+66	[ 1 	ind 	1 	33 	]
+67	[ 0 	33 	None 	ind 	]
+68	[ GOTO 	None 	None 	60 	]
+69	[ RETURN 	None 	None 	None 	]
+ ***************************************** 
+
+
+
+
+ ********** quads ********** 
+ ***************************************** 
+
+
+
+
+<Classes.Cuadruplo.Quadruple instance at 0x02C60AD0>
+[]
+[['v1', 0],
+ ['v2', 1],
+ ['v1', 0],
+ ['v2', 1],
+ ['sumas', 4],
+ ['v1', 0],
+ ['v2', 1],
+ ['v5', 4],
+ ['nombre', -1],
+ ['v5', -1],
+ ['v5', 4],
+ ['arr', 2]]
