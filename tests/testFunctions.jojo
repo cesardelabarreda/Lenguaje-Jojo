@@ -1,0 +1,20 @@
+
+func stand func1() {
+	
+}
+
+func stand func2(int i1, real i2) {
+	
+}
+
+
+
+public stand jojo() {
+	@@@
+		int a, b;
+		int c[10];
+	@@@
+
+	gets(a);
+	gets(b);
+}
