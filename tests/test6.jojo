@@ -37,15 +37,15 @@ class Jotaro hamon Joseph {
 	real cesar, caesar, zepeli;
 @@@
 
-func bool ejemplo2(int var1, int var2) {
+func stand ejemplo2(int var1, int var2, int var3) {
 	@@@
 		bool trileano1;
 	@@@
 
-	zadust trileano1;
+	zadust;
 }
 
 public stand jojo() {
-	
+	ejemplo2(1, 2, 3);
 	zadust;
 }

@@ -4,14 +4,14 @@ class point {
 		public int x, y;
 	@@@
 
-	func public real max(int x1, int x2) {
+	func public int max(int x1, int x2) {
 		if (x1 < x2) {
 			zadust x1;
 		}
 		zadust x2;
 	}
 
-	func real min(int x1, int x2) {
+	func int min(int x1, int x2) {
 		if (x1 < x2) {
 			zadust x1;
 		}
