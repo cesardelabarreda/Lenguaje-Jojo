@@ -78,6 +78,11 @@ class DicFunction:
       return -1
     return self.functions[functionId].retType 
 
+  def getParams(self, functionId):
+    if self.existsFunction(functionId) == 0:
+      return -1
+    return self.functions[functionId].getParams()
+
   def pprint(self):
     iTam = self.size()
     for func in self.functions:

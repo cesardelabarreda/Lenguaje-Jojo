@@ -21,6 +21,19 @@ class DicClass:
 	def existsClass(self, classId):
 		return classId in self.classes
 
+	def existsMethod(self, classId, methodId):
+		if self.existsClass(classId) == 0:
+			return 0
+
+		if self.classes[classId].existsMethod(methodId):
+			return 1
+
+		for clas in self.classes[classId].classes:
+			bRet = self.existsMethod(clas, methodId)
+			if iRet:
+				return 1
+		return 0
+
 	def existsAtribute(self, classId, atributeId):
 		if self.existsClass(classId) == 0:
 			return 0
@@ -109,10 +122,38 @@ class DicClass:
 			return iRet
 
 		for clas in self.classes[classId].classes:
-			iRet = self.getAtributeType(clas, methodId)
+			iRet = self.getMethodReturnType(clas, methodId)
 			if iRet != -1:
 				return iRet
 		return -1
+
+	def getMethodEncap(self, classId):
+		if self.existsClass(classId) == 0:
+			return -1
+
+		iRet = self.classes[classId].getMethodEncap(methodId)
+		if iRet != -1:
+			return iRet
+
+		for clas in self.classes[classId].classes:
+			iRet = self.getMethodEncap(clas, methodId)
+			if iRet != -1:
+				return iRet
+		return -1
+
+	def getParams(self, classId, methodId):
+		if self.existsClass(classId) == 0:
+			return [-1]
+
+		iRet = self.classes[classId].getParams(methodId)
+		if iRet != -1:
+			return iRet
+
+		for clas in self.classes[classId].classes:
+			iRet = self.getParams(clas, methodId)
+			if iRet != -1:
+				return iRet
+		return [-1]
 
 	def pprint(self):
 		iTam = self.size()

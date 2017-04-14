@@ -123,6 +123,16 @@ class Class:
 			return -1
 		return self.methods[methodId].getReturnType()
 
+	def getMethodEncap(self, methodId):
+		if self.existsMethod(methodId) == 0:
+			return -1
+		return self.methods[methodId].getEncap()
+
+	def getParams(self, methodId):
+		if self.existsMethod(methodId) == 0:
+			return -1
+		return self.methods[methodId].getParams()
+
 	def pprint(self, clas):
 		print(" ******* " + clas + " ******* ")
 		print("Atributes: " + str(self.atributes))
