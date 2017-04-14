@@ -30,7 +30,7 @@ class DicClass:
 
 		for clas in self.classes[classId].classes:
 			bRet = self.existsMethod(clas, methodId)
-			if iRet:
+			if bRet:
 				return 1
 		return 0
 
@@ -127,7 +127,7 @@ class DicClass:
 				return iRet
 		return -1
 
-	def getMethodEncap(self, classId):
+	def getMethodEncap(self, classId, methodId):
 		if self.existsClass(classId) == 0:
 			return -1
 
@@ -143,7 +143,7 @@ class DicClass:
 
 	def getParams(self, classId, methodId):
 		if self.existsClass(classId) == 0:
-			return [-1]
+			return -1
 
 		iRet = self.classes[classId].getParams(methodId)
 		if iRet != -1:
@@ -153,7 +153,7 @@ class DicClass:
 			iRet = self.getParams(clas, methodId)
 			if iRet != -1:
 				return iRet
-		return [-1]
+		return -1
 
 	def pprint(self):
 		iTam = self.size()
