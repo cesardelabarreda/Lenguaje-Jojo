@@ -18,6 +18,12 @@ class Error:
 			"Type mismatch",                                # 9
 			"Se esperaba token",                            # 10
 			"Tipo de retorno equivocado",										# 11
+			"Tipo equivocado en argumento",									# 12
+			"Cantidad equivocada de argumentos",						# 13
+			"Clase no existente",														# 14
+			"Funcion/Metodo no existente",									# 15
+			"Metodo no publico",														# 16
+			"No se admite compocision",											# 17
 		]
 
 	def printError(self, errorId, message, lineNo):

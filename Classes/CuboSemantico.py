@@ -225,6 +225,10 @@ class TypeConvertion:
 			"gotoF"		: 18,
 			"gotoV"		: 19,
 			"return"	: 20,
+			"endProc" : 21,
+			"era" 		: 22,
+			"param"		: 23,
+			"gosub" 	: 24,
 
 			0 	: "=      ",
 			1 	: "+      ",
@@ -247,6 +251,10 @@ class TypeConvertion:
 			18	: "gotoF  ",
 			19	: "gotoV  ",
 			20	: "return ",
+			21 	: "endProc",
+			22 	: "era    ",
+			23 	: "param  ",
+			24 	: "gosub  ",
 		}
 
 	def existType(self, tipo):

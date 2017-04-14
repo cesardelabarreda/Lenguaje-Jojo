@@ -101,7 +101,11 @@ def p_functionClassStar_1(t):
                         | '''
 
 def p_functionClass_1(t):
-  '''functionClass  : FUNC accessPos typeReturn ID defScopeClass parameters body'''
+  '''functionClass  : FUNC accessPos typeReturn ID defScopeClass parameters body genEndproc'''
+
+def p_genEndProc_1(t):
+  '''genEndproc   : '''
+  quads.append(typeConv.convertOp("endProc"))
 
 def p_defScopeClass_1(t):
   '''defScopeClass : '''
@@ -127,7 +131,7 @@ def p_decVarclass_1(t):
 
 
 def p_function_1(t):
-  '''function   : FUNC typeReturn ID defScope parameters body'''
+  '''function   : FUNC typeReturn ID defScope parameters body genEndproc'''
   
 
 def p_defScope_1(t):
@@ -140,7 +144,7 @@ def p_defScope_1(t):
     errorHandling.printError(3, sError, t.lexer.lineno)
 
 def p_main_1(t):
-  '''main   : gotMain PUBLIC STAND JOJO defScope PARA PARC body'''
+  '''main   : gotMain PUBLIC STAND JOJO defScope PARA PARC body genEndproc'''
 
 def p_gotMain_1(t):
   '''gotMain  : '''
@@ -217,6 +221,10 @@ def p_decVar2_1(t):
 
   if bClass:
     if sScope == "_Atributes":
+      if not (0 <= iTipo and iTipo <= 3):
+        sError = "Atributo: " + variable
+        errorHandling.printError(17, sError, t.lexer.lineno)
+        
       if dictionaryClass.insertAtribute(sClassName, variable, iTipo, iAccess) == 0:
         sError = "Atributo: " + variable
         errorHandling.printError(1, sError, t.lexer.lineno)
@@ -246,7 +254,7 @@ def p_var_1(t):
   
   if vartype == -1:
     sError = "Variable: " + sVariable
-    errorHandling.printError(8, sError, t.lexer.lineno)
+    errorHandling.printError(8, sError, t.lexer.lineno)    
 
   stID.push([sVariable, vartype])
     
@@ -269,32 +277,39 @@ def p_corchetesInd_1(t):
   stID.pop()
 
 def p_funCall_1(t):
-  '''funCall  : ID corchetesPosExp funCallStar PARA funCallParams PARC'''
-  sVariable = t[1]
-  global bClass
+  '''funCall  : funCallId funCallStar genEra PARA funCallParams PARC'''
+  validaFuncion(t)
 
-  if bClass:
-    vartype = dictionaryClass.getMethodReturnType(sClassName, t[1])
-  else:
-    vartype = dictionaryFunction.getFunctionReturnType(sScope)
+def p_funCallId_1(t):
+  '''funCallId  : ID'''
+  quFunc.push(t[0])
 
-  if vartype == -1:
-    sError = "Variable: " + sVariable
-    errorHandling.printError(8, sError, t.lexer.lineno)
-  
-  stID.push([sVariable, vartype])
+def p_genEra_1(t):
+  '''genEra   : '''
+  quads.append(typeConv.convertOp("era"))
 
 def p_funCallStar_1(t):
-  '''funCallStar  : DOT ID corchetesPosExp funCallStar
+  '''funCallStar  : funCallIsObject corchetesPosExp DOT funCallId funCallStar
                   | '''
 
+def p_funCallIsObject_1(t):
+  '''funCallIsObject  : '''
+  global bMethodCall
+  bMethodCall = True
+
 def p_funCallParams_1(t):
-  '''funCallParams  : expression funCallParamsStar
+  '''funCallParams  : expression genParam funCallParamsStar
                     | '''
 
 def p_funCallParamsStar_1(t):
-  '''funCallParamsStar  : COLON expression
+  '''funCallParamsStar  : COLON expression genParam funCallParamsStar
                         | '''
+
+def p_genParam_1(t):
+  '''genParam   : '''
+  var = stID.pop()
+  quads.append(typeConv.convertOp("param"), var[0], None, None)
+  quParams.push(var[1])
 
 def p_condition_1(t):
   '''condition  : IF PARA expression parcGTF LLAVEA actionStar LLAVEC conditionElse endif'''
@@ -382,37 +397,7 @@ def p_whilecondition_1(t):
 
 def p_return_1(t):
   '''return   : ZADUST expressionPos SEMICOLON'''
-  global isExpression
-
-  global bclass
-
-  global sScope
-  global sClassName
-
-  sError = ""
-  iTypeFunc = -1
-
-  if bClass:
-    iTypeFunc = dictionaryClass.getMethodReturnType(sClassName, sScope)
-  else:
-    iTypeFunc = dictionaryFunction.getFunctionReturnType(sScope)
-
-  if isExpression:
-    var = stID.pop()
-    if iTypeFunc == var[1]: 
-      quads.append(typeConv.convertOp("return"), var[0])
-    else:
-      sError = "Error en Zadust 1"
-  else:
-    if iTypeFunc == 4:
-      quads.append(typeConv.convertOp("return"), None)
-    else:
-      sError = "Error en Zadust 2"
-
-  if sError != "": 
-    errorHandling.printError(11, sError, t.lexer.lineno)
-    print str(var[1])
-    print str(iTypeFunc)
+  validaReturn(t)
   
 
 def p_expressionPos_1(t):
@@ -496,8 +481,6 @@ def p_checkAS_1(t):
     asociIzq(t)
 
 
-
-
 def p_expressionMDM_1(t):
   '''expressionMDM  : expressionL expressionMDMStar'''
 
@@ -512,14 +495,30 @@ def p_checkMDM_1(t):
     asociIzq(t)
 
 
-def p_expresionL_1(t):
-  '''expressionL  : reseteaSigno simbolASPoss para expression parc
-                  | reseteaSigno simbolASPoss value'''
+def p_expressionL_1(t):
+  '''expressionL  : para expression parc
+                  | simbolASPoss value expressionNegativo '''
 
-def p_reseteaSigno_1(t):
-  '''reseteaSigno : '''
+def p_expresionNegativo_1(t):
+  '''expressionNegativo   : '''
   global bSigno
+  global iTempCont
+
+  if bSigno:
+    return
+  
+  var = stID.pop()
+  if not (var[1] == 0 or var[1] == 1):
+    sError = "Type: " + str(typeConv.convertType(var[1])) + " Expected: Int/Real"
+    errorHandling.printError(9, sError, t.lexer.lineno)
+    res_type = var[1]
+
+  iTempCont += 1
+  result = iTempCont
+  quads.append(typeConv.convertOp("-"), 0, var[0], result)
+  stID.push([result, var[1]])
   bSigno = True
+
 
 def p_para_1(t):
   '''para  : PARA '''
@@ -566,7 +565,7 @@ def p_checkNOT_1(t):
         errorHandling.printError(9, sError, t.lexer.lineno)
         res_type = var[1]
 
-    iTempCont +=1
+    iTempCont += 1
     result = iTempCont
     quads.append(oper, var[0], None, result)
     stID.push([result, res_type])
@@ -692,6 +691,128 @@ def asociIzq(t):
   quads.append(oper, varL[0], varR[0], result)
   stID.push([result, res_type])
 
+def validaReturn(t):
+  global isExpression
+
+  global bclass
+
+  global sScope
+  global sClassName
+
+  sError = ""
+  iTypeFunc = -1
+
+  if bClass:
+    iTypeFunc = dictionaryClass.getMethodReturnType(sClassName, sScope)
+  else:
+    iTypeFunc = dictionaryFunction.getFunctionReturnType(sScope)
+
+  if isExpression:
+    var = stID.pop()
+    if iTypeFunc == var[1]: 
+      quads.append(typeConv.convertOp("return"), var[0])
+    else:
+      sError = "Error en Zadust 1"
+  else:
+    if iTypeFunc == 4:
+      quads.append(typeConv.convertOp("return"), None)
+    else:
+      sError = "Error en Zadust 2"
+
+  if sError != "": 
+    errorHandling.printError(11, sError, t.lexer.lineno)
+    print str(var[1])
+    print str(iTypeFunc)
+
+
+
+
+def validaParams(params):
+  # Validar tipos de parametro y argumento
+  i = 0
+  while quParams.empty() == False and i < len(params):
+    par = quParams.pop()
+    if par != params[i]:
+      sError = "Parametro numero: " + i
+      errorHandling.printError(12, sError, t.lexer.lineno)
+    i += 1
+
+  # Validar tamanos de argumentos y parametros
+  if quParams.empty() == False:
+    sError = "Argumentos sobrantes: " + quParams.size()
+    errorHandling.printError(13, sError, t.lexer.lineno)
+    sys.exit()
+
+  if i != len(params):
+    sError = "Argumentos faltantes: " + str(len(params) - i)
+    errorHandling.printError(13, sError, t.lexer.lineno)
+    sys.exit()
+
+
+def validaMetodo(t):
+  sClass = quFunc.pop()
+  sMethod = quFunc.pop()
+
+  # Validar que existe la clase
+  bExist = dictionaryClass.existsClass(sClass)
+
+  if not bExist:
+    sError = "Clase: " + sClass
+    errorHandling.printError(14, sError, t.lexer.lineno)
+    sys.exit()
+
+  # Validar que existe el metodo
+  bExist = dictionaryClass.existsMethod(sClass, sMethod)
+  if not bExist:
+    sError = "Metodo: " + sMethod
+    errorHandling.printError(15, sError, t.lexer.lineno)
+    sys.exit()
+
+  iPrivate = dictionaryClass.getMehodEncap(sClass, sMethod)
+  if iPrivate == 1:
+    sError = "Metodo: " + sMethod
+    errorHandling.printError(16, sError, t.lexer.lineno)
+    sys.exit()
+
+  varType = dictionaryClass.getMethodReturnType(sClass, sMethod)
+  params = dictionaryClass.getParams(sClass, sMethod)
+
+  validaParams(params)
+
+  if varType != 4:
+    stID.push([sScope, varType])
+
+  quads.append(typeConv.convertOp("gosub"), sClass, sMethod)
+  bMethodCall = False
+
+def validaFuncion(t):
+  global bMethodCall
+
+   #divide metodos de funciones
+  if bMethodCall:
+    validaMetodo()
+    return
+  
+  sScope = quFunc.pop()
+  # Validar que existe la funcion
+  bExist = dictionaryFunction.existsFunction(sScope)
+
+  # Validar tipos de retorno
+  varType = dictionaryFunction.getFunctionReturnType(sScope)
+  params = dictionaryFunction.getParams(sScope)
+
+  if varType == -1:
+    sError = "Funcion: " + str(sScope)
+    errorHandling.printError(9, sError, t.lexer.lineno)
+
+  validaParams(params)
+
+  if varType != 4:
+    stID.push([sScope, varType])
+
+  quads.append(typeConv.convertOp("gosub"), sScope)
+  bMethodCall = False
+
 
 global dictionaryClass
 global dictionaryFunction
@@ -711,6 +832,7 @@ global bSigno
 global bClass
 global bFunc
 global bIsExpression
+global bMethodCall
 
 global sTipo
 global sScope
@@ -723,6 +845,7 @@ bSigno = True
 bClass = False
 bFunc = False
 bIsExpression = True
+bMethodCall = False
 
 sTipo = ""
 sScope = ""
@@ -741,6 +864,9 @@ util = Util()
 stID = Stack()
 stOper = Stack()
 stSaltos = Stack()
+
+quParams = Queue()
+quFunc = Queue()
 
 parser = yacc.yacc()
 

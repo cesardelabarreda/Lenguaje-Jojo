@@ -56,6 +56,9 @@ class Function:
 	def getReturnType(self):
 		return self.retType
 
+	def getParams(self):
+		return self.params
+
 	def deleteVar(self, varId):
 		if self.existsVar(varId) == 0:
 			return 0
