@@ -27,8 +27,8 @@ class point {
 
 	func int dist2(int xx, int yy) {
 		zadust 
-			abs(xx - x) * abs(xx - x) + 
-			abs(yy - y) * abs(yy - y);
+			zawarudo abs(xx - x) * zawarudo abs(xx - x) + 
+			zawarudo abs(yy - y) * zawarudo abs(yy - y);
 	}
 }
 
@@ -37,32 +37,34 @@ class point3d hamon point {
 		int z;
 	@@@
 
-	func real dist2(int xx, int yy, int zz) {
+	func int dist2(int xx, int yy, int zz) {
 		zadust 
-			abs(xx - x) * abs(xx - x) + 
-			abs(yy - y) * abs(yy - y) +
-			abs(zz - z) * abs(zz - z);
+			zawarudo abs(xx - x) * zawarudo abs(xx - x) + 
+			zawarudo abs(yy - y) * zawarudo abs(yy - y) +
+			zawarudo abs(zz - z) * zawarudo abs(zz - z);
 	}
 }
 
 class line {
 	@@@
-		public point p1, p2;
 		int a, b, c;
 	@@@
 
-	func public real distEntrePuntos() {
-		zadust p1.dist(p2.x, p2.y);
+	func public int distEntrePuntos() {
+		@@@
+			point p1;
+			point p2;
+		@@@
+		zadust zawarudo p1.dist2(p2.x, p2.y);
 	}
 }
 
-class line3d {
-	@@@
-		public point3d p1, p2;
-	@@@
-
-	func public real distEntrePuntos() {
-		zadust p1.dist(p2.x, p2.y, p3.z);
+class line3d hamon line{
+	func public int distEntrePuntos() {
+		@@@
+			point3d p1, p2, p3;
+		@@@
+		zadust zawarudo p1.dist2(p2.x, p2.y, p3.z);
 	}
 }
 
@@ -70,24 +72,26 @@ class line3d {
 
 public stand jojo() {
 	@@@
+		point p1, p2;
+		point3d p3, p4;
 		line l1;
 		line3d l2;
 	@@@
 
-	l1.p1.x = 0;
-	l1.p1.y = 0;
-	l1.p2.x = 10;
-	l1.p2.y = 0;
+	p1.x = 0;
+	p1.y = 0;
+	p2.x = 10;
+	p2.y = 0;
 
-	l2.p1.x = 0;
-	l2.p1.y = 0;
-	l2.p1.z = 0;
-	l2.p2.x = 1;
-	l2.p2.y = 1;
-	l2.p2.z = 1;
+	p3.x = 0;
+	p3.y = 0;
+	p3.z = 0;
+	p4.x = 1;
+	p4.y = 1;
+	p4.z = 1;
+	
+	prints(zawarudo l1.distEntrePuntos());
+	prints(zawarudo l2.distEntrePuntos());
 
-	print(l1.distEntrePuntos())
-	print(l2.distEntrePuntos())
-
-	zadust 0;
+	zadust;
 }
