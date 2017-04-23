@@ -4,6 +4,9 @@ from Cuadruplo import Quadruple
 from Stack import Stack
 
 global contQuads
+global ret
+global stEjecucion
+stEjecucion = Stack()
 contQuads = 0
 
 dirMethods = {
@@ -25,6 +28,13 @@ dirMethods = {
 	'!' : nots
 	'&&' : ands
 	'||' : ors
+	'gets' : gets
+	'prints' : prints
+	'era' : era
+	'endProc' : endProc
+	'param' : param
+	'return' : returns
+	'gosub' : gosub
 }
 
 class VM:
@@ -168,6 +178,21 @@ def lessthan(self, oper1, oper2, res):
 			return 1
 	return 0
 
+def prints(self, oper1, oper2, res):
+	if(mapmemory.exists(oper1)):
+		Operando1 = mapmemory.get(oper1)
+		print(Operando1)
+		return 1
+	return 0
+
+def gets(self, oper1, oper2, res):
+	if(mapmemory.exists(oper1)):
+		Operando1 = raw_input()
+		# Hay que checar que sea el tipo de entrada igual al tipo de dato
+		mapmemory.insert(oper1, Operando1)
+		return 1
+	return 0
+
 
 def goto(self, oper1, oper2, res):
 	global contQuads
@@ -175,20 +200,63 @@ def goto(self, oper1, oper2, res):
 	return 1
 
 
-def gotov(self, oper1, oper2, res):
+def gotoF(self, oper1, oper2, res):
 	if(mapmemory.exists(oper1)):
-		if(mapmemory.get(not oper1)):   
+		if(not mapmemory.get(oper1)):   
 			global contQuads
 			contQuads = res
 			return 1
 	return 0
 
-def gotov(self, oper1, oper2, res):
+def gotoV(self, oper1, oper2, res):
 	if(mapmemory.exists(oper1)):
 		if(mapmemory.get(oper1)):   
 			global contQuads
 			contQuads = res
 			return 1
+	return 0
+
+
+
+
+def era(self, oper1, oper2, res):
+	if(mapmemory.exists(oper1)):
+		mapmemory.era(oper1)
+		return 1
+	return 0
+
+
+def param(self, oper1, oper2, res):
+	if(mapmemory.exists(oper1)): 
+		mapmemory.param(oper1)
+		return 1
+	return 0
+
+def returns(self, oper1, oper2, res):
+	if(mapmemory.exists(oper1)):
+		global ret
+		ret = mapmemory.get(oper1)
+		mapmemry.endProc()
+		global contQuads
+		contQuads = stEjecucion.pop
+		return 1
+	return 0
+
+def gosub(self, oper1, oper2, res):
+	if(mapmemory.exists(oper1)): 
+		global contQuads
+		stEjecucion.push(contQuads)
+		contQuads = res
+		return 1
+	return 0
+
+
+def endProc(self, oper1, oper2, res):
+	if(mapmemory.exists(oper1)):
+		mapmemory.endProc()
+		global contQuads
+		contQuads = stEjecucion.pop
+		return 1
 	return 0
 
 
