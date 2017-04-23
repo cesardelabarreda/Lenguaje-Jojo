@@ -268,7 +268,7 @@ class TypeConvertion:
 
 	def convertType(self, tipo):
 		if self.existType(tipo) == 0:
-			return -1
+			return tipo
 		return self.types[tipo]
 
 	def convertOp(self, op):

@@ -243,26 +243,47 @@ def p_decVar2Star_1(t):
                   | '''
 
 def p_var_1(t):
-  '''var  : ID corchetesPosExp varDotPos'''
-  sVariable = t[1]
-  vartype = 0
-  
-  if bClass:
-    vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
-  else:
-    vartype = dictionaryFunction.getVariableType(sScope, sVariable)
-  
-  if vartype == -1:
-    sError = "Variable: " + sVariable
-    errorHandling.printError(8, sError, t.lexer.lineno)    
+  '''var  : getVariableID corchetesPosExp varDotPos'''
+ 
 
-  stID.push([sVariable, vartype])
-    
-
+def p_getVariableID_1(t):
+  '''getVariableID  : ID'''
+  quVariables.push(t[1])
+  
 
 def p_varDotPos_1(t):
   '''varDotPos  : DOT var
-                | '''
+                | varRevisa'''
+
+def p_varRevisa_1(t):
+  '''varRevisa  : '''
+  global sClassName
+  vartype = 0
+  if bClass:
+    if quVariables.size() == 2:
+      sClass = quVariables.pop()
+      sVariable = quVariables.pop()
+      vartype = dictionaryClass.getAtributeType(dictionaryClass.getVariableType(sClassName, sScope, sClass), sVariable)
+      stID.push([[sClass, sVariable], vartype])
+    else:
+      sVariable = quVariables.pop()
+      vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
+      stID.push([sVariable, vartype])
+  else:
+    if quVariables.size() == 2:
+      sClass = quVariables.pop()
+      sVariable = quVariables.pop()
+      vartype = dictionaryClass.getAtributeType(dictionaryFunction.getVariableType(sScope, sClass), sVariable)
+      stID.push([[sClass, sVariable], vartype])
+    else:
+      sVariable = quVariables.pop()
+      vartype = dictionaryFunction.getVariableType(sScope, sVariable)
+      stID.push([sVariable, vartype])
+
+  if vartype == -1:
+    sError = "Variable: " + sVariable
+    errorHandling.printError(8, sError, t.lexer.lineno)
+    sys.exit()
 
 def p_corchetesPosExp_1(t):
   '''corchetesPosExp  : CORCHA expression corchetesInd CORCHC
@@ -277,12 +298,16 @@ def p_corchetesInd_1(t):
   stID.pop()
 
 def p_funCall_1(t):
-  '''funCall  : funCallId funCallStar genEra PARA funCallParams PARC'''
+  '''funCall  : ZAWARUDO funCallId funCall2'''
   validaFuncion(t)
+
+def p_funCall2_1(t):
+  '''funCall2  : funCallStar genEra PARA funCallParams PARC'''
+
 
 def p_funCallId_1(t):
   '''funCallId  : ID'''
-  quFunc.push(t[0])
+  quFunc.push(t[1])
 
 def p_genEra_1(t):
   '''genEra   : '''
@@ -727,19 +752,19 @@ def validaReturn(t):
 
 
 
-def validaParams(params):
+def validaParams(t, params):
   # Validar tipos de parametro y argumento
   i = 0
   while quParams.empty() == False and i < len(params):
     par = quParams.pop()
     if par != params[i]:
-      sError = "Parametro numero: " + i
+      sError = "Parametro numero: " + str(i)
       errorHandling.printError(12, sError, t.lexer.lineno)
     i += 1
 
   # Validar tamanos de argumentos y parametros
   if quParams.empty() == False:
-    sError = "Argumentos sobrantes: " + quParams.size()
+    sError = "Argumentos sobrantes: " + str(quParams.size())
     errorHandling.printError(13, sError, t.lexer.lineno)
     sys.exit()
 
@@ -749,15 +774,25 @@ def validaParams(params):
     sys.exit()
 
 
-def validaMetodo(t):
-  sClass = quFunc.pop()
+def validaMetodo(t, bIsDouble=False, sClass=None):
+  global sClassName
+  global sScope
+
+  if sClass is None:
+    sClass = quFunc.pop()
   sMethod = quFunc.pop()
+
+  sNClass = ""
+  if bIsDouble and bClass:
+    sClass = dictionaryClass.getVariableType(sClassName, sScope, sClass)
+  elif bIsDouble and not bClass:
+    sClass = dictionaryFunction.getVariableType(sScope, sClass)
 
   # Validar que existe la clase
   bExist = dictionaryClass.existsClass(sClass)
 
   if not bExist:
-    sError = "Clase: " + sClass
+    sError = "Clase: " + str(sClass)
     errorHandling.printError(14, sError, t.lexer.lineno)
     sys.exit()
 
@@ -768,7 +803,7 @@ def validaMetodo(t):
     errorHandling.printError(15, sError, t.lexer.lineno)
     sys.exit()
 
-  iPrivate = dictionaryClass.getMehodEncap(sClass, sMethod)
+  iPrivate = dictionaryClass.getMethodEncap(sClass, sMethod)
   if iPrivate == 1:
     sError = "Metodo: " + sMethod
     errorHandling.printError(16, sError, t.lexer.lineno)
@@ -777,7 +812,7 @@ def validaMetodo(t):
   varType = dictionaryClass.getMethodReturnType(sClass, sMethod)
   params = dictionaryClass.getParams(sClass, sMethod)
 
-  validaParams(params)
+  validaParams(t, params)
 
   if varType != 4:
     stID.push([sScope, varType])
@@ -787,12 +822,18 @@ def validaMetodo(t):
 
 def validaFuncion(t):
   global bMethodCall
+  global bClass
+  global sClassName
 
    #divide metodos de funciones
   if bMethodCall:
-    validaMetodo()
+    validaMetodo(t, True)
     return
   
+  if bClass:
+    validaMetodo(t, False, sClassName)
+    return
+
   sScope = quFunc.pop()
   # Validar que existe la funcion
   bExist = dictionaryFunction.existsFunction(sScope)
@@ -800,12 +841,13 @@ def validaFuncion(t):
   # Validar tipos de retorno
   varType = dictionaryFunction.getFunctionReturnType(sScope)
   params = dictionaryFunction.getParams(sScope)
-
+  print sScope
+  print(params)
   if varType == -1:
     sError = "Funcion: " + str(sScope)
     errorHandling.printError(9, sError, t.lexer.lineno)
 
-  validaParams(params)
+  validaParams(t, params)
 
   if varType != 4:
     stID.push([sScope, varType])
@@ -867,6 +909,7 @@ stSaltos = Stack()
 
 quParams = Queue()
 quFunc = Queue()
+quVariables = Queue()
 
 parser = yacc.yacc()
 
