@@ -46,7 +46,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 + Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 + Operando2)
 			return 1
 		return 0
 
@@ -54,7 +54,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 - Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 - Operando2)
 			return 1
 		return 0
 
@@ -62,7 +62,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 * Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 * Operando2)
 			return 1
 		return 0
 
@@ -70,7 +70,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 / Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 / Operando2)
 			return 1
 		return 0
 
@@ -79,7 +79,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 % Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 % Operando2)
 			return 1
 		return 0
 
@@ -87,7 +87,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 && Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 && Operando2)
 			return 1
 		return 0
 
@@ -95,14 +95,14 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 || Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 || Operando2)
 			return 1
 		return 0
 
 	def nots(self, oper1, oper2, res):
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		if Operando1 != None :
-			self.mapmemory.insert(res, not Operando1)
+			self.mapmemory.setVariableValue(res, not Operando1)
 			return 1
 		return 0
 
@@ -110,7 +110,7 @@ class VM:
 	def equal(self, oper1, oper2, res):
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		if Operando1 != None :
-			self.mapmemory.insert(res, Operando1)
+			self.mapmemory.setVariableValue(res, Operando1)
 			return 1
 		return 0
 
@@ -118,7 +118,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 != Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 != Operando2)
 			return 1
 		return 0
 
@@ -126,7 +126,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 >= Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 >= Operando2)
 			return 1
 		return 0
 
@@ -134,7 +134,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 >= Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 >= Operando2)
 			return 1
 		return 0
 
@@ -143,7 +143,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 == Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 == Operando2)
 			return 1
 		return 0
 
@@ -151,7 +151,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 > Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 > Operando2)
 			return 1
 		return 0
 
@@ -160,7 +160,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.insert(res, Operando1 < Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 < Operando2)
 			return 1
 		return 0
 
@@ -174,7 +174,7 @@ class VM:
 	def gets(self, oper1, oper2, res):
 		Operando1 = raw_input()
 		# Hay que checar que sea el tipo de entrada igual al tipo de dato
-		self.mapmemory.insert(oper1, Operando1)
+		self.mapmemory.setVariableValue(oper1, Operando1)
 		return 1
 
 
