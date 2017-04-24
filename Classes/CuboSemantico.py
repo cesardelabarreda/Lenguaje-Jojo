@@ -229,6 +229,7 @@ class TypeConvertion:
 			"era" 		: 22,
 			"param"		: 23,
 			"gosub" 	: 24,
+			"end"			: 25,
 
 			0 	: "=      ",
 			1 	: "+      ",
@@ -255,6 +256,7 @@ class TypeConvertion:
 			22 	: "era    ",
 			23 	: "param  ",
 			24 	: "gosub  ",
+			25	: "end    ",
 		}
 
 	def existType(self, tipo):
