@@ -1,8 +1,8 @@
-public stand jojo() {
-	@@@
-		int a, b;
-	@@@
+@@@
+	int a, b;
+@@@
 
+public stand jojo() {
 	gets(a);
 	gets(b);
 

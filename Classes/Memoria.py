@@ -253,4 +253,4 @@ print m.addVariableGlobal(0, 0, 10)
 print m.addVariableGlobal(0)
 
 print m.createFunction()
-m.addVariableLocal()
+print m.endFunction()
