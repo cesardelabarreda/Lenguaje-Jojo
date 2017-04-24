@@ -242,7 +242,9 @@ def p_decVar2_1(t):
       sError = "Variable: " + variable
       errorHandling.printError(2, sError, t.lexer.lineno)
       sys.exit()
-    mem.addVariableGlobal(iTipo)
+    iMem = mem.addVariableGlobal(iTipo)
+    print iMem
+    dictionaryFunction.setMemVar(sScope, variable, iMem)
 
 
 def p_decVar2Star_1(t):
@@ -406,12 +408,22 @@ def p_assignExpID_1(t):
 def p_input_1(t):
   '''input  : GETS PARA var PARC SEMICOLON'''
   var = stID.pop()
-  quads.append(typeConv.convertOp("gets"), var[0])
+
+  global sScope
+
+  iMemoria = dictionaryFunction.getMemVar("_Global", var[0])
+  print iMemoria
+
+  quads.append(typeConv.convertOp("gets"), iMemoria)
 
 def p_output_1(t):
   '''output   : PRINTS PARA expression PARC SEMICOLON'''
   var = stID.pop()
-  quads.append(typeConv.convertOp("prints"), var[0])
+  global sScope
+
+  iMemoria = dictionaryFunction.getMemVar("_Global", var[0])
+  print iMemoria
+  quads.append(typeConv.convertOp("prints"), iMemoria)
 
 
 def p_while_1(t):
@@ -937,7 +949,8 @@ if __name__ == '__main__':
         #sys.exit()
       print(" *************** Compilacion Finalizada **************** ")
       print("\n")
-      vm = VM(quads, mem)
+      vm = VM(mem, quads)
+      vm.run()
 
       
       # util.printAll(dictionaryClass, dictionaryFunction, quads, stOper, stID, stSaltos)

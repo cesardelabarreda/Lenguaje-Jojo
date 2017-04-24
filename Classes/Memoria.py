@@ -2,6 +2,7 @@ from Util import Util
 from CuboSemantico import TypeConvertion
 from DataStructures.Dictionary import Dictionary
 from DataStructures.Stack import Stack
+from DataStructures.Queue import Queue
 
 class MemoryTypes:
 	def __init__(self, iBaseVars, iCantVars):
@@ -51,7 +52,7 @@ class MemoryTypes:
 		return self.mem[iMem]
 
 	def setVariableValue(self, iMem, iValue):
-		self.mem.setVariableValue(iMemId, iValue)
+		self.mem[iMem] = iValue
 		return True
 
 
@@ -70,6 +71,7 @@ class MemoryFunction:
 			self.iBaseVar[i] = iBaseVars + (i * iCantVars)
 	
 	def exists(self, iMemId):
+		return False
 		return self.mem.exists(iMemId)
 
 	def getSize(self):
@@ -138,7 +140,7 @@ class MemoryGlobal:
 		return self.mem.getVariableValue(iMem)
 
 	def setVariableValue(self, iMem, iValue):
-		return self.mem.setVariableValue(iMemId, iValue)
+		return self.mem.setVariableValue(iMem, iValue)
 
 # ##################################################### #
 
@@ -182,7 +184,7 @@ class MemoryManager:
 		self.mem = memory
 
 		self.globa = memory.getGlobal()
-		self.function = {}
+		self.function = memory.getLocal()
 		self.constante = memory.getConstant()
 
 		self.quNextFunction = Queue()
@@ -193,6 +195,7 @@ class MemoryManager:
 		self.function = self.quNextFunction.pop()
 
 	def returnGoSub(self):
+		return
 		self.function = quLocales.pop()
 
 	def eraFuncion(self, iFuncID):
@@ -239,6 +242,15 @@ class Memory:
 	def endFunction(self):
 		return self.local.endFunction()
 
+	def getGlobal(self):
+		return self.globa
+
+	def getConstant(self):
+		return self.constante
+
+	def getLocal(self):
+		return self.local
+
 
 # ##################################################### #
 
@@ -251,6 +263,3 @@ print m.addVariableGlobal(3)
 print m.addVariableGlobal(2)
 print m.addVariableGlobal(0, 0, 10)
 print m.addVariableGlobal(0)
-
-print m.createFunction()
-print m.endFunction()

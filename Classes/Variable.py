@@ -4,6 +4,14 @@ class Variable:
 	def __init__(self, varTipo):
 		self.convert = TypeConvertion()
 		self.tipo = varTipo
+		self.memory = -1
+
+	def setMemory(self, mem):
+		self.memory = mem
+		return 1
+
+	def getMemory(self):
+		return self.memory
 
 	def pprint(self):
 		print(str(self))
