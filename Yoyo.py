@@ -9,8 +9,10 @@ from Classes.CuboSemantico import SemanticCube
 from Classes.Cuadruplo import Quadruple
 from Classes.DataStructures.Queue import Queue
 from Classes.DataStructures.Stack import Stack
+from Classes.Memoria import Memory
 from Classes.Util import Error
 from Classes.Util import Util
+from Classes.VirtualMachine import VM
 
 
 # Reglas gramaticales
@@ -224,19 +226,26 @@ def p_decVar2_1(t):
       if not (0 <= iTipo and iTipo <= 3):
         sError = "Atributo: " + variable
         errorHandling.printError(17, sError, t.lexer.lineno)
+        sys.exit()
         
       if dictionaryClass.insertAtribute(sClassName, variable, iTipo, iAccess) == 0:
         sError = "Atributo: " + variable
         errorHandling.printError(1, sError, t.lexer.lineno)
+        sys.exit()
     else:
       if dictionaryClass.insertVar(sClassName, sScope, variable, iTipo) == 0:
         sError = "Variable: " + variable
         errorHandling.printError(2, sError, t.lexer.lineno)
+        sys.exit()
   else:
     if dictionaryFunction.insertVar(sScope, variable, iTipo) == 0:
       sError = "Variable: " + variable
       errorHandling.printError(2, sError, t.lexer.lineno)
-        
+      sys.exit()
+    iMem = mem.addVariableGlobal(iTipo)
+    print iMem
+    dictionaryFunction.setMemVar(sScope, variable, iMem)
+
 
 def p_decVar2Star_1(t):
   '''decVar2Star  : DOT ID corchetesPosCte decVar2Star
@@ -399,12 +408,22 @@ def p_assignExpID_1(t):
 def p_input_1(t):
   '''input  : GETS PARA var PARC SEMICOLON'''
   var = stID.pop()
-  quads.append(typeConv.convertOp("gets"), var[0])
+
+  global sScope
+
+  iMemoria = dictionaryFunction.getMemVar("_Global", var[0])
+  print iMemoria
+
+  quads.append(typeConv.convertOp("gets"), iMemoria)
 
 def p_output_1(t):
   '''output   : PRINTS PARA expression PARC SEMICOLON'''
   var = stID.pop()
-  quads.append(typeConv.convertOp("prints"), var[0])
+  global sScope
+
+  iMemoria = dictionaryFunction.getMemVar("_Global", var[0])
+  print iMemoria
+  quads.append(typeConv.convertOp("prints"), iMemoria)
 
 
 def p_while_1(t):
@@ -894,6 +913,7 @@ sScope = ""
 sAccess = ""
 sClassName = ""
 
+mem = Memory([100000, 100000], [1000000, 200000, 100000], [300000, 100000])
 
 dictionaryClass = DicClass()
 dictionaryFunction = DicFunction()
@@ -929,14 +949,16 @@ if __name__ == '__main__':
         #sys.exit()
       print(" *************** Compilacion Finalizada **************** ")
       print("\n")
+      vm = VM(mem, quads)
+      vm.run()
 
       
       # util.printAll(dictionaryClass, dictionaryFunction, quads, stOper, stID, stSaltos)
       # util.printAll(dictionaryClass, dictionaryFunction, quads, stOper, stID, stSaltos)
-      util.printQuadruples(quads)
+      # util.printQuadruples(quads)
 
-      print (stOper.items)
-      pprint.pprint (stID.items)
+      # print (stOper.items)
+      # pprint.pprint (stID.items)
 
     except EOFError:
         print(EOFError)

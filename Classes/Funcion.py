@@ -59,6 +59,16 @@ class Function:
 	def getParams(self):
 		return self.params
 
+	def setMem(self, varId, mem):
+		if self.existsVar(varId) == 0:
+			return 0
+		return self.vars[varId].setMemory(mem)
+
+	def getMem(self, varId):
+		if self.existsVar(varId) == 0:
+			return 0
+		return self.vars[varId].getMemory()
+
 	def deleteVar(self, varId):
 		if self.existsVar(varId) == 0:
 			return 0

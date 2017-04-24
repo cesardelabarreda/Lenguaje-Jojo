@@ -83,6 +83,16 @@ class DicFunction:
       return -1
     return self.functions[functionId].getParams()
 
+  def setMemVar(self, functionId, varId, mem):
+    if self.existsFunction(functionId) == 0:
+      return 0
+    return self.functions[functionId].setMem(varId, mem)
+
+  def getMemVar(self, functionId, varId):
+    if self.existsFunction(functionId) == 0:
+      return self.functions["_Global"].getMem(varId)
+    return self.functions[functionId].getMem(varId)
+
   def pprint(self):
     iTam = self.size()
     for func in self.functions:
