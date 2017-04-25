@@ -5,17 +5,16 @@ from DataStructures.Stack import Stack
 from DataStructures.Queue import Queue
 
 class MemoryTypes:
-	def __init__(self, iBaseVars, iCantVars):
-		iCantVars /= 5
-
-		self.iBaseVar = {}
+	def __init__(self, iBaseVars, iLimits):
+		self.iBaseVar = iBaseVars
 		self.iCantVar = {}
+		self.iLimit = iLimits
+
 		for i in range(0, 4):
-			self.iBaseVar[i] = iBaseVars + (i * iCantVars)
 			self.iCantVar[i] = 0
 
 		self.mem = {}
-	
+
 	def exists(self, iMemId):
 		return iMemId in self.mem
 
@@ -34,6 +33,9 @@ class MemoryTypes:
 	def getSizeString(self):
 		return self.iCantVar[3]
 
+	def getSizeType(self, iType):
+		return self.iCantVar[iType]
+
 	def getNextMem(self, iType):
 		return self.iBaseVar[iType] + self.iCantVar[iType]
 		
@@ -46,6 +48,9 @@ class MemoryTypes:
 			self.mem[iMem] = iValue
 		
 		self.iCantVar[iType] = self.iCantVar[iType] + iSize
+		
+		if self.iBaseVar[iType] + self.getSizeType(iType) >= self.iLimit[iType]
+			return -1
 		return iMem
 
 	def getVariableValue(self, iMem):
@@ -61,17 +66,27 @@ class MemoryTypes:
 class MemoryFunction:
 	def __init__(self, iBaseFunc, iBaseVars, iCantVars):
 		self.mem = {}
-
 		self.iBaseFuncIDs = iBaseFunc
 
-		iCantVars /= 4
+		iCantVar = iCantVars + 5
+
+		self.iBaseVar = {}
+
+		for i in range(0, 4):
+			self.iBaseVar[i] = iBaseVars + i * iCantVar
+
+		self.mem = MemoryTypes(iBaseVar, iBaseVars + iCantVars)
+
+
+
+		
+		iCantVars /= 5
 
 		self.iBaseVar = {}
 		for i in range(0, 4):
 			self.iBaseVar[i] = iBaseVars + (i * iCantVars)
 	
 	def exists(self, iMemId):
-		return False
 		return self.mem.exists(iMemId)
 
 	def getSize(self):
@@ -93,7 +108,7 @@ class MemoryFunction:
 		return self.mem[self.iBaseFuncIDs].addVariable(iType, iValue, iSize)
 
 	def createFunction(self):
-		self.mem[self.iBaseFuncIDs] = MemoryTypes(self.iBaseVar[0], 10000)
+		self.mem[self.iBaseFuncIDs] = MemoryTypes()
 		return self.iBaseFuncIDs
 
 	def endFunction(self):
@@ -113,7 +128,14 @@ class MemoryFunction:
 # ##################################################### #
 class MemoryGlobal:
 	def __init__(self, iBaseVars, iCantVars):
-		self.mem = MemoryTypes(iBaseVars, iCantVars)
+		iCantVar = iCantVars + 5
+
+		self.iBaseVar = {}
+
+		for i in range(0, 4):
+			self.iBaseVar[i] = iBaseVars + i * iCantVar
+
+		self.mem = MemoryTypes(iBaseVar, iBaseVars + iCantVars)
 
 	def exists(self, iMemId):
 		return self.mem.exists(iMemId)
@@ -147,6 +169,7 @@ class MemoryGlobal:
 
 class MemoryConstante:
 	def __init__(self, iBaseVars, iCantVar):
+		iCantVar =
 		self.mem = MemoryTypes(iBaseVars, iCantVar)
 
 	def exists(self, iMemId):
@@ -184,7 +207,7 @@ class MemoryManager:
 		self.mem = memory
 
 		self.globa = memory.getGlobal()
-		self.function = memory.getLocal()
+		self.function = {}
 		self.constante = memory.getConstant()
 
 		self.quNextFunction = Queue()
@@ -195,7 +218,6 @@ class MemoryManager:
 		self.function = self.quNextFunction.pop()
 
 	def returnGoSub(self):
-		return
 		self.function = quLocales.pop()
 
 	def eraFuncion(self, iFuncID):
@@ -235,6 +257,9 @@ class Memory:
 
 	def addVariableConstante(self, iType, iValue=0, iSize=1):
 		return self.constante.addVariable(iType, iValue, iSize)
+
+	def addVariableTemporal(self, iType, iValue=0, iSize=1):
+		return self.local.addVariable(iType, iValue, iSize)
 
 	def createFunction(self):
 		return self.local.createFunction()

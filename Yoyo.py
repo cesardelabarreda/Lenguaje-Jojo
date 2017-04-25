@@ -22,7 +22,9 @@ def p_programa_1(t):
 
 def p_gotoMain_1(t):
   '''gotoMain : '''
-  quads.append(typeConv.convertOp("goto"))
+  quads.append(typeConv.convertOp("era"))
+  quads.append(typeConv.convertOp("gosub"))
+  quads.append(typeConv.convertOP("end"))
 
 def p_decVarPos_1(t):
   '''decVarPos  : VARIABLES decVar decVarStar VARIABLES
