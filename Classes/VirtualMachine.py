@@ -209,6 +209,17 @@ class VM:
 		global contQuads
 		# contQuads = self.stEjecucion.pop()
 		return 1
+
+	def ver(self, oper1, oper2, res):
+		Operando1 = self.mapmemory.getVariableValue(oper1)
+		if Operando1 != None :
+			if Operando1 >= oper2 and Operando1 <= res:
+				return 1
+		return 0
+
+
+
+
 	global dirMethods
 	dirMethods = {
 		0	: equal,
@@ -236,6 +247,7 @@ class VM:
 		22 : era,
 		23 : param,
 		24 : gosub,
+		25 : ver,
 	}
 
 	def run(self):
@@ -249,5 +261,6 @@ class VM:
 			Operando2 = quad[2]
 			Res = quad[3]
 			functionToCall = dirMethods[quad[0]]
-			functionToCall(self, Operando1, Operando2, Res)
+			if functionToCall(self, Operando1, Operando2, Res) == 0
+				print "Error en cuadruplo " contQuads
 
