@@ -47,9 +47,9 @@ class MemoryTypes:
 		for i in range(0, iSize):
 			self.mem[iMem] = iValue
 		
+		print(str(iType) + " " + str(self.iLimit[iType]))
 		self.iCantVar[iType] = self.iCantVar[iType] + iSize
-		
-		if self.iBaseVar[iType] + self.getSizeType(iType) >= self.iLimit[iType]
+		if self.iBaseVar[iType] + self.getSizeType(iType) >= self.iLimit[iType]:
 			return -1
 		return iMem
 
@@ -64,27 +64,20 @@ class MemoryTypes:
 # ##################################################### #
 
 class MemoryFunction:
-	def __init__(self, iBaseFunc, iBaseVars, iCantVars):
-		self.mem = {}
+	def __init__(self, iBaseVars, iCantVars, iBaseFunc, iCantFuncs):
 		self.iBaseFuncIDs = iBaseFunc
+		self.iLimitFunc = iBaseFunc + iCantFuncs
 
-		iCantVar = iCantVars + 5
-
+		iCantVar = iCantVars / 5
 		self.iBaseVar = {}
-
+		self.iLimit = {}
 		for i in range(0, 4):
 			self.iBaseVar[i] = iBaseVars + i * iCantVar
+			self.iLimit[i] = iBaseVars + (i+1) * iCantVar
 
-		self.mem = MemoryTypes(iBaseVar, iBaseVars + iCantVars)
+		iCantVar = iCantVars / 5
 
-
-
-		
-		iCantVars /= 5
-
-		self.iBaseVar = {}
-		for i in range(0, 4):
-			self.iBaseVar[i] = iBaseVars + (i * iCantVars)
+		self.mem = {}
 	
 	def exists(self, iMemId):
 		return self.mem.exists(iMemId)
@@ -108,15 +101,20 @@ class MemoryFunction:
 		return self.mem[self.iBaseFuncIDs].addVariable(iType, iValue, iSize)
 
 	def createFunction(self):
-		self.mem[self.iBaseFuncIDs] = MemoryTypes()
+		self.mem[self.iBaseFuncIDs] = MemoryTypes(self.iBaseVar, self.iLimit)
 		return self.iBaseFuncIDs
 
 	def endFunction(self):
-		iBaseVars = self.getSize(self.iBaseFuncIDs)
+		iBaseVars = self.getSize()
 
 		for i in range(0, 4):
-			self.iBaseVar[i] = iBaseVars[i] 
+			self.iBaseVar[i] = self.iBaseVar[i] + iBaseVars[i] 
 		self.iBaseFuncIDs += 1
+
+		return self.iBaseFuncIDs < self.iLimitFunc
+
+	def getLocal(self, iFuncID):
+		return self.mem[iFuncID]
 
 	def getVariableValue(self, iMem):
 		return self.mem.getVariableValue(iMem)
@@ -128,14 +126,14 @@ class MemoryFunction:
 # ##################################################### #
 class MemoryGlobal:
 	def __init__(self, iBaseVars, iCantVars):
-		iCantVar = iCantVars + 5
-
-		self.iBaseVar = {}
-
+		iCantVar = iCantVars / 5
+		iBaseVar = {}
+		iLimit = {}
 		for i in range(0, 4):
-			self.iBaseVar[i] = iBaseVars + i * iCantVar
+			iBaseVar[i] = iBaseVars + i * iCantVar
+			iLimit[i] = iBaseVars + (i+1) * iCantVar
 
-		self.mem = MemoryTypes(iBaseVar, iBaseVars + iCantVars)
+		self.mem = MemoryTypes(iBaseVar, iLimit)
 
 	def exists(self, iMemId):
 		return self.mem.exists(iMemId)
@@ -168,10 +166,16 @@ class MemoryGlobal:
 
 
 class MemoryConstante:
-	def __init__(self, iBaseVars, iCantVar):
-		iCantVar =
-		self.mem = MemoryTypes(iBaseVars, iCantVar)
+	def __init__(self, iBaseVars, iCantVars):
+		iCantVar = iCantVars / 5
+		iBaseVar = {}
+		iLimit = {}
+		for i in range(0, 4):
+			iBaseVar[i] = iBaseVars + i * iCantVar
+			iLimit[i] = iBaseVars + (i+1) * iCantVar
 
+		self.mem = MemoryTypes(iBaseVar, iLimit)
+		
 	def exists(self, iMemId):
 		return self.mem.exists(iMemId)
 
@@ -191,7 +195,7 @@ class MemoryConstante:
 		return self.mem.getSizeString()
 
 	def addVariable(self, iType, iValue=0, iSize=1):
-		self.mem.addVariable(iType, iValue, iSize)
+		return self.mem.addVariable(iType, iValue, iSize)
 
 	def getVariableValue(self, iMem):
 		return self.mem.getVariableValue(iMem)
@@ -246,7 +250,7 @@ class MemoryManager:
 class Memory:
 	def __init__(self, iMemGlobal, iMemLocal, iMemCte):
 		self.globa = MemoryGlobal(iMemGlobal[0], iMemGlobal[1])
-		self.local = MemoryFunction(iMemLocal[0], iMemLocal[1], iMemLocal[2])
+		self.local = MemoryFunction(iMemLocal[0], iMemLocal[1], iMemLocal[2], iMemLocal[3])
 		self.constante = MemoryConstante(iMemCte[0], iMemCte[1])
 
 	def addVariableGlobal(self, iType, iValue=0, iSize=1):
@@ -273,13 +277,13 @@ class Memory:
 	def getConstant(self):
 		return self.constante
 
-	def getLocal(self):
-		return self.local
+	def getLocal(self, iFuncID):
+		return self.local.getLocal(iFuncID)
 
 
 # ##################################################### #
 
-m = Memory([100000, 100000], [1000000, 200000, 100000], [300000, 100000])
+m = Memory([100000, 100000], [200000, 100000, 1000000, 10000], [300000, 100000])
 
 print m.addVariableGlobal(0)
 print m.addVariableGlobal(0)
@@ -288,3 +292,49 @@ print m.addVariableGlobal(3)
 print m.addVariableGlobal(2)
 print m.addVariableGlobal(0, 0, 10)
 print m.addVariableGlobal(0)
+
+print m.addVariableConstante(0)
+print m.addVariableConstante(2)
+
+print m.createFunction()
+print m.addVariableLocal(0)
+print m.addVariableLocal(0)
+print m.addVariableLocal(0)
+print m.addVariableLocal(0)
+print m.addVariableLocal(0)
+print m.addVariableLocal(0, 0, 1000)
+print m.addVariableLocal(0, 0, 2)
+print m.addVariableLocal(0, 0, 1)
+
+print m.addVariableLocal(1)
+print m.addVariableLocal(1)
+print m.addVariableLocal(1)
+print m.addVariableLocal(2)
+print m.addVariableLocal(2)
+print m.addVariableLocal(1, 0, 1000)
+print m.addVariableLocal(1, 0, 2)
+print m.addVariableLocal(2, 0, 1)
+print m.addVariableLocal(2, 0, 0)
+print m.endFunction()
+
+print "\n\n"
+
+print m.createFunction()
+print m.addVariableLocal(0)
+print m.addVariableLocal(0)
+print m.addVariableLocal(0)
+print m.addVariableLocal(0)
+print m.addVariableLocal(0)
+print m.addVariableLocal(0, 0, 1000)
+print m.addVariableLocal(0, 0, 2)
+print m.addVariableLocal(0, 0, 1)
+
+print m.addVariableLocal(1)
+print m.addVariableLocal(1)
+print m.addVariableLocal(1)
+print m.addVariableLocal(2)
+print m.addVariableLocal(2)
+print m.addVariableLocal(1, 0, 1000)
+print m.addVariableLocal(1, 0, 2)
+print m.addVariableLocal(2, 0, 1)
+print m.addVariableLocal(2, 0, 0)

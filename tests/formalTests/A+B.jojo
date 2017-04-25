@@ -1,9 +1,10 @@
-@@@
-	string a, b;
-@@@
-
 public stand jojo() {
-	gets(a);
+	@@@
+		int a, b;
+	@@@
 
-	prints(a + " mundo");
+	gets(a);
+	gets(b);
+
+	prints(a + b);
 }
