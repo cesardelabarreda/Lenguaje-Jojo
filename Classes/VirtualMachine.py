@@ -147,7 +147,24 @@ class VM:
 
 	def gets(self, oper1, oper2, res):
 		Operando1 = raw_input()
-		# Hay que checar que sea el tipo de entrada igual al tipo de dato
+		if oper2 == 0 :
+			try:
+				Operando1 = int(Operando1)
+			except ValueError:
+				return 0
+
+		if oper2 == 1 :
+			try:
+				Operando1 = float(Operando1)
+			except ValueError:
+				return 0
+
+		if oper2 == 2 :
+			if Operando1 == "0"
+				Operando1 = False
+			else:
+				Operando1 = True
+
 		self.mapmemory.setVariableValue(oper1, Operando1)
 		return 1
 
@@ -217,6 +234,10 @@ class VM:
 				return 1
 		return 0
 
+	def end(self, ope1, oper2, res):
+		global contQuads
+		contQuads = self.cuadruplo.size()
+
 
 
 
@@ -247,7 +268,8 @@ class VM:
 		22 : era,
 		23 : param,
 		24 : gosub,
-		25 : ver,
+		25 : end,
+		26 : ver,
 	}
 
 	def run(self):
@@ -258,8 +280,14 @@ class VM:
 			quad = self.cuadruplo.quads[contQuads]
 			contQuads += 1
 			Operando1 = quad[1]
+			if Operando1 is list :
+				Operando1 = self.mapmemory.getVariableValue(Operando1)
 			Operando2 = quad[2]
+			if Operando2 is list :
+				Operando2 = self.mapmemory.getVariableValue(Operando2)
 			Res = quad[3]
+			if Res is list :
+				Res = self.mapmemory.getVariableValue(Res)
 			functionToCall = dirMethods[quad[0]]
 			if functionToCall(self, Operando1, Operando2, Res) == 0
 				print "Error en cuadruplo " contQuads
