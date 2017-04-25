@@ -342,7 +342,9 @@ def p_funCallParamsStar_1(t):
 def p_genParam_1(t):
   '''genParam   : '''
   var = stID.pop()
-  quads.append(typeConv.convertOp("param"), var[0], None, None)
+  global sScope
+  iMemoria = dictionaryFunction.getMemVar(sScope, var[0])
+  quads.append(typeConv.convertOp("param"), iMemoria, None, None)
   quParams.push(var[1])
 
 def p_condition_1(t):
@@ -355,7 +357,10 @@ def p_parcGTF_1(t):
   if var[1] != 2:
     sError = "Variable: " + str(var[0]) + " Type: " + str(var[1]) + " Expected: Bool"
     errorHandling.printError(9, sError, t.lexer.lineno)
-  quads.append(typeConv.convertOp("gotoF"), var[0], None, None)
+
+  global sScope
+  iMemoria = dictionaryFunction.getMemVar(sScope, var[0])
+  quads.append(typeConv.convertOp("gotoF"), iMemoria, None, None)
   stSaltos.push(quads.size() - 1)
 
 def p_endif_1(t):
@@ -393,7 +398,11 @@ def p_assign_1(t):
     sError = "VariableL: " + str(varL[0]) + " TypeL: " + str(typeConv.convertType(varL[1])) + "\n"
     sError = sError + "VariableR: " + str(varR[0]) + " TypeR: " + str(typeConv.convertType(varR[1]))
     errorHandling.printError(9, sError, t.lexer.lineno)
-  quads.append(oper, varR[0], None, varL[0])
+
+  global sScope
+  iMemoriaR = dictionaryFunction.getMemVar(sScope, varR[0])
+  iMemoriaL = dictionaryFunction.getMemVar(sScope, varL[0])
+  quads.append(oper, iMemoriaR, None, iMemoriaL)
   
     
 
@@ -411,7 +420,7 @@ def p_input_1(t):
 
   global sScope
 
-  iMemoria = dictionaryFunction.getMemVar("_Global", var[0])
+  iMemoria = dictionaryFunction.getMemVar(sScope, var[0])
   print iMemoria
 
   quads.append(typeConv.convertOp("gets"), iMemoria)
@@ -421,7 +430,7 @@ def p_output_1(t):
   var = stID.pop()
   global sScope
 
-  iMemoria = dictionaryFunction.getMemVar("_Global", var[0])
+  iMemoria = dictionaryFunction.getMemVar(sScope, var[0])
   print iMemoria
   quads.append(typeConv.convertOp("prints"), iMemoria)
 
@@ -559,7 +568,10 @@ def p_expresionNegativo_1(t):
 
   iTempCont += 1
   result = iTempCont
-  quads.append(typeConv.convertOp("-"), 0, var[0], result)
+  global sScope
+  iMemoria = dictionaryFunction.getMemVar(sScope, var[0])
+  iDirTemp = mem.addVariableTemporal(var[1], 0)
+  quads.append(typeConv.convertOp("-"), 0, iMemoria, iDirTemp)
   stID.push([result, var[1]])
   bSigno = True
 
@@ -611,7 +623,11 @@ def p_checkNOT_1(t):
 
     iTempCont += 1
     result = iTempCont
-    quads.append(oper, var[0], None, result)
+
+    global sScope
+    iMemoria = dictionaryFunction.getMemVar(sScope, var[0])
+    iDirTemp = mem.addVariableTemporal(var[1], 0)
+    quads.append(oper, iMemoria, None, iDirTemp)
     stID.push([result, res_type])
 
 
@@ -732,7 +748,12 @@ def asociIzq(t):
 
   iTempCont += 1
   result = iTempCont
-  quads.append(oper, varL[0], varR[0], result)
+ 
+  global sScope
+  iMemoriaL = dictionaryFunction.getMemVar(sScope, varL[0])
+  iMemoriaR = dictionaryFunction.getMemVar(sScope, varR[0])
+  iDirTemp = mem.addVariableTemporal(varL[1], 0)
+  quads.append(oper, iMemoriaL, iMemoriaR, iDirTemp)
   stID.push([result, res_type])
 
 def validaReturn(t):
@@ -754,7 +775,9 @@ def validaReturn(t):
   if isExpression:
     var = stID.pop()
     if iTypeFunc == var[1]: 
-      quads.append(typeConv.convertOp("return"), var[0])
+      global sScope
+      iMemoria = dictionaryFunction.getMemVar(sScope, var[0])
+      quads.append(typeConv.convertOp("return"), iMemoria)
     else:
       sError = "Error en Zadust 1"
   else:
