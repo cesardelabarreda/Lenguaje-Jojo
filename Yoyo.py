@@ -149,6 +149,7 @@ def p_defScope_1(t):
     errorHandling.printError(3, sError, t.lexer.lineno)
   iMem = mem.createFunction()
   dictionaryFunction.setMemFunc(sScope, iMem)
+  dictionaryFunction.setQuadInicial(sScope, quads.size())
 
 def p_main_1(t):
   '''main   : PUBLIC STAND JOJO defScope gotMain PARA PARC body genEndproc'''
@@ -200,6 +201,9 @@ def p_funcVarTab_1(t):
     iResult = dictionaryClass.insertParam(sClassName, sScope, variable, iTipo)
   else:
     iResult = dictionaryFunction.insertParam(sScope, variable, iTipo)
+    iMem = mem.addVariableLocal(iTipo)
+    dictionaryFunction.actualizaParam(sScope, iMem)
+    dictionaryFunction.setMemVar(sScope, variable, iMem)
 
   if iResult == 0:
     sError = "Variable: " + variable
@@ -306,7 +310,7 @@ def p_varRevisa_1(t):
     sys.exit()
 
 def p_corchetesPosExp_1(t):
-  '''corchetesPosExp  : arrAc CORCHA expression corchetesInd CORCHC
+  '''corchetesPosExp  : arrAc CORCHA expression CORCHC
                       | '''
 
 
@@ -325,25 +329,22 @@ def p_arrAc_1(t):
   stID.push([[iDirTemp2], res_type])
 
 def p_corchetesPosCte_1(t):
-  '''corchetesPosCte  : arrInit CORCHA CTE_INT cte_int corchetesInd CORCHC
+  '''corchetesPosCte  : CORCHA CTE_INT cte_int arrInit CORCHC
                       | '''
 
 def p_arrInit_1(t):
   '''arrInit : '''
   global sScope
   global sClassName
-  typeA = dictionaryFunction.getVariableType(sScope, t[-1])
+  typeA = dictionaryFunction.getVariableType(sScope, t[-3])
   if typeA <= 4 :
-    dictionaryFunction.modifyVarArray(sScope, t[-1], t[2], 1)
+    dictionaryFunction.setVarSizeOff(sScope, t[-3], t[-1], 1)
   else:
     numAt = dictionaryClass.getNumAtribute(t[-2])
-    dictionaryFunction.modifyVarArray(sScope, t[-1], t[2], numAt)
+    dictionaryFunction.setVarSizeOff(sScope, t[-1], t[2], numAt)
 
 
 
-def p_corchetesInd_1(t):
-  '''corchetesInd   : '''
-  stID.pop()
 
 def p_funCall_1(t):
   '''funCall  : ZAWARUDO funCallId funCall2'''
@@ -401,7 +402,7 @@ def p_parcGTF_1(t):
 def p_endif_1(t):
   '''endif  : '''
   end = stSaltos.pop()
-  quads.fill(end, quads.size() + 1)
+  quads.fill(end, quads.size())
 
 
 def p_conditionElse_1(t):
@@ -914,10 +915,12 @@ def validaFuncion(t):
 
   validaParams(t, params)
 
-  if varType != 4:
-    stID.push([sScope, varType])
-
-  quads.append(typeConv.convertOp("gosub"), sScope)
+  quads.append(typeConv.convertOp("gosub"), sScope, None ,dictionaryFunction.getQuadInicial(sScope))
+  itype = dictionaryFunction.getFunctionReturnType(sScope) 
+  if itype != 4:
+    iDirTemp = mem.addVariableTemporal(itype)
+    quads.append(typeConv.convertOp("="), dictionaryFunction.getMemFunc(sScope), None, iDirTemp)
+    stID.push([iDirTemp, itype])
   bMethodCall = False
 
 
@@ -991,6 +994,9 @@ if __name__ == '__main__':
       print(" ******************************************************* ") 
       yacc.parse(info, tracking=True)
       if errorHandling.hasError() or stOper.size() > 0 or stID.size() > 0 or stSaltos.size() > 0:
+        print stOper.size()
+        print stID.size()
+        print stSaltos.size()
         print(" *************** Compilacion con errores *************** ")
         #sys.exit()
       print(" *************** Compilacion Finalizada **************** ")
