@@ -109,6 +109,7 @@ def p_functionClass_1(t):
 
 def p_genEndProc_1(t):
   '''genEndproc   : '''
+  mem.endFunction()
   quads.append(typeConv.convertOp("endProc"))
 
 def p_defScopeClass_1(t):
@@ -142,6 +143,7 @@ def p_defScope_1(t):
   '''defScope : '''
   global sScope
   sScope = t[-1]
+  mem.createFunction()
 
   if dictionaryFunction.insertFunction(sScope, typeConv.convertType(t[-2])) == 0:
     sError = "Funcion: " + sScope
@@ -275,21 +277,25 @@ def p_varRevisa_1(t):
       sClass = quVariables.pop()
       sVariable = quVariables.pop()
       vartype = dictionaryClass.getAtributeType(dictionaryClass.getVariableType(sClassName, sScope, sClass), sVariable)
-      stID.push([[sClass, sVariable], vartype])
+      iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
+      stID.push([[sClass, iMemoria], vartype])
     else:
       sVariable = quVariables.pop()
       vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
-      stID.push([sVariable, vartype])
+      iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
+      stID.push([iMemoria, vartype])
   else:
     if quVariables.size() == 2:
       sClass = quVariables.pop()
       sVariable = quVariables.pop()
       vartype = dictionaryClass.getAtributeType(dictionaryFunction.getVariableType(sScope, sClass), sVariable)
-      stID.push([[sClass, sVariable], vartype])
+      iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
+      stID.push([[sClass, iMemoria], vartype])
     else:
       sVariable = quVariables.pop()
       vartype = dictionaryFunction.getVariableType(sScope, sVariable)
-      stID.push([sVariable, vartype])
+      iMemoria = dictionaryFunction.getMemVar(sScope, sVariable)
+      stID.push([iMemoria, vartype])
 
   if vartype == -1:
     sError = "Variable: " + sVariable
@@ -299,10 +305,31 @@ def p_varRevisa_1(t):
 def p_corchetesPosExp_1(t):
   '''corchetesPosExp  : CORCHA expression corchetesInd CORCHC
                       | '''
+  global sScope
+  var = stID.pop()
+  offset = dictionaryFunction.getOffSet(sScope, var[0])
+  size = dictionaryFunction.getVariableSize(sScope, t[-1])
+  quads.append(typeConv.convertOp("ver"), var[0], offset, size-1)
+  iDirTemp = mem.addVariableTemporal(var[1], 0)
+  quads.append(typeConv.convertOp("*"), var[0], offset, iDirTemp)
+  iDirTemp2 = mem.addVariableTemporal(var[1], 0)
+  iMemoria = dictionaryFunction.getMemVar(sScope, t[-1])
+  quads.append(typeConv.convertOp("+"), iMemoria, iDirTemp, iDirTemp2)
+  stID.push([[iDirTemp2], res_type])
 
 def p_corchetesPosCte_1(t):
   '''corchetesPosCte  : CORCHA CTE_INT cte_int corchetesInd CORCHC
                       | '''
+  global sScope
+  global sClassName
+  typeA = dictionaryFunction.getVariableType(sScope, t[-1])
+  if typeA >= 4 :
+    dictionaryFunction.modifyVarArray(sScope, t[-1], t[2], 1)
+  else:
+    numAt = dictionaryClass.getNumAtribute(t[-2])
+    dictionaryFunction.modifyVarArray(sScope, t[-1], t[2], numAt)
+
+
 
 def p_corchetesInd_1(t):
   '''corchetesInd   : '''
@@ -357,6 +384,7 @@ def p_parcGTF_1(t):
   if var[1] != 2:
     sError = "Variable: " + str(var[0]) + " Type: " + str(var[1]) + " Expected: Bool"
     errorHandling.printError(9, sError, t.lexer.lineno)
+
   quads.append(typeConv.convertOp("gotoF"), var[0], None, None)
   stSaltos.push(quads.size() - 1)
 
@@ -395,6 +423,7 @@ def p_assign_1(t):
     sError = "VariableL: " + str(varL[0]) + " TypeL: " + str(typeConv.convertType(varL[1])) + "\n"
     sError = sError + "VariableR: " + str(varR[0]) + " TypeR: " + str(typeConv.convertType(varR[1]))
     errorHandling.printError(9, sError, t.lexer.lineno)
+
   quads.append(oper, varR[0], None, varL[0])
   
     
@@ -410,22 +439,12 @@ def p_assignExpID_1(t):
 def p_input_1(t):
   '''input  : GETS PARA var PARC SEMICOLON'''
   var = stID.pop()
-
-  global sScope
-
-  iMemoria = dictionaryFunction.getMemVar("_Global", var[0])
-  print iMemoria
-
-  quads.append(typeConv.convertOp("gets"), iMemoria)
+  quads.append(typeConv.convertOp("gets"), var[0], var[1])
 
 def p_output_1(t):
   '''output   : PRINTS PARA expression PARC SEMICOLON'''
   var = stID.pop()
-  global sScope
-
-  iMemoria = dictionaryFunction.getMemVar("_Global", var[0])
-  print iMemoria
-  quads.append(typeConv.convertOp("prints"), iMemoria)
+  quads.append(typeConv.convertOp("prints"), var[0])
 
 
 def p_while_1(t):
@@ -561,8 +580,9 @@ def p_expresionNegativo_1(t):
 
   iTempCont += 1
   result = iTempCont
-  quads.append(typeConv.convertOp("-"), 0, var[0], result)
-  stID.push([result, var[1]])
+  iDirTemp = mem.addVariableTemporal(var[1], 0)
+  quads.append(typeConv.convertOp("-"), 0, var[0], iDirTemp)
+  stID.push([iDirTemp, var[1]])
   bSigno = True
 
 
@@ -613,8 +633,10 @@ def p_checkNOT_1(t):
 
     iTempCont += 1
     result = iTempCont
-    quads.append(oper, var[0], None, result)
-    stID.push([result, res_type])
+
+    iDirTemp = mem.addVariableTemporal(var[1], 0)
+    quads.append(oper, var[0], None, iDirTemp)
+    stID.push([iDirTemp, res_type])
 
 
 def p_not_1(t):
@@ -659,19 +681,28 @@ def p_const_1(t):
 
 def p_cte_int_1(t):
   '''cte_int  : '''
-  stID.push([t[-1], 0])
+  valor = int(t[-1])
+  iDirCte = mem.addVariableConstante(0,valor)
+  stID.push(iDirCte, 0])
 
 def p_cte_real_1(t):
   '''cte_real  : '''
-  stID.push([t[-1], 1])
+  valor = float(t[-1])
+  iDirCte = mem.addVariableConstante(1,valor)
+  stID.push([iDirCte, 1])
 
 def p_cte_bool_1(t):
   '''cte_bool  : '''
-  stID.push([t[-1], 2])
+  valor = True
+  if t[-1].lower() == "false":
+    valor = False
+  iDirCte = mem.addVariableConstante(2,valor)
+  stID.push([iDirCte, 2])
 
 def p_cte_str_1(t):
   '''cte_str  : '''
-  stID.push([t[-1], 3])
+  iDirCte = mem.addVariableConstante(3,t[-1])
+  stID.push([iDirCte, 3])
 
 def p_accessPos_1(t):
   '''accessPos  : access 
@@ -734,8 +765,10 @@ def asociIzq(t):
 
   iTempCont += 1
   result = iTempCont
-  quads.append(oper, varL[0], varR[0], result)
-  stID.push([result, res_type])
+ 
+  iDirTemp = mem.addVariableTemporal(varL[1], 0)
+  quads.append(oper, varL[0], varR[0], iDirTemp)
+  stID.push([iDirTemp, res_type])
 
 def validaReturn(t):
   global isExpression
