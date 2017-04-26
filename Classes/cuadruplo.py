@@ -21,8 +21,6 @@ class Quadruple:
 	def fill(self, quadNum, filler, fillPos=3):
 		if self.size() <= quadNum:
 			return 0
-		if self.size() < filler and fillPos==3:
-			return 0
 		self.quads[quadNum][fillPos] = filler
 		return 1
 

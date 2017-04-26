@@ -1,7 +1,6 @@
 func int factorial(int n) {
 	if (n == 0)	{ zadust 1; }
-
-	zadust n * factorial(n - 1);
+	zadust n * zawarudo factorial(n - 1);
 }
 
 
@@ -11,5 +10,5 @@ public stand jojo() {
 	@@@
 
 	gets(n);
-	prints(factorial(n));
+	prints(zawarudo factorial(n));
 }

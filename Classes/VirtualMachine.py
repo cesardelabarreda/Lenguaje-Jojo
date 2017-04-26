@@ -86,6 +86,10 @@ class VM:
 		if Operando1 != None :
 			self.mapmemory.setVariableValue(res, Operando1)
 			return 1
+		else:
+			global ret
+			self.mapmemory.setVariableValue(res, ret)
+			return 1
 		return 0
 
 	def notequals(self, oper1, oper2, res):
@@ -181,7 +185,7 @@ class VM:
 			if not self.mapmemory.getVariableValue(oper1) :   
 				global contQuads
 				contQuads = res
-				return 1
+			return 1
 		return 0
 
 	def gotoV(self, oper1, oper2, res):
@@ -190,7 +194,7 @@ class VM:
 			if self.mapmemory.getVariableValue(oper1) :   
 				global contQuads
 				contQuads = res
-				return 1
+			return 1
 		return 0
 
 
@@ -200,13 +204,16 @@ class VM:
 
 
 	def param(self, oper1, oper2, res):
-		self.mapmemory.param(oper1)
-		return 1
+		Operando1 = self.mapmemory.getVariableValue(oper1)
+		if Operando1 != None :
+			self.mapmemory.paramFunction(res, Operando1)
+			return 1
+		return 0
 
 	def returns(self, oper1, oper2, res):
 		global ret
 		ret = self.mapmemory.getVariableValue(oper1)
-		if Operando1 != None :		
+		if ret != None :		
 			self.mapmemory.returnGoSub()
 			global contQuads
 			contQuads = self.stEjecucion.pop()
@@ -224,7 +231,7 @@ class VM:
 	def endProc(self, oper1, oper2, res):
 		self.mapmemory.returnGoSub()
 		global contQuads
-		# contQuads = self.stEjecucion.pop()
+	 	contQuads = self.stEjecucion.pop()
 		return 1
 
 	def ver(self, oper1, oper2, res):
@@ -277,6 +284,7 @@ class VM:
 		global contQuads
 		global dirMethods
 		while(contQuads < self.cuadruplo.size()):
+			#print contQuads
 			quad = self.cuadruplo.quads[contQuads]
 			contQuads += 1
 			Operando1 = quad[1]
@@ -288,7 +296,14 @@ class VM:
 			Res = quad[3]
 			if Res is list :
 				Res = self.mapmemory.getVariableValue(Res)
+			
+			
 			functionToCall = dirMethods[quad[0]]
 			if functionToCall(self, Operando1, Operando2, Res) == 0:
-				print "Error en cuadruplo " + contQuads
+				print "Error en cuadruplo "  + str(contQuads)
+			#try:
+			#	print "Val 1: " + str(self.mapmemory.getVariableValue(Operando1))
+			#	print "Val 2: " + str(self.mapmemory.getVariableValue(Operando2))
+			#except :
+			#	print "hola"
 

@@ -34,7 +34,7 @@ public stand jojo() {
 		int i;
 	@@@
 	MAXN = 1000;
-	EratosthenesON();
+	zawarudo EratosthenesON();
 
 	i = 0;
 	while (i < pc) {

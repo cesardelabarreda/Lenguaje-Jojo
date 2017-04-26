@@ -50,10 +50,8 @@ class Function:
 		self.params.append([-1, paramType])
 		return 1
 
-	def actualizaParam(self, iParamNum, memId):
-		if self.sizeParams() <= iParamNum
-			return 0
-		self.params[iParamNum][0] = memId
+	def actualizaParam(self, memId):
+		self.params[self.sizeParams() - 1][0] = memId
 
 
 	def getVariableType(self, varId):
@@ -89,6 +87,9 @@ class Function:
 	def setQuadInicial(self, iQuad):
 		self.quadInicial = iQuad
 		return 1
+
+	def getQuadInicial(self):
+		return self.quadInicial
 
 	def getMemVar(self, varId):
 		if self.existsVar(varId) == 0:

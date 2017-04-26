@@ -1,7 +1,7 @@
 func int fibo(int n) {
-	if (n == 0 || n == 1) { zadust 1; }
+	if (n == 0 || n == 1) { zadust n; }
 
-	zadust fibo(n - 1) + fibo(n - 2);
+	zadust zawarudo fibo(n - 1) + zawarudo fibo(n - 2);
 }
 
 
@@ -11,5 +11,5 @@ public stand jojo() {
 	@@@
 
 	gets(n);
-	prints(fibo(n));
+	prints(zawarudo fibo(n));
 }
