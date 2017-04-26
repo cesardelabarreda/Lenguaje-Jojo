@@ -109,6 +109,7 @@ def p_functionClass_1(t):
 
 def p_genEndProc_1(t):
   '''genEndproc   : '''
+  mem.endFunction()
   quads.append(typeConv.convertOp("endProc"))
 
 def p_defScopeClass_1(t):
@@ -142,6 +143,7 @@ def p_defScope_1(t):
   '''defScope : '''
   global sScope
   sScope = t[-1]
+  mem.createFunction()
 
   if dictionaryFunction.insertFunction(sScope, typeConv.convertType(t[-2])) == 0:
     sError = "Funcion: " + sScope
