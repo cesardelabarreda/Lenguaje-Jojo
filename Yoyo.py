@@ -382,8 +382,7 @@ def p_funCallParamsStar_1(t):
 def p_genParam_1(t):
   '''genParam   : '''
   var = stID.pop()
-  quads.append(typeConv.convertOp("param"), var[0], None, None)
-  quParams.push(var[1])
+  quParams.push(var)
 
 def p_condition_1(t):
   '''condition  : IF PARA expression parcGTF LLAVEA actionStar LLAVEC conditionElse endif'''
@@ -822,9 +821,11 @@ def validaParams(t, params):
   i = 0
   while quParams.empty() == False and i < len(params):
     par = quParams.pop()
-    if par != params[i]:
+    if par[1] != params[i][1]:
       sError = "Parametro numero: " + str(i)
       errorHandling.printError(12, sError, t.lexer.lineno)
+    else: 
+      quads.append(typeConv.convertOp("param"), par[0], None, params[i][0])
     i += 1
 
   # Validar tamanos de argumentos y parametros
