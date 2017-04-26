@@ -7,6 +7,7 @@ class Function:
 		self.vars = {}
 		self.params = []
 		self.retType = funcRetType
+		self.memId = -1
 
 	def emptyVars(self):
 		return self.vars == {}
@@ -48,6 +49,8 @@ class Function:
 		self.params.append(paramType)
 		return 1
 
+
+
 	def getVariableType(self, varId):
 		if self.existsVar(varId) == 0:
 			return -1
@@ -59,15 +62,32 @@ class Function:
 	def getParams(self):
 		return self.params
 
-	def setMem(self, varId, mem):
+	def setMemVar(self, varId, mem):
 		if self.existsVar(varId) == 0:
 			return 0
 		return self.vars[varId].setMemory(mem)
 
-	def getMem(self, varId):
+	def setMemFunc(self, iMem):
+		self.memId = iMem
+		return 1
+
+	def setVarSize(self, varId, iSize):
+    if self.existsVar(varId) == 0:
+      return 0
+    return self.vars[varId].setSize(iSize)
+
+  def setVarOffset(self, varId, iOffset):
+    if self.existsVar(varId) == 0:
+      return 0
+    return self.vars[varId].setOffset(iOffset)
+
+	def getMemVar(self, varId):
 		if self.existsVar(varId) == 0:
 			return 0
 		return self.vars[varId].getMemory()
+
+	def getMemFunc(self):
+		return self.memId
 
 	def deleteVar(self, varId):
 		if self.existsVar(varId) == 0:

@@ -5,13 +5,27 @@ class Variable:
 		self.convert = TypeConvertion()
 		self.tipo = varTipo
 		self.memory = -1
+		self.size = 0
+		self.offset = 1
 
-	def setMemory(self, mem):
-		self.memory = mem
+	def setMemory(self, iMem):
+		self.memory = iMem
 		return 1
+
+	def setSize(self, iSize):
+		self.size = iSize
+
+	def setOffset(self, iOffset):
+		self.offset = iOffset
 
 	def getMemory(self):
 		return self.memory
+
+	def getSize(self):
+		return self.size
+
+	def getOffset(self):
+		return self.offset
 
 	def pprint(self):
 		print(str(self))
