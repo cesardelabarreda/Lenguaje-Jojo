@@ -1,3 +1,4 @@
+import copy
 from Util import Util
 from CuboSemantico import TypeConvertion
 from DataStructures.Dictionary import Dictionary
@@ -213,18 +214,24 @@ class MemoryManager:
 		self.function = {}
 		self.constante = memory.getConstant()
 
-		self.quNextFunction = Queue()
-		self.quFunctions = Queue()
+		self.stNextFunction = Stack()
+		self.stFunctions = Stack()
 
 	def moveMemGoSub(self):
-		self.quFunctions.push(self.function)
-		self.function = self.quNextFunction.pop()
+		self.stFunctions.push(self.function)
+		self.function = self.stNextFunction.pop()
 
 	def returnGoSub(self):
-		self.function = self.quFunctions.pop()
+		self.function = self.stFunctions.pop()
+
 
 	def eraFuncion(self, iFuncID):
-		self.quNextFunction.push(self.mem.getLocal(iFuncID))
+		self.stNextFunction.push(copy.deepcopy(self.mem.getLocal(iFuncID)))
+
+	def paramFunction(self, iMemId, iValue):
+		stF = self.stNextFunction.pop()
+		stF.setVariableValue(iMemId, iValue)
+		self.stNextFunction.push(stF)
 
 	def getVariableValue(self, iMemId):
 		if self.globa.exists(iMemId):
@@ -243,6 +250,9 @@ class MemoryManager:
 		if self.constante.exists(iMemId):
 			return self.constante.setVariableValue(iMemId, iValue)
 		return None
+
+	
+
 
 # ##################################################### #
 

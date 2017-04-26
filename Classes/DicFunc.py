@@ -66,10 +66,10 @@ class DicFunction:
       return 0
     return self.functions[functionId].insertParam(varId, paramType)
 
-  def actualizaParam(self, functionId, iParamNum, memId):
+  def actualizaParam(self, functionId, memId):
     if self.existsFunction(functionId) == 0:
       return 0
-    return self.functions[functionId].actualizaParam(iParamNum, memId)
+    return self.functions[functionId].actualizaParam(memId)
 
   def getVariableType(self, functionId, varId):
     if self.existsFunction(functionId):
@@ -127,6 +127,11 @@ class DicFunction:
     if self.existsFunction(functionId) == 0:
       return 0
     return self.functions[functionId].setQuadInicial(iQuad)
+
+  def getQuadInicial(self, functionId):
+    if self.existsFunction(functionId) == 0:
+      return -1
+    return self.functions[functionId].getQuadInicial()
 
   def pprint(self):
     iTam = self.size()
