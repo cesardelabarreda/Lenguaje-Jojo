@@ -83,15 +83,40 @@ class DicFunction:
       return -1
     return self.functions[functionId].getParams()
 
+  def setVarSizeOff(self, functionId, varId, iSize, iOffset):
+    if self.setVarSize(functionId, varId, iSize) == 0:
+      return 0
+    return self.setVarOffset(functionId, varId, iSize)
+
+  def setVarSize(self, functionId, varId, iSize):
+    if self.existsFunction(functionId) == 0:
+      return self.functions["_Global"].setVarSize(varId, iSize)
+    return self.functions[functionId].setVarSize(varId, iSize)
+
+  def setVarOffset(self, functionId, varId, iOffset):
+    if self.existsFunction(functionId) == 0:
+      return self.functions["_Global"].setVarOffset(varId, iOffset)
+    return self.functions[functionId].setVarOffset(varId, iOffset)
+
   def setMemVar(self, functionId, varId, mem):
     if self.existsFunction(functionId) == 0:
       return 0
-    return self.functions[functionId].setMem(varId, mem)
+    return self.functions[functionId].setMemVar(varId, mem)
+
+  def setMemFunc(self, functionId, mem):
+    if self.existsFunction(functionId) == 0:
+      return 0
+    return self.functions[functionId].setMemFunc(mem)
 
   def getMemVar(self, functionId, varId):
     if self.existsFunction(functionId) == 0:
-      return self.functions["_Global"].getMem(varId)
-    return self.functions[functionId].getMem(varId)
+      return self.functions["_Global"].getMemVar(varId)
+    return self.functions[functionId].getMemVar(varId)
+
+  def getMemFunc(self, functionId):
+    if self.existsFunction(functionId) == 0:
+      return 0
+    return self.functions[functionId].getMemFunc(mem)
 
   def pprint(self):
     iTam = self.size()
