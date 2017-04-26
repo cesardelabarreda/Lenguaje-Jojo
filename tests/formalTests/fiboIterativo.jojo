@@ -25,5 +25,5 @@ public stand jojo() {
 	@@@
 
 	gets(n);
-	prints(fibo(n));
+	prints(zawarudo fibo(n));
 }
