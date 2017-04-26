@@ -8,6 +8,7 @@ class Function:
 		self.params = []
 		self.retType = funcRetType
 		self.memId = -1
+		self.quadInicial = -1
 
 	def emptyVars(self):
 		return self.vars == {}
@@ -72,14 +73,18 @@ class Function:
 		return 1
 
 	def setVarSize(self, varId, iSize):
-    if self.existsVar(varId) == 0:
-      return 0
-    return self.vars[varId].setSize(iSize)
+	    if self.existsVar(varId) == 0:
+	      return 0
+	    return self.vars[varId].setSize(iSize)
 
-  def setVarOffset(self, varId, iOffset):
-    if self.existsVar(varId) == 0:
-      return 0
-    return self.vars[varId].setOffset(iOffset)
+	def setVarOffset(self, varId, iOffset):
+		if self.existsVar(varId) == 0:
+	  		return 0
+		return self.vars[varId].setOffset(iOffset)
+
+	def setQuadInicial(self, iQuad):
+		self.quadInicial = iQuad
+		return 1
 
 	def getMemVar(self, varId):
 		if self.existsVar(varId) == 0:

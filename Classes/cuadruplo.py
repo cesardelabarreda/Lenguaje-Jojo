@@ -18,12 +18,12 @@ class Quadruple:
 	def append(self, operation, left=None, right=None, temp=None):
 		self.quads.append([operation, left, right, temp])
 
-	def fill(self, quadNum, filler):
+	def fill(self, quadNum, filler, fillPos=3):
 		if self.size() <= quadNum:
 			return 0
-		if self.size() < filler:
+		if self.size() < filler and fillPos==3:
 			return 0
-		self.quads[quadNum][3] = filler
+		self.quads[quadNum][fillPos] = filler
 		return 1
 
 	def pprint(self):

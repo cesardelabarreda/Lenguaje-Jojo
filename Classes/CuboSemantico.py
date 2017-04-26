@@ -229,7 +229,7 @@ class TypeConvertion:
 			"era" 		: 22,
 			"param"		: 23,
 			"gosub" 	: 24,
-			"end"			: 25,
+			"end"		: 25,
 
 			0 	: "=      ",
 			1 	: "+      ",

@@ -115,8 +115,13 @@ class DicFunction:
 
   def getMemFunc(self, functionId):
     if self.existsFunction(functionId) == 0:
+      return -1
+    return self.functions[functionId].getMemFunc()
+
+  def setQuadInicial(self, functionId, iQuad):
+    if self.existsFunction(functionId) == 0:
       return 0
-    return self.functions[functionId].getMemFunc(mem)
+    return self.functions[functionId].setQuadInicial(iQuad)
 
   def pprint(self):
     iTam = self.size()

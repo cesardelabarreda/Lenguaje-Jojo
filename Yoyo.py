@@ -24,7 +24,7 @@ def p_gotoMain_1(t):
   '''gotoMain : '''
   quads.append(typeConv.convertOp("era"))
   quads.append(typeConv.convertOp("gosub"))
-  quads.append(typeConv.convertOP("end"))
+  quads.append(typeConv.convertOp("end"))
 
 def p_decVarPos_1(t):
   '''decVarPos  : VARIABLES decVar decVarStar VARIABLES
@@ -109,7 +109,7 @@ def p_functionClass_1(t):
 
 def p_genEndProc_1(t):
   '''genEndproc   : '''
-  mem.endFunction()
+  mem.endFunction() 
   quads.append(typeConv.convertOp("endProc"))
 
 def p_defScopeClass_1(t):
@@ -143,18 +143,21 @@ def p_defScope_1(t):
   '''defScope : '''
   global sScope
   sScope = t[-1]
-  mem.createFunction()
 
   if dictionaryFunction.insertFunction(sScope, typeConv.convertType(t[-2])) == 0:
     sError = "Funcion: " + sScope
     errorHandling.printError(3, sError, t.lexer.lineno)
+  iMem = mem.createFunction()
+  dictionaryFunction.setMemFunc(sScope, iMem)
 
 def p_main_1(t):
-  '''main   : gotMain PUBLIC STAND JOJO defScope PARA PARC body genEndproc'''
+  '''main   : PUBLIC STAND JOJO defScope gotMain PARA PARC body genEndproc'''
 
 def p_gotMain_1(t):
   '''gotMain  : '''
-  quads.fill(0, quads.size())
+  global sScope
+  quads.fill(0, dictionaryFunction.getMemFunc(sScope), 1)
+  quads.fill(1, quads.size())
 
 def p_body_1(t):
   '''body   : LLAVEA decVarPos actionStar LLAVEC'''
@@ -303,8 +306,12 @@ def p_varRevisa_1(t):
     sys.exit()
 
 def p_corchetesPosExp_1(t):
-  '''corchetesPosExp  : CORCHA expression corchetesInd CORCHC
+  '''corchetesPosExp  : arrAc CORCHA expression corchetesInd CORCHC
                       | '''
+
+
+def p_arrAc_1(t):
+  '''arrAc : '''            
   global sScope
   var = stID.pop()
   offset = dictionaryFunction.getOffSet(sScope, var[0])
@@ -318,12 +325,15 @@ def p_corchetesPosExp_1(t):
   stID.push([[iDirTemp2], res_type])
 
 def p_corchetesPosCte_1(t):
-  '''corchetesPosCte  : CORCHA CTE_INT cte_int corchetesInd CORCHC
+  '''corchetesPosCte  : arrInit CORCHA CTE_INT cte_int corchetesInd CORCHC
                       | '''
+
+def p_arrInit_1(t):
+  '''arrInit : '''
   global sScope
   global sClassName
   typeA = dictionaryFunction.getVariableType(sScope, t[-1])
-  if typeA >= 4 :
+  if typeA <= 4 :
     dictionaryFunction.modifyVarArray(sScope, t[-1], t[2], 1)
   else:
     numAt = dictionaryClass.getNumAtribute(t[-2])
@@ -349,7 +359,8 @@ def p_funCallId_1(t):
 
 def p_genEra_1(t):
   '''genEra   : '''
-  quads.append(typeConv.convertOp("era"))
+  iMem = dictionaryFunction.getMemFunc(quFunc.front())
+  quads.append(typeConv.convertOp("era"), iMem)
 
 def p_funCallStar_1(t):
   '''funCallStar  : funCallIsObject corchetesPosExp DOT funCallId funCallStar
@@ -683,7 +694,7 @@ def p_cte_int_1(t):
   '''cte_int  : '''
   valor = int(t[-1])
   iDirCte = mem.addVariableConstante(0,valor)
-  stID.push(iDirCte, 0])
+  stID.push([iDirCte, 0])
 
 def p_cte_real_1(t):
   '''cte_real  : '''
@@ -701,7 +712,7 @@ def p_cte_bool_1(t):
 
 def p_cte_str_1(t):
   '''cte_str  : '''
-  iDirCte = mem.addVariableConstante(3,t[-1])
+  iDirCte = mem.addVariableConstante(3, t[-1])
   stID.push([iDirCte, 3])
 
 def p_accessPos_1(t):
@@ -895,7 +906,6 @@ def validaFuncion(t):
   # Validar tipos de retorno
   varType = dictionaryFunction.getFunctionReturnType(sScope)
   params = dictionaryFunction.getParams(sScope)
-  print sScope
   print(params)
   if varType == -1:
     sError = "Funcion: " + str(sScope)
@@ -948,7 +958,7 @@ sScope = ""
 sAccess = ""
 sClassName = ""
 
-mem = Memory([100000, 100000], [1000000, 200000, 100000], [300000, 100000])
+mem = Memory([100000, 100000], [200000, 100000, 1000000, 10000], [300000, 100000])
 
 dictionaryClass = DicClass()
 dictionaryFunction = DicFunction()

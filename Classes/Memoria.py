@@ -40,14 +40,13 @@ class MemoryTypes:
 		return self.iBaseVar[iType] + self.iCantVar[iType]
 		
 	def addVariable(self, iType, iValue=0, iSize=1):
-		if iType == 3:
+		if iType == 3 and iValue == 0:
 			iValue = ""
 		iMem = self.getNextMem(iType)
 
 		for i in range(0, iSize):
 			self.mem[iMem] = iValue
 		
-		print(str(iType) + " " + str(self.iLimit[iType]))
 		self.iCantVar[iType] = self.iCantVar[iType] + iSize
 		if self.iBaseVar[iType] + self.getSizeType(iType) >= self.iLimit[iType]:
 			return -1
@@ -80,7 +79,7 @@ class MemoryFunction:
 		self.mem = {}
 	
 	def exists(self, iMemId):
-		return self.mem.exists(iMemId)
+		return self.mem[self.iBaseFuncIDs].exists(iMemId)
 
 	def getSize(self):
 		return self.mem[self.iBaseFuncIDs].getSize()
@@ -218,14 +217,14 @@ class MemoryManager:
 		self.quFunctions = Queue()
 
 	def moveMemGoSub(self):
-		self.quFunction.push(self.function)
+		self.quFunctions.push(self.function)
 		self.function = self.quNextFunction.pop()
 
 	def returnGoSub(self):
-		self.function = quLocales.pop()
+		self.function = self.quFunctions.pop()
 
 	def eraFuncion(self, iFuncID):
-		self.quNextFunction.push(memory.getLocal(iFuncID))
+		self.quNextFunction.push(self.mem.getLocal(iFuncID))
 
 	def getVariableValue(self, iMemId):
 		if self.globa.exists(iMemId):
@@ -280,9 +279,18 @@ class Memory:
 	def getLocal(self, iFuncID):
 		return self.local.getLocal(iFuncID)
 
+	def getVariableValue(self, iMemId):
+		if self.globa.exists(iMemId):
+			return self.globa.getVariableValue(iMemId)
+		if self.local.exists(iMemId):
+			return self.function.getVariableValue(iMemId)
+		if self.constante.exists(iMemId):
+			return self.constante.getVariableValue(iMemId)
+		return None
+
 
 # ##################################################### #
-
+'''
 m = Memory([100000, 100000], [200000, 100000, 1000000, 10000], [300000, 100000])
 
 print m.addVariableGlobal(0)
@@ -338,3 +346,5 @@ print m.addVariableLocal(1, 0, 1000)
 print m.addVariableLocal(1, 0, 2)
 print m.addVariableLocal(2, 0, 1)
 print m.addVariableLocal(2, 0, 0)
+
+'''
