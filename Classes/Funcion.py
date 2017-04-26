@@ -46,9 +46,13 @@ class Function:
 		if self.insertVar(varId, paramType) == 0:
 			return 0
 
-		self.params.append(paramType)
+		self.params.append([-1, paramType])
 		return 1
 
+	def actualizaParam(self, iParamNum, memId):
+		if self.sizeParams() <= iParamNum
+			return 0
+		self.params[iParamNum][0] = memId
 
 
 	def getVariableType(self, varId):
