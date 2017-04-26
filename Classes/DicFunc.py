@@ -66,6 +66,11 @@ class DicFunction:
       return 0
     return self.functions[functionId].insertParam(varId, paramType)
 
+  def actualizaParam(self, functionId, iParamNum, memId):
+    if self.existsFunction(functionId) == 0:
+      return 0
+    return self.functions[functionId].actualizaParam(iParamNum, memId)
+
   def getVariableType(self, functionId, varId):
     if self.existsFunction(functionId):
       tipo = self.functions[functionId].getVariableType(varId)
