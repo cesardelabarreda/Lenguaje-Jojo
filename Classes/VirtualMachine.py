@@ -160,7 +160,7 @@ class VM:
 				return 0
 
 		if oper2 == 2 :
-			if Operando1 == "0"
+			if Operando1 == "0":
 				Operando1 = False
 			else:
 				Operando1 = True
@@ -195,7 +195,7 @@ class VM:
 
 
 	def era(self, oper1, oper2, res):
-		self.mapmemory.eraLocal(oper1)
+		self.mapmemory.eraFuncion(oper1)
 		return 1
 
 
@@ -214,7 +214,7 @@ class VM:
 		return 0
 
 	def gosub(self, oper1, oper2, res):
-		self.mapmemory.moveMemGoSub(oper1) 
+		self.mapmemory.moveMemGoSub() 
 		global contQuads
 		self.stEjecucion.push(contQuads)
 		contQuads = res
@@ -289,6 +289,6 @@ class VM:
 			if Res is list :
 				Res = self.mapmemory.getVariableValue(Res)
 			functionToCall = dirMethods[quad[0]]
-			if functionToCall(self, Operando1, Operando2, Res) == 0
-				print "Error en cuadruplo " contQuads
+			if functionToCall(self, Operando1, Operando2, Res) == 0:
+				print "Error en cuadruplo " + contQuads
 

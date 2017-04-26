@@ -19,5 +19,5 @@ public stand jojo() {
 	@@@
 
 	gets(n);
-	prints(factorial(n));
+	prints(zawarudo factorial(n));
 }
