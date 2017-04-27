@@ -230,6 +230,7 @@ class TypeConvertion:
 			"param"		: 23,
 			"gosub" 	: 24,
 			"end"		: 25,
+            "ver"       : 26,
 
 			0 	: "=      ",
 			1 	: "+      ",
@@ -257,6 +258,7 @@ class TypeConvertion:
 			23 	: "param  ",
 			24 	: "gosub  ",
 			25	: "end    ",
+            26  : "ver    ",
 		}
 
 	def existType(self, tipo):

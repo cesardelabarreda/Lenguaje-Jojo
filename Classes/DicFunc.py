@@ -103,6 +103,17 @@ class DicFunction:
       return self.functions["_Global"].setVarOffset(varId, iOffset)
     return self.functions[functionId].setVarOffset(varId, iOffset)
 
+  def getVarOffset(self, functionId, varId):
+    if self.existsFunction(functionId) == 0:
+      return self.functions["_Global"].getVarOffset(varId)
+    return self.functions[functionId].getVarOffset(varId)
+
+  def getVarSize(self, functionId, varId):
+    if self.existsFunction(functionId) == 0:
+      return self.functions["_Global"].getVarSize(varId)
+    return self.functions[functionId].getVarSize(varId)
+
+
   def setMemVar(self, functionId, varId, mem):
     if self.existsFunction(functionId) == 0:
       return 0

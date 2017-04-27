@@ -84,6 +84,17 @@ class Function:
 	  		return 0
 		return self.vars[varId].setOffset(iOffset)
 
+
+	def getVarOffset(self, varId):
+		if self.existsVar(varId) == 0:
+	  		return 0
+		return self.vars[varId].getOffset()
+
+	def getVarSize(self, varId):
+	    if self.existsVar(varId) == 0:
+	      return 0
+	    return self.vars[varId].getSize()
+
 	def setQuadInicial(self, iQuad):
 		self.quadInicial = iQuad
 		return 1
