@@ -105,7 +105,7 @@ class DicFunction:
 
   def setMemVar(self, functionId, varId, mem):
     if self.existsFunction(functionId) == 0:
-      return 0
+      return self.functions["_Global"].setMemVar(varId, mem)
     return self.functions[functionId].setMemVar(varId, mem)
 
   def setMemFunc(self, functionId, mem):
@@ -132,6 +132,11 @@ class DicFunction:
     if self.existsFunction(functionId) == 0:
       return -1
     return self.functions[functionId].getQuadInicial()
+
+  def isLocal(self, functionId, varId):
+    if self.existsFunction(functionId) == 0:
+      return 0
+    return self.functions[functionId].existsVar(varId)
 
   def pprint(self):
     iTam = self.size()
