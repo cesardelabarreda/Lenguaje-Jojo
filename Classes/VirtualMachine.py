@@ -284,7 +284,7 @@ class VM:
 		global contQuads
 		global dirMethods
 		while(contQuads < self.cuadruplo.size()):
-			#print contQuads
+			# print contQuads
 			quad = self.cuadruplo.quads[contQuads]
 			contQuads += 1
 			Operando1 = quad[1]
@@ -301,9 +301,10 @@ class VM:
 			functionToCall = dirMethods[quad[0]]
 			if functionToCall(self, Operando1, Operando2, Res) == 0:
 				print "Error en cuadruplo "  + str(contQuads)
-			#try:
-			#	print "Val 1: " + str(self.mapmemory.getVariableValue(Operando1))
-			#	print "Val 2: " + str(self.mapmemory.getVariableValue(Operando2))
-			#except :
-			#	print "hola"
-
+			"""
+			try:
+				print "Val 1: " + str(self.mapmemory.getVariableValue(Operando1))
+				print "Val 2: " + str(self.mapmemory.getVariableValue(Operando2))
+			except :
+				print "hola"
+			"""
