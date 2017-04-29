@@ -60,6 +60,7 @@ def p_scopeClass_1(t):
   if dictionaryClass.insertClass(sClassName) == 0:
     sError = "Clase: " + sClassName
     errorHandling.printError(5, sError, t.lexer.lineno)
+    sys.exit()
 
 def p_extends_1(t):
   '''extends  : HAMON ID scopeHamon 
@@ -73,6 +74,7 @@ def p_scopeHamon_1(t):
   if dictionaryClass.insertHamon(sClassName, herencia) == 0:
     sError = sClassName + " intenta heredar de " + herencia
     errorHandling.printError(6, sError, t.lexer.lineno)
+    sys.exit()
 
 def p_bodyclass_1(t):
   '''bodyclass  : LLAVEA decVarClassPos funcOn functionClassStar funcOff LLAVEC'''
@@ -122,6 +124,13 @@ def p_defScopeClass_1(t):
   if dictionaryClass.insertMethod(sClassName, sScope, typeConv.convertType(sTipo), typeConv.convertAccess(sAccess)) == 0:
     sError = "Metodo: " + sScope
     errorHandling.printError(4, sError, t.lexer.lineno)
+    sys.exit()
+  # TODO: Agregar el metodo a la memoria del objeto
+  """
+  iMem = mem.createMethod()
+  dictionaryClass.setMemFunc(sClassName, sScope, iMem)
+  dictionaryClass.setQuadInicial(sClassName, sScope, quads.size())
+  """
 
 def p_decVarStar_1(t):
   '''decVarStar   : decVar decVarStar
@@ -155,10 +164,10 @@ def p_main_1(t):
   '''main   : PUBLIC STAND JOJO defScope gotMain PARA PARC body genEndproc'''
 
 def p_gotMain_1(t):
-  '''gotMain  : '''
-  global sScope
-  quads.fill(0, dictionaryFunction.getMemFunc(sScope), 1)
-  quads.fill(1, quads.size())
+	'''gotMain  : '''
+	global sScope
+	quads.fill(0, dictionaryFunction.getMemFunc(sScope), 1)
+	quads.fill(1, quads.size())
 
 def p_body_1(t):
   '''body   : LLAVEA decVarPos actionStar LLAVEC'''
@@ -199,6 +208,12 @@ def p_funcVarTab_1(t):
 
   if bClass:
     iResult = dictionaryClass.insertParam(sClassName, sScope, variable, iTipo)
+    # TODO
+    """
+    iMem = mem.addVariableObjLocal(iTipo)
+    dictionaryClass.actualizaParam(sClassName, sScope, iMem)
+    dictionaryClass.setMemVar(sClassName, sScope, variable, iMem)
+    """
   else:
     iResult = dictionaryFunction.insertParam(sScope, variable, iTipo)
     iMem = mem.addVariableLocal(iTipo)
@@ -243,18 +258,31 @@ def p_decVar2_1(t):
         sError = "Atributo: " + variable
         errorHandling.printError(1, sError, t.lexer.lineno)
         sys.exit()
+       # TODO:
+      """
+      iMem = mem.addVariableObjAtr(iTipo)
+      dictionaryClass.setMemObjAtr(sScope, variable, iMem)
+      """
     else:
       if dictionaryClass.insertVar(sClassName, sScope, variable, iTipo) == 0:
         sError = "Variable: " + variable
         errorHandling.printError(2, sError, t.lexer.lineno)
         sys.exit()
+      # TODO:
+      """
+      iMem = mem.addVariableObjFuncVar(iTipo)
+      dictionaryClass.setMemObjFuncVar(sScope, variable, iMem)
+      """
   else:
     if dictionaryFunction.insertVar(sScope, variable, iTipo) == 0:
       sError = "Variable: " + variable
       errorHandling.printError(2, sError, t.lexer.lineno)
       sys.exit()
-    iMem = mem.addVariableGlobal(iTipo)
-    print iMem
+    iMem = 0
+    if dictionaryFunction.isLocal(sScope, variable) == 0:
+      iMem = mem.addVariableLocal(iTipo)
+    else:
+      iMem = mem.addVariableGlobal(iTipo)
     dictionaryFunction.setMemVar(sScope, variable, iMem)
 
 
@@ -279,6 +307,7 @@ def p_varRevisa_1(t):
   '''varRevisa  : '''
   global sClassName
   vartype = 0
+  # TODO: Revisar esto
   if bClass:
     if quVariables.size() == 2:
       sClass = quVariables.pop()
@@ -325,10 +354,17 @@ def p_arrAc_1(t):
   print "size"
   print size
   quads.append(typeConv.convertOp("ver"), var[0], offset, size-1)
+
   iDirTemp = mem.addVariableTemporal(var[1], 0)
   quads.append(typeConv.convertOp("*"), var[0], offset, iDirTemp)
+
   iDirTemp2 = mem.addVariableTemporal(var[1], 0)
+<<<<<<< HEAD
   iMemoria = dictionaryFunction.getMemVar(sScope, t[-3])
+=======
+  iMemoria = dictionaryFunction.getMemVar(sScope, t[-1])
+
+>>>>>>> refs/remotes/origin/Googles
   quads.append(typeConv.convertOp("+"), iMemoria, iDirTemp, iDirTemp2)
   print t[-3]
   print var[1]
@@ -368,11 +404,11 @@ def p_funCall2_1(t):
 
 def p_funCallId_1(t):
   '''funCallId  : ID'''
-  quFunc.push(t[1])
+  stFunc.push(t[1])
 
 def p_genEra_1(t):
   '''genEra   : '''
-  iMem = dictionaryFunction.getMemFunc(quFunc.front())
+  iMem = dictionaryFunction.getMemFunc(stFunc.top())
   quads.append(typeConv.convertOp("era"), iMem)
 
 def p_funCallStar_1(t):
@@ -858,8 +894,8 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
   global sScope
 
   if sClass is None:
-    sClass = quFunc.pop()
-  sMethod = quFunc.pop()
+    sClass = stFunc.pop()
+  sMethod = stFunc.pop()
 
   sNClass = ""
   if bIsDouble and bClass:
@@ -913,7 +949,7 @@ def validaFuncion(t):
     validaMetodo(t, False, sClassName)
     return
 
-  sScope = quFunc.pop()
+  sScope = stFunc.pop()
   # Validar que existe la funcion
   bExist = dictionaryFunction.existsFunction(sScope)
 
@@ -987,9 +1023,9 @@ util = Util()
 stID = Stack()
 stOper = Stack()
 stSaltos = Stack()
+stFunc = Stack()
 
 quParams = Queue()
-quFunc = Queue()
 quVariables = Queue()
 
 parser = yacc.yacc()
