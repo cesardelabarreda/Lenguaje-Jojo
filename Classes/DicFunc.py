@@ -91,7 +91,7 @@ class DicFunction:
   def setVarSizeOff(self, functionId, varId, iSize, iOffset):
     if self.setVarSize(functionId, varId, iSize) == 0:
       return 0
-    return self.setVarOffset(functionId, varId, iSize)
+    return self.setVarOffset(functionId, varId, iOffset)
 
   def setVarSize(self, functionId, varId, iSize):
     if self.existsFunction(functionId) == 0:
@@ -125,7 +125,7 @@ class DicFunction:
     return self.functions[functionId].setMemFunc(mem)
 
   def getMemVar(self, functionId, varId):
-    if self.existsFunction(functionId) == 0:
+    if self.existsFunction(functionId) == 0 or functionId == "_Global":
       return self.functions["_Global"].getMemVar(varId)
     return self.functions[functionId].getMemVar(varId)
 
