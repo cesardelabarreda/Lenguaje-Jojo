@@ -112,7 +112,7 @@ class VM:
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
 		if Operando1 != None and Operando2 != None :
-			self.mapmemory.setVariableValue(res, Operando1 >= Operando2)
+			self.mapmemory.setVariableValue(res, Operando1 <= Operando2)
 			return 1
 		return 0
 
