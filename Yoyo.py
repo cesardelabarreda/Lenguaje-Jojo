@@ -1109,8 +1109,8 @@ if __name__ == '__main__':
         #sys.exit()
       print(" *************** Compilacion Finalizada **************** ")
       print("\n")
-      quads.pprint(dictionaryFunction)
-
+      quads.pprint(dictionaryFunction, mem)
+      # mem.pprint()
       vm = VM(mem, quads)
       vm.run()
 
