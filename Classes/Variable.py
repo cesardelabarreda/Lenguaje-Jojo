@@ -14,10 +14,12 @@ class Variable:
 
 	def setSize(self, iSize):
 		self.size = iSize
+		return 1
 
 	def setOffset(self, iOffset):
 		self.offset = iOffset
-
+		return 1
+		
 	def getMemory(self):
 		return self.memory
 

@@ -37,7 +37,6 @@ class Quadruple:
 
 			for i in range(1, 4):
 				if quad[i] == None:
-
 					print(str(quad[i])),
 					iTam = 14 - len(str(quad[i]))
 					if (iTam % 2 == 1):
@@ -47,14 +46,10 @@ class Quadruple:
 						print(" "),
 				else:
 					sVal = str(dicFunc.buscaVar(quad[i]))
-					if sVal == None:
-						if mem.obtenValorCte(sVal) != None:
-							sVal = mem.obtenValorCte(sVal)
-						else:
+					if str(sVal) == str(None):
+						sVal = mem.obtenValorCte(quad[i])
+						if str(sVal) == str(None):
 							sVal = quad[i]
-					else:
-						sVal = quad[i]
-
 
 					print(str(sVal)),
 					iTam = 14 - len(str(sVal))
