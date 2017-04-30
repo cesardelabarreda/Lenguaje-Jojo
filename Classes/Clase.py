@@ -7,6 +7,7 @@ class Class:
 		self.methods = {}
 		self.atributes = {}
 		self.classes = []
+		self.memId = -1
 
 	def emptyMethod(self):
 		return self.metodos == {}
