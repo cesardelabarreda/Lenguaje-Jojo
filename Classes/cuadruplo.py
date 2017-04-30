@@ -24,7 +24,7 @@ class Quadruple:
 		self.quads[quadNum][fillPos] = filler
 		return 1
 
-	def pprint(self, dicFunc):
+	def pprint(self, dicFunc, mem):
 		typeConv = TypeConvertion()
 		iNum = 0
 		for quad in self.quads:
@@ -46,8 +46,16 @@ class Quadruple:
 					for j in range(0, (iTam / 2)):
 						print(" "),
 				else:
-					print(str(dicFunc.buscaVar(quad[i]))),
-					iTam = 14 - len(str(dicFunc.buscaVar(quad[i])))
+					sVal = str(dicFunc.buscaVar(quad[i]))
+					if sVal == str(quad[i]):
+						if mem.obtenValorCte(sVal) != None:
+							sVal = mem.obtenValorCte(sVal)
+						else:
+							sVal = quad[i]
+
+
+					print(str(sVal)),
+					iTam = 14 - len(str(sVal))
 					if (iTam % 2 == 1):
 						iTam = iTam - 3
 						print("  "),
