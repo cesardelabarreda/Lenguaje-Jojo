@@ -46,7 +46,7 @@ class MemoryTypes:
 		iMem = self.getNextMem(iType)
 
 		for i in range(0, iSize):
-			self.mem[iMem] = iValue
+			self.mem[iMem + i] = iValue
 		
 		self.iCantVar[iType] = self.iCantVar[iType] + iSize
 		if self.iBaseVar[iType] + self.getSizeType(iType) >= self.iLimit[iType]:
@@ -102,6 +102,7 @@ class MemoryFunction:
 		return self.mem[self.iBaseFuncIDs].getSizeString()
 
 	def addVariable(self, iType, iValue=0, iSize=1):
+		self.pprint()
 		return self.mem[self.iBaseFuncIDs].addVariable(iType, iValue, iSize)
 
 	def createFunction(self):
@@ -127,6 +128,7 @@ class MemoryFunction:
 		return self.mem.setVariableValue(iMemId, iValue)
 
 	def pprint(self):
+		print "Entre"
 		for iFunID, Function in self.mem.items():
 			print("Funcion " + str(iFunID) + ": ")
 			self.mem[iFunID].pprint()
@@ -272,7 +274,7 @@ class MemoryManager:
 		print("Globales: ")
 		self.globa.pprint()
 		print("\nFunciones: ")
-		self.local.pprint()
+		self.function.pprint()
 		print("\nConstantes: ")
 		self.constante.pprint()
 		print(" **************************** ")

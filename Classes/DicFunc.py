@@ -91,7 +91,7 @@ class DicFunction:
 	def setVarSizeOff(self, functionId, varId, iSize, iOffset):
 		if self.setVarSize(functionId, varId, iSize) == 0:
 			return 0
-		return self.setVarOffset(functionId, varId, iSize)
+		return self.setVarOffset(functionId, varId, iOffset)
 
 	def setVarSize(self, functionId, varId, iSize):
 		if self.existsFunction(functionId) == 0:
@@ -147,7 +147,7 @@ class DicFunction:
 	def isLocal(self, functionId, varId):
 		if self.existsFunction(functionId) == 0:
 			return 0
-		return self.functions[functionId].existsVar(varId)
+		return functionId != "_Global" and self.functions[functionId].existsVar(varId)
 
 	def buscaVar(self, iMem):
 		for iFunc, value in self.functions.items():

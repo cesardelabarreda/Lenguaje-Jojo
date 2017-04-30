@@ -287,14 +287,14 @@ class VM:
 			quad = self.cuadruplo.quads[contQuads]
 			contQuads += 1
 			Operando1 = quad[1]
-			if Operando1 is list :
-				Operando1 = self.mapmemory.getVariableValue(Operando1)
+			if type(Operando1) is list :
+				Operando1 = self.mapmemory.getVariableValue(Operando1[0])
 			Operando2 = quad[2]
-			if Operando2 is list :
-				Operando2 = self.mapmemory.getVariableValue(Operando2)
+			if type(Operando2) is list :
+				Operando2 = self.mapmemory.getVariableValue(Operando2[0])
 			Res = quad[3]
-			if Res is list :
-				Res = self.mapmemory.getVariableValue(Res)
+			if type(Res) is list :
+				Res = self.mapmemory.getVariableValue(Res[0])
 			
 			
 			functionToCall = dirMethods[quad[0]]
