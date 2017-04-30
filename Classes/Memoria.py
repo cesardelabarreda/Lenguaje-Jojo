@@ -107,7 +107,6 @@ class MemoryFunction:
 		return self.mem[self.iBaseFuncIDs].getSizeString()
 
 	def addVariable(self, iType, iValue=0, iSize=1):
-		self.pprint()
 		return self.mem[self.iBaseFuncIDs].addVariable(iType, iValue, iSize)
 
 	def createFunction(self):
@@ -133,7 +132,6 @@ class MemoryFunction:
 		return self.mem.setVariableValue(iMemId, iValue)
 
 	def pprint(self):
-		print "Entre"
 		for iFunID, Function in self.mem.items():
 			print("Funcion " + str(iFunID) + ": ")
 			self.mem[iFunID].pprint()

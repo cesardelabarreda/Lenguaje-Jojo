@@ -47,11 +47,13 @@ class Quadruple:
 						print(" "),
 				else:
 					sVal = str(dicFunc.buscaVar(quad[i]))
-					if sVal == str(quad[i]):
+					if sVal == None:
 						if mem.obtenValorCte(sVal) != None:
 							sVal = mem.obtenValorCte(sVal)
 						else:
 							sVal = quad[i]
+					else:
+						sVal = quad[i]
 
 
 					print(str(sVal)),
