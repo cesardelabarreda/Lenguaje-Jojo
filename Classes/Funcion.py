@@ -91,9 +91,9 @@ class Function:
 		return self.vars[varId].getOffset()
 
 	def getVarSize(self, varId):
-			if self.existsVar(varId) == 0:
-				return 0
-			return self.vars[varId].getSize()
+		if self.existsVar(varId) == 0:
+			return 0
+		return self.vars[varId].getSize()
 
 	def setQuadInicial(self, iQuad):
 		self.quadInicial = iQuad

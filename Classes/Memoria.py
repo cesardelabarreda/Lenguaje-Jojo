@@ -46,7 +46,7 @@ class MemoryTypes:
 		iMem = self.getNextMem(iType)
 
 		for i in range(0, iSize):
-			self.mem[iMem] = iValue
+			self.mem[iMem + i] = iValue
 		
 		self.iCantVar[iType] = self.iCantVar[iType] + iSize
 		if self.iBaseVar[iType] + self.getSizeType(iType) >= self.iLimit[iType]:
@@ -277,7 +277,7 @@ class MemoryManager:
 		print("Globales: ")
 		self.globa.pprint()
 		print("\nFunciones: ")
-		self.local.pprint()
+		self.function.pprint()
 		print("\nConstantes: ")
 		self.constante.pprint()
 		print(" **************************** ")
