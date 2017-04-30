@@ -60,6 +60,10 @@ class MemoryTypes:
 		self.mem[iMem] = iValue
 		return True
 
+	def pprint(self):
+		for iMem, iValue in self.mem.items():
+			print(str(iMem) + ": " + str(iValue))
+
 
 # ##################################################### #
 
@@ -122,6 +126,12 @@ class MemoryFunction:
 	def setVariableValue(self, iMem, iValue):
 		return self.mem.setVariableValue(iMemId, iValue)
 
+	def pprint(self):
+		for iFunID, Function in self.mem.items():
+			print("Funcion " + str(iFunID) + ": ")
+			self.mem[iFunID].pprint()
+			print("")
+
 
 # ##################################################### #
 class MemoryGlobal:
@@ -161,6 +171,9 @@ class MemoryGlobal:
 
 	def setVariableValue(self, iMem, iValue):
 		return self.mem.setVariableValue(iMem, iValue)
+
+	def pprint(self):
+		self.mem.pprint()
 
 # ##################################################### #
 
@@ -202,6 +215,9 @@ class MemoryConstante:
 
 	def setVariableValue(self, iMem, iValue):
 		return self.mem.setVariableValue(iMemId, iValue)
+
+	def pprint(self):
+		self.mem.pprint()
 
 
 # ##################################################### #
@@ -250,8 +266,16 @@ class MemoryManager:
 		if self.constante.exists(iMemId):
 			return self.constante.setVariableValue(iMemId, iValue)
 		return None
-
 	
+	def pprint(self):
+		print(" ********** Memory ********** ")
+		print("Globales: ")
+		self.globa.pprint()
+		print("\nFunciones: ")
+		self.local.pprint()
+		print("\nConstantes: ")
+		self.constante.pprint()
+		print(" **************************** ")
 
 
 # ##################################################### #
@@ -298,9 +322,19 @@ class Memory:
 			return self.constante.getVariableValue(iMemId)
 		return None
 
+	def pprint(self):
+		print(" ********** Memory ********** ")
+		print("Globales: ")
+		self.globa.pprint()
+		print("\nFunciones: ")
+		self.local.pprint()
+		print("\nConstantes: ")
+		self.constante.pprint()
+		print(" **************************** ")
+
 
 # ##################################################### #
-'''
+"""
 m = Memory([100000, 100000], [200000, 100000, 1000000, 10000], [300000, 100000])
 
 print m.addVariableGlobal(0)
@@ -357,4 +391,5 @@ print m.addVariableLocal(1, 0, 2)
 print m.addVariableLocal(2, 0, 1)
 print m.addVariableLocal(2, 0, 0)
 
-'''
+m.pprint()
+"""

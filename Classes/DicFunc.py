@@ -91,7 +91,7 @@ class DicFunction:
   def setVarSizeOff(self, functionId, varId, iSize, iOffset):
     if self.setVarSize(functionId, varId, iSize) == 0:
       return 0
-    return self.setVarOffset(functionId, varId, iSize)
+    return self.setVarOffset(functionId, varId, iOffset)
 
   def setVarSize(self, functionId, varId, iSize):
     if self.existsFunction(functionId) == 0:
@@ -102,6 +102,17 @@ class DicFunction:
     if self.existsFunction(functionId) == 0:
       return self.functions["_Global"].setVarOffset(varId, iOffset)
     return self.functions[functionId].setVarOffset(varId, iOffset)
+
+  def getVarOffset(self, functionId, varId):
+    if self.existsFunction(functionId) == 0:
+      return self.functions["_Global"].getVarOffset(varId)
+    return self.functions[functionId].getVarOffset(varId)
+
+  def getVarSize(self, functionId, varId):
+    if self.existsFunction(functionId) == 0:
+      return self.functions["_Global"].getVarSize(varId)
+    return self.functions[functionId].getVarSize(varId)
+
 
   def setMemVar(self, functionId, varId, mem):
     if self.existsFunction(functionId) == 0:
@@ -114,7 +125,7 @@ class DicFunction:
     return self.functions[functionId].setMemFunc(mem)
 
   def getMemVar(self, functionId, varId):
-    if self.existsFunction(functionId) == 0:
+    if self.existsFunction(functionId) == 0 or functionId == "_Global":
       return self.functions["_Global"].getMemVar(varId)
     return self.functions[functionId].getMemVar(varId)
 

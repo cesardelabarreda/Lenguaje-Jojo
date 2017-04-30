@@ -1,0 +1,28 @@
+func int tres(int n1, int n2, int n3) {
+	zadust n1 + n2 + n3;
+}
+
+func int dos(int n1, int n2) {
+	zadust n1 + n2;
+}
+
+func int unos(int n1) {
+	zadust n1 + 1;
+}
+
+
+public stand jojo() {
+	@@@
+		int n;
+	@@@
+
+	gets(n);
+	prints(zawarudo tres(
+						zawarudo dos(n, 
+									zawarudo unos(n)
+									), 
+						n, zawarudo dos(n, 5)));
+	prints(zawarudo unos(
+						zawarudo dos(
+									zawarudo unos(n), n)));
+}

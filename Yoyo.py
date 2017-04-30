@@ -316,17 +316,19 @@ def p_varRevisa_1(t):
       iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
       stID.push([[sClass, iMemoria], vartype])
     else:
-      sVariable = quVariables.pop()
-      vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
-      iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
-      stID.push([iMemoria, vartype])
+      print "Objeto"
+      #sVariable = quVariables.pop()
+      #vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
+      #iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
+      #stID.push([iMemoria, vartype])
   else:
     if quVariables.size() == 2:
-      sClass = quVariables.pop()
-      sVariable = quVariables.pop()
-      vartype = dictionaryClass.getAtributeType(dictionaryFunction.getVariableType(sScope, sClass), sVariable)
-      iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
-      stID.push([[sClass, iMemoria], vartype])
+      print "Objeto"
+      #sClass = quVariables.pop()
+      #sVariable = quVariables.pop()
+      #vartype = dictionaryClass.getAtributeType(dictionaryFunction.getVariableType(sScope, sClass), sVariable)
+      #iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
+      #stID.push([[sClass, iMemoria], vartype])
     else:
       sVariable = quVariables.pop()
       vartype = dictionaryFunction.getVariableType(sScope, sVariable)
@@ -339,7 +341,7 @@ def p_varRevisa_1(t):
     sys.exit()
 
 def p_corchetesPosExp_1(t):
-  '''corchetesPosExp  : arrAc CORCHA expression CORCHC
+  '''corchetesPosExp  :  CORCHA expression arrAc CORCHC
                       | '''
 
 
@@ -347,18 +349,29 @@ def p_arrAc_1(t):
   '''arrAc : '''            
   global sScope
   var = stID.pop()
-  offset = dictionaryFunction.getOffSet(sScope, var[0])
-  size = dictionaryFunction.getVariableSize(sScope, t[-1])
+  offset = dictionaryFunction.getVarOffset(sScope, var[0])
+  size = dictionaryFunction.getVarSize(sScope, t[-3])
+  print "size"
+  print size
   quads.append(typeConv.convertOp("ver"), var[0], offset, size-1)
 
   iDirTemp = mem.addVariableTemporal(var[1], 0)
   quads.append(typeConv.convertOp("*"), var[0], offset, iDirTemp)
 
   iDirTemp2 = mem.addVariableTemporal(var[1], 0)
+<<<<<<< HEAD
+  iMemoria = dictionaryFunction.getMemVar(sScope, t[-3])
+=======
   iMemoria = dictionaryFunction.getMemVar(sScope, t[-1])
 
+>>>>>>> refs/remotes/origin/Googles
   quads.append(typeConv.convertOp("+"), iMemoria, iDirTemp, iDirTemp2)
-  stID.push([[iDirTemp2], res_type])
+  print t[-3]
+  print var[1]
+  print var[0]
+  print "hola"
+  res_type = dictionaryFunction.getVariableType(sScope, t[-3])
+  stID.push([[iDirTemp2], var[1]])
 
 def p_corchetesPosCte_1(t):
   '''corchetesPosCte  : CORCHA CTE_INT cte_int arrInit CORCHC
@@ -369,7 +382,10 @@ def p_arrInit_1(t):
   global sScope
   global sClassName
   typeA = dictionaryFunction.getVariableType(sScope, t[-3])
+  var = stID.pop()
   if typeA <= 4 :
+    print "size int"
+    print var[1]
     dictionaryFunction.setVarSizeOff(sScope, t[-3], t[-1], 1)
   else:
     numAt = dictionaryClass.getNumAtribute(t[-2])
@@ -1029,6 +1045,7 @@ if __name__ == '__main__':
         print stOper.size()
         print stID.size()
         print stSaltos.size()
+        print stID.items
         print(" *************** Compilacion con errores *************** ")
         #sys.exit()
       print(" *************** Compilacion Finalizada **************** ")

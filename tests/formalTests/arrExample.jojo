@@ -1,0 +1,15 @@
+public stand jojo() {
+	@@@	
+		int MAXN;
+		int primes[1000], f[1000], pc;
+		int i;
+	@@@
+	MAXN = 1000;
+	i = 0;
+
+	prints(f[0]);
+
+	prints(f[5]);
+	f[5] = 1 + 3;
+	prints(f[0]);
+}
