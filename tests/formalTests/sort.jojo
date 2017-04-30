@@ -1,0 +1,46 @@
+@@@
+  int arr[11], n;
+@@@
+
+func stand sort() {
+  @@@
+    int i, j, aux;
+  @@@
+
+  i = 0;
+  while (i < n) {
+    j = i + 1;
+    while (j < n) {
+      if(arr[i] > arr[j]) {
+        aux = arr[i];
+        arr[i] = arr[j];
+        arr[j] = aux;
+      }
+      j = j + 1;
+    }
+    i = i + 1;
+  }
+}
+
+
+public stand jojo() {
+  @@@
+    int i;
+  @@@
+
+  gets(n);
+  i = 0;
+  while(i < n) {
+    gets(arr[i]);
+
+    i = i + 1;
+  }
+
+  zawarudo sort();
+
+  i = 0;
+  while (i < n) {
+    prints(arr[i]);
+    i = i + 1;
+  }
+}

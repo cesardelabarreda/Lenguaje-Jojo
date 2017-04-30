@@ -1,14 +1,15 @@
 @@@
 	int MAXN;
-	int primes[1000], f[1000], pc;
+	int primes[100], f[100], pc;
 @@@
 
 func stand EratosthenesON() {
 	@@@
-		int i, j;
+		int i, j, aux2;
 	@@@
 
 	i = 2;
+	pc = 0;
 	while (i < MAXN) {
 		if (f[i] == 0) {
 			primes[pc] = i;
@@ -21,7 +22,9 @@ func stand EratosthenesON() {
 				i * primes[j] 
 				< MAXN && 
 				primes[j] <= f[i]) {
-			f[i*primes[j]] = primes[j];
+			aux2 = i*primes[j];
+			f[aux2] = primes[j];
+			prints(f[aux2]);
 			j = j + 1;
 		}            
 		i = i + 1;
@@ -33,12 +36,12 @@ public stand jojo() {
 	@@@
 		int i;
 	@@@
-	MAXN = 1000;
+	MAXN = 100;
 	zawarudo EratosthenesON();
 
 	i = 0;
+	prints(pc);
 	while (i < pc) {
-		prints(primes[i]);
 		i = i + 1;
 	}
 }
