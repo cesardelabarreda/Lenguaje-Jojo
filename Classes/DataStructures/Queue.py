@@ -44,4 +44,25 @@ class Queue:
     # Params: No tiene parametros de entrada
     # Ret: No tiene return
     def clear(self):
-        self.list.clear()
+        self.list = []
+
+    def pprint(self):
+        iNum = 0
+        print("[")
+        for lis in self.list:
+            print(str(iNum) + "\t" + str(lis))
+            iNum = iNum + 1
+        print("]\n")
+
+    def __str__(self):
+        if self.size() == 0:
+            return "[ ]"
+
+        sRet = ""
+        iNum = 0
+        sRet = "[\n"
+        for lis in self.list:
+            sRet = sRet + str(iNum) + "\t" + str(lis) + "\n"
+            iNum = iNum + 1
+        sRet = sRet + "]\n"
+        return sRet
