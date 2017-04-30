@@ -27,6 +27,9 @@ class Variable:
 	def getOffset(self):
 		return self.offset
 
+	def equalsMem(self, iMem):
+		return self.memory == iMem
+
 	def pprint(self):
 		print(str(self))
 
