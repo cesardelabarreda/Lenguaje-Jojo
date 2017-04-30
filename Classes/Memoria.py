@@ -54,7 +54,12 @@ class MemoryTypes:
 		return iMem
 
 	def getVariableValue(self, iMem):
-		return self.mem[iMem]
+		try:
+			if int(iMem) in self.mem:
+				return self.mem[int(iMem)]
+			return None
+		except :
+			return None
 
 	def setVariableValue(self, iMem, iValue):
 		self.mem[iMem] = iValue
@@ -323,6 +328,9 @@ class Memory:
 		if self.constante.exists(iMemId):
 			return self.constante.getVariableValue(iMemId)
 		return None
+
+	def obtenValorCte(self, iMemId):
+		return str(self.constante.getVariableValue(iMemId))
 
 	def pprint(self):
 		print(" ********** Memory ********** ")
