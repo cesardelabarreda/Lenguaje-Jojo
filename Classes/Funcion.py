@@ -75,25 +75,25 @@ class Function:
 		return 1
 
 	def setVarSize(self, varId, iSize):
-	    if self.existsVar(varId) == 0:
-	      return 0
-	    return self.vars[varId].setSize(iSize)
+			if self.existsVar(varId) == 0:
+				return 0
+			return self.vars[varId].setSize(iSize)
 
 	def setVarOffset(self, varId, iOffset):
 		if self.existsVar(varId) == 0:
-	  		return 0
+				return 0
 		return self.vars[varId].setOffset(iOffset)
 
 
 	def getVarOffset(self, varId):
 		if self.existsVar(varId) == 0:
-	  		return 0
+				return 0
 		return self.vars[varId].getOffset()
 
 	def getVarSize(self, varId):
-	    if self.existsVar(varId) == 0:
-	      return 0
-	    return self.vars[varId].getSize()
+			if self.existsVar(varId) == 0:
+				return 0
+			return self.vars[varId].getSize()
 
 	def setQuadInicial(self, iQuad):
 		self.quadInicial = iQuad
@@ -115,6 +115,12 @@ class Function:
 			return 0
 		del self.vars[varId]
 		return 1
+
+	def buscaVar(self, iMem):
+		for sVar, value in self.vars.items():
+			if self.vars[sVar].equalsMem(iMem):
+				return sVar 
+		return "_"
 
 	def pprint(self, sFunc):
 		print(" --- " + sFunc + " --- ")

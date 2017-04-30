@@ -280,7 +280,6 @@ class VM:
 	}
 
 	def run(self):
-		self.cuadruplo.pprint()
 		global contQuads
 		global dirMethods
 		while(contQuads < self.cuadruplo.size()):

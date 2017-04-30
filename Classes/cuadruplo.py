@@ -24,7 +24,7 @@ class Quadruple:
 		self.quads[quadNum][fillPos] = filler
 		return 1
 
-	def pprint(self):
+	def pprint(self, dicFunc):
 		typeConv = TypeConvertion()
 		iNum = 0
 		for quad in self.quads:
@@ -32,6 +32,9 @@ class Quadruple:
 			print(str(typeConv.convertOp(quad[0]))),
 			for i in range(1, 4):
 				print(str("\t")),
-				print(str(quad[i])),
+				if quad[i] == None:
+					print(str(quad[i])),
+				else:
+					print(str(dicFunc.buscaVar(quad[i]))),
 			print("]")
 			iNum = iNum + 1
