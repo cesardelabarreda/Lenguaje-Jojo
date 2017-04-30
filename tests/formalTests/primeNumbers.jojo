@@ -24,7 +24,6 @@ func stand EratosthenesON() {
 				primes[j] <= f[i]) {
 			aux2 = i*primes[j];
 			f[aux2] = primes[j];
-			prints(f[aux2]);
 			j = j + 1;
 		}            
 		i = i + 1;

@@ -119,9 +119,9 @@ class DicFunction:
 
 	def getVarSize(self, functionId, varId):
 		if self.existsFunction(functionId) == 0:
-			return 0
+			return -1
 		iRet = self.functions[functionId].getVarSize(varId)
-		if iRet != 0:
+		if iRet != -1:
 			return iRet
 		return self.functions["_Global"].getVarSize(varId)
 
@@ -173,7 +173,7 @@ class DicFunction:
 			sRet = self.functions[iFunc].buscaVar(iMem)
 			if (sRet != "_"):
 				return sRet
-		return iMem
+		return None
 
 
 	def pprint(self):

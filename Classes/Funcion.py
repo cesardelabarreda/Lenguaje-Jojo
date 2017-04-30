@@ -75,24 +75,23 @@ class Function:
 		return 1
 
 	def setVarSize(self, varId, iSize):
-			if self.existsVar(varId) == 0:
-				return 0
-			return self.vars[varId].setSize(iSize)
+		if self.existsVar(varId) == 0:
+			return 0
+		return self.vars[varId].setSize(iSize)
 
 	def setVarOffset(self, varId, iOffset):
 		if self.existsVar(varId) == 0:
-				return 0
+			return 0
 		return self.vars[varId].setOffset(iOffset)
-
 
 	def getVarOffset(self, varId):
 		if self.existsVar(varId) == 0:
-				return 0
+			return 0
 		return self.vars[varId].getOffset()
 
 	def getVarSize(self, varId):
 		if self.existsVar(varId) == 0:
-			return 0
+			return -1
 		return self.vars[varId].getSize()
 
 	def setQuadInicial(self, iQuad):

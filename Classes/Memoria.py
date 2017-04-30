@@ -58,7 +58,7 @@ class MemoryTypes:
 			if int(iMem) in self.mem:
 				return self.mem[int(iMem)]
 			return None
-		except :
+		except:
 			return None
 
 	def setVariableValue(self, iMem, iValue):
