@@ -803,7 +803,7 @@ def p_cte_real_1(t):
 def p_cte_bool_1(t):
   '''cte_bool  : '''
   valor = True
-  if t[-1].lower() == "false":
+  if t[-1] == "false":
     valor = False
   iDirCte = mem.addVariableConstante(2,valor)
   stID.push([iDirCte, 2, t[-1]])
@@ -923,8 +923,8 @@ def validaParams(t, params):
     if par[1] != params[i][1]:
       sError = "Parametro numero: " + str(i)
       errorHandling.printError(12, sError, t.lexer.lineno)
-    else: 
-      quads.append(typeConv.convertOp("param"), par[0], None, params[i][0])
+      sys.exit()
+    quads.append(typeConv.convertOp("param"), par[0], None, params[i][0])
     i += 1
 
   # Validar tamanos de argumentos y parametros
