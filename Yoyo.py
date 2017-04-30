@@ -1,5 +1,6 @@
 import sys
 import pprint
+import copy
 import ply.yacc as yacc
 from Llollo import tokens
 from Classes.DicClases import DicClass
@@ -237,11 +238,16 @@ def p_decVarColonStar_1(t):
                       | '''
 
 def p_decVar2_1(t):
-  '''decVar2  : ID corchetesPosCte decVar2Star'''
-  variable = t[1]
+  '''decVar2  : ID decVar3 corchetesPosCte decVar2Star'''
+
+def p_decVar3_1(t):
+  '''decVar3  : '''
+  global variable
+  variable = t[-1]
   global sAccess
   global sScope
   global sTipo
+  global iTipo
   global bClass
 
   iTipo = typeConv.convertType(sTipo)
@@ -279,11 +285,16 @@ def p_decVar2_1(t):
       errorHandling.printError(2, sError, t.lexer.lineno)
       sys.exit()
     iMem = 0
-    if dictionaryFunction.isLocal(sScope, variable) == 0:
+    if dictionaryFunction.isLocal(sScope, variable):
       iMem = mem.addVariableLocal(iTipo)
     else:
+      print "VAR GLOBAL" + t[-1]
       iMem = mem.addVariableGlobal(iTipo)
-    dictionaryFunction.setMemVar(sScope, variable, iMem)
+      print iMem
+      print sScope
+      print variable
+    print dictionaryFunction.setMemVar(sScope, variable, iMem)
+    print dictionaryFunction.getMemVar(sScope, variable)
 
 
 def p_decVar2Star_1(t):
@@ -296,16 +307,23 @@ def p_var_1(t):
 
 def p_getVariableID_1(t):
   '''getVariableID  : ID'''
+  print "VARIABLE" + t[1]
   quVariables.push(t[1])
   
 
 def p_varDotPos_1(t):
-  '''varDotPos  : DOT var
+  '''varDotPos  : activateIsVarClass DOT var
                 | varRevisa'''
+
+def p_activateIsVarClass_1(t):
+  '''activateIsVarClass   : '''
+  global bIsVarClass
+  bIsVarClass = True
 
 def p_varRevisa_1(t):
   '''varRevisa  : '''
   global sClassName
+  global bClass
   vartype = 0
   # TODO: Revisar esto
   if bClass:
@@ -314,26 +332,28 @@ def p_varRevisa_1(t):
       sVariable = quVariables.pop()
       vartype = dictionaryClass.getAtributeType(dictionaryClass.getVariableType(sClassName, sScope, sClass), sVariable)
       iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
-      stID.push([[sClass, iMemoria], vartype])
+      global bArray
+      if not bArray:
+        stID.push([[sClass, iMemoria], vartype, sVariable])
     else:
-      print "Objeto"
+      print "Objeto 1"
+      print quVariables.list
       #sVariable = quVariables.pop()
       #vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
       #iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
       #stID.push([iMemoria, vartype])
   else:
-    if quVariables.size() == 2:
-      print "Objeto"
-      #sClass = quVariables.pop()
-      #sVariable = quVariables.pop()
-      #vartype = dictionaryClass.getAtributeType(dictionaryFunction.getVariableType(sScope, sClass), sVariable)
-      #iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
-      #stID.push([[sClass, iMemoria], vartype])
-    else:
       sVariable = quVariables.pop()
       vartype = dictionaryFunction.getVariableType(sScope, sVariable)
       iMemoria = dictionaryFunction.getMemVar(sScope, sVariable)
-      stID.push([iMemoria, vartype])
+      print "Si entre"
+      if not bArray:
+        
+        stID.push([iMemoria, vartype, sVariable])
+      else:
+        print "No entre " + str(sVariable)
+      bArray = False
+
 
   if vartype == -1:
     sError = "Variable: " + sVariable
@@ -341,37 +361,52 @@ def p_varRevisa_1(t):
     sys.exit()
 
 def p_corchetesPosExp_1(t):
-  '''corchetesPosExp  :  CORCHA expression arrAc CORCHC
+  '''corchetesPosExp  :  CORCHA mandaArrSt expression arrAc CORCHC
                       | '''
+
+def p_mandaArrSt_1(t):
+  '''mandaArrSt   : '''
+  # stVariables.push(copy.deepcopy(quVariables))
+  # quVariables.clear()
 
 
 def p_arrAc_1(t):
-  '''arrAc : '''            
+  '''arrAc : '''       
+  global quVariables     
+  global bArray
+  bArray = True
   global sScope
+  print stID.list
+  print quVariables.list
+  print t.lexer.lineno
   var = stID.pop()
-  offset = dictionaryFunction.getVarOffset(sScope, var[0])
-  size = dictionaryFunction.getVarSize(sScope, t[-3])
-  print "size"
+  offset = dictionaryFunction.getVarOffset(sScope, quVariables.top())
+  print "OFFSET " + str(offset)
+  size = dictionaryFunction.getVarSize(sScope, quVariables.top())
+  print "size"  
   print size
-  quads.append(typeConv.convertOp("ver"), var[0], offset, size-1)
+  print quVariables.list
+  print quVariables.top()
+  print t[-4]
+  print var
+  print size
+  quads.append(typeConv.convertOp("ver"), var[0], 0, size-1)
 
+  iDirCte = mem.addVariableConstante(0,offset)
   iDirTemp = mem.addVariableTemporal(var[1], 0)
-  quads.append(typeConv.convertOp("*"), var[0], offset, iDirTemp)
+  quads.append(typeConv.convertOp("*"), var[0], iDirCte, iDirTemp)
 
   iDirTemp2 = mem.addVariableTemporal(var[1], 0)
-<<<<<<< HEAD
-  iMemoria = dictionaryFunction.getMemVar(sScope, t[-3])
-=======
-  iMemoria = dictionaryFunction.getMemVar(sScope, t[-1])
-
->>>>>>> refs/remotes/origin/Googles
-  quads.append(typeConv.convertOp("+"), iMemoria, iDirTemp, iDirTemp2)
-  print t[-3]
-  print var[1]
-  print var[0]
-  print "hola"
+  iMemoria = dictionaryFunction.getMemVar(sScope, quVariables.top())
+  iDirTemp3 = mem.addVariableConstante(0, iMemoria)
+  iMemoria = dictionaryFunction.getMemVar(sScope, quVariables.top())
+  quads.append(typeConv.convertOp("+"), iDirTemp3, iDirTemp, iDirTemp2)
   res_type = dictionaryFunction.getVariableType(sScope, t[-3])
-  stID.push([[iDirTemp2], var[1]])
+  print "ARREGLOS"
+  print stID.list
+  stID.push([[iDirTemp2], var[1], var[0]])
+  print stID.list
+  # quVariables = stVariables.pop()
 
 def p_corchetesPosCte_1(t):
   '''corchetesPosCte  : CORCHA CTE_INT cte_int arrInit CORCHC
@@ -379,17 +414,27 @@ def p_corchetesPosCte_1(t):
 
 def p_arrInit_1(t):
   '''arrInit : '''
+  print stID.pop()
   global sScope
   global sClassName
+  global iTipo
   typeA = dictionaryFunction.getVariableType(sScope, t[-3])
-  var = stID.pop()
   if typeA <= 4 :
     print "size int"
-    print var[1]
-    dictionaryFunction.setVarSizeOff(sScope, t[-3], t[-1], 1)
+    print t[-5]
+    print t[-2]
+    dictionaryFunction.setVarSizeOff(sScope, t[-5], t[-2], 1)
+    global variable
+    if dictionaryFunction.isLocal(sScope, variable):
+      iMem = mem.addVariableLocal(iTipo,0 ,t[-2]-1)
+    else:
+      iMem = mem.addVariableGlobal(iTipo, 0 ,t[-2]-1)
+      print iMem
+      print sScope
+      print variable
   else:
-    numAt = dictionaryClass.getNumAtribute(t[-2])
-    dictionaryFunction.setVarSizeOff(sScope, t[-1], t[2], numAt)
+    numAt = dictionaryClass.getNumAtribute(t[-4])
+    dictionaryFunction.setVarSizeOff(sScope, t[-4], t[-2], numAt)
 
 
 
@@ -471,6 +516,9 @@ def p_conditionElsePos_1(t):
 
 def p_assign_1(t):
   '''assign   : var equal assignExpID SEMICOLON'''
+  print t.lexer.lineno
+  print "En assign"
+  print quVariables.list
   varR = stID.pop()
   varL = stID.pop()
   
@@ -502,6 +550,8 @@ def p_input_1(t):
 
 def p_output_1(t):
   '''output   : PRINTS PARA expression PARC SEMICOLON'''
+  print "PRINTS"
+  print stID.list
   var = stID.pop()
   quads.append(typeConv.convertOp("prints"), var[0])
 
@@ -641,7 +691,7 @@ def p_expresionNegativo_1(t):
   result = iTempCont
   iDirTemp = mem.addVariableTemporal(var[1], 0)
   quads.append(typeConv.convertOp("-"), 0, var[0], iDirTemp)
-  stID.push([iDirTemp, var[1]])
+  stID.push([iDirTemp, var[1], result])
   bSigno = True
 
 
@@ -695,7 +745,7 @@ def p_checkNOT_1(t):
 
     iDirTemp = mem.addVariableTemporal(var[1], 0)
     quads.append(oper, var[0], None, iDirTemp)
-    stID.push([iDirTemp, res_type])
+    stID.push([iDirTemp, res_type, result])
 
 
 def p_not_1(t):
@@ -742,13 +792,13 @@ def p_cte_int_1(t):
   '''cte_int  : '''
   valor = int(t[-1])
   iDirCte = mem.addVariableConstante(0,valor)
-  stID.push([iDirCte, 0])
+  stID.push([iDirCte, 0, t[-1]])
 
 def p_cte_real_1(t):
   '''cte_real  : '''
   valor = float(t[-1])
   iDirCte = mem.addVariableConstante(1,valor)
-  stID.push([iDirCte, 1])
+  stID.push([iDirCte, 1, t[-1]])
 
 def p_cte_bool_1(t):
   '''cte_bool  : '''
@@ -756,12 +806,12 @@ def p_cte_bool_1(t):
   if t[-1].lower() == "false":
     valor = False
   iDirCte = mem.addVariableConstante(2,valor)
-  stID.push([iDirCte, 2])
+  stID.push([iDirCte, 2, t[-1]])
 
 def p_cte_str_1(t):
   '''cte_str  : '''
   iDirCte = mem.addVariableConstante(3, t[-1])
-  stID.push([iDirCte, 3])
+  stID.push([iDirCte, 3, t[-1]])
 
 def p_accessPos_1(t):
   '''accessPos  : access 
@@ -827,7 +877,7 @@ def asociIzq(t):
  
   iDirTemp = mem.addVariableTemporal(varL[1], 0)
   quads.append(oper, varL[0], varR[0], iDirTemp)
-  stID.push([iDirTemp, res_type])
+  stID.push([iDirTemp, res_type, result])
 
 def validaReturn(t):
   global isExpression
@@ -930,7 +980,7 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
   validaParams(t, params)
 
   if varType != 4:
-    stID.push([sScope, varType])
+    stID.push([sScope, varType, sScope])
 
   quads.append(typeConv.convertOp("gosub"), sClass, sMethod)
   bMethodCall = False
@@ -968,7 +1018,7 @@ def validaFuncion(t):
   if itype != 4:
     iDirTemp = mem.addVariableTemporal(itype)
     quads.append(typeConv.convertOp("="), dictionaryFunction.getMemFunc(sScope), None, iDirTemp)
-    stID.push([iDirTemp, itype])
+    stID.push([iDirTemp, itype, iDirTemp])
   bMethodCall = False
 
 
@@ -983,19 +1033,24 @@ global util
 global stID
 global stOper
 global stSaltos
+global stVariables
 
 global iTempCont
+global iTipo
 
 global bSigno
 global bClass
 global bFunc
 global bIsExpression
 global bMethodCall
+global bArray
+global bIsVarClass
 
 global sTipo
 global sScope
 global sAccess
 global sClassName
+global variable
 
 iTempCont = 0
 
@@ -1004,6 +1059,8 @@ bClass = False
 bFunc = False
 bIsExpression = True
 bMethodCall = False
+bArray = False
+bIsVarClass = False
 
 sTipo = ""
 sScope = ""
@@ -1024,9 +1081,10 @@ stID = Stack()
 stOper = Stack()
 stSaltos = Stack()
 stFunc = Stack()
+stVariables = Stack()
 
 quParams = Queue()
-quVariables = Queue()
+quVariables = Stack()
 
 parser = yacc.yacc()
 
@@ -1042,14 +1100,17 @@ if __name__ == '__main__':
       print(" ******************************************************* ") 
       yacc.parse(info, tracking=True)
       if errorHandling.hasError() or stOper.size() > 0 or stID.size() > 0 or stSaltos.size() > 0:
+        print "Stacks"
         print stOper.size()
         print stID.size()
         print stSaltos.size()
-        print stID.items
+        print stID.list
         print(" *************** Compilacion con errores *************** ")
         #sys.exit()
       print(" *************** Compilacion Finalizada **************** ")
       print("\n")
+      quads.pprint(dictionaryFunction)
+
       vm = VM(mem, quads)
       vm.run()
 
