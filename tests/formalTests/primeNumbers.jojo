@@ -5,7 +5,7 @@
 
 func stand EratosthenesON() {
 	@@@
-		int i, j, aux2;
+		int i, j;
 	@@@
 
 	i = 2;
@@ -22,8 +22,7 @@ func stand EratosthenesON() {
 				i * primes[j] 
 				< MAXN && 
 				primes[j] <= f[i]) {
-			aux2 = i*primes[j];
-			f[aux2] = primes[j];
+			f[i*primes[j]] = primes[j];
 			j = j + 1;
 		}            
 		i = i + 1;
@@ -39,8 +38,11 @@ public stand jojo() {
 	zawarudo EratosthenesON();
 
 	i = 0;
+	prints("Cantidad de primos menores que MAXN = ");
 	prints(pc);
+	prints("");
 	while (i < pc) {
+		prints(primes[i]);
 		i = i + 1;
 	}
 }
