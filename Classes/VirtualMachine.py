@@ -5,6 +5,8 @@ from Cuadruplo import Quadruple
 from DataStructures.Stack import Stack
 
 global contQuads
+global objeto
+objeto = Stack()
 global ret
 contQuads = 0
 
@@ -212,12 +214,27 @@ class VM:
 
 	def returns(self, oper1, oper2, res):
 		global ret
-		ret = self.mapmemory.getVariableValue(oper1)
-		if ret != None :		
-			self.mapmemory.returnGoSub()
-			global contQuads
-			contQuads = self.stEjecucion.pop()
-			return 1
+		global objeto
+		if type(oper1) is list:
+			ret = self.mapmemory.getVariableValue(oper1[1])
+			listRet = oper[0]
+			for i in range(len(listRet))
+				oper[0][i] = self.mapmemory.getVariableValue(listRet[i])
+			if ret != None :		
+				self.mapmemory.returnGoSub()
+				listobj = objeto.pop()
+				for i in range(len(listRet))
+					self.mapmemory.setVariableValue(listobj[i], oper1[0][i])
+				global contQuads
+				contQuads = self.stEjecucion.pop()
+				return 1
+		else:
+			ret = self.mapmemory.getVariableValue(oper1)
+			if ret != None :		
+				self.mapmemory.returnGoSub()
+				global contQuads
+				contQuads = self.stEjecucion.pop()
+				return 1
 		return 0
 
 	def gosub(self, oper1, oper2, res):
@@ -282,12 +299,17 @@ class VM:
 	def run(self):
 		global contQuads
 		global dirMethods
+		global objeto
 		while(contQuads < self.cuadruplo.size()):
 			# print contQuads
 			quad = self.cuadruplo.quads[contQuads]
+			if quad[0] == 27:
+				objeto.push(oper1)
+				contQuads +=1
+				quad = self.cuadruplo.quads[contQuads]
 			contQuads += 1
 			Operando1 = quad[1]
-			if type(Operando1) is list :
+			if type(Operando1) is list and quad[0] !=20:
 				Operando1 = self.mapmemory.getVariableValue(Operando1[0])
 			Operando2 = quad[2]
 			if type(Operando2) is list :
