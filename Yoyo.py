@@ -127,11 +127,11 @@ def p_defScopeClass_1(t):
     errorHandling.printError(4, sError, t.lexer.lineno)
     sys.exit()
   # TODO: Agregar el metodo a la memoria del objeto
-  """
-  iMem = mem.createMethod()
+
+  iMem = mem.createFunction()
   dictionaryClass.setMemFunc(sClassName, sScope, iMem)
   dictionaryClass.setQuadInicial(sClassName, sScope, quads.size())
-  """
+
 
 def p_decVarStar_1(t):
   '''decVarStar   : decVar decVarStar
@@ -210,11 +210,11 @@ def p_funcVarTab_1(t):
   if bClass:
     iResult = dictionaryClass.insertParam(sClassName, sScope, variable, iTipo)
     # TODO
-    """
-    iMem = mem.addVariableObjLocal(iTipo)
+    
+    iMem = mem.addVariableLocal(iTipo)
     dictionaryClass.actualizaParam(sClassName, sScope, iMem)
     dictionaryClass.setMemVar(sClassName, sScope, variable, iMem)
-    """
+    
   else:
     iResult = dictionaryFunction.insertParam(sScope, variable, iTipo)
     iMem = mem.addVariableLocal(iTipo)
@@ -238,7 +238,7 @@ def p_decVarColonStar_1(t):
                       | '''
 
 def p_decVar2_1(t):
-  '''decVar2  : ID decVar3 corchetesPosCte decVar2Star'''
+  '''decVar2  : ID decVar3 corchetesPosCte'''
 
 def p_decVar3_1(t):
   '''decVar3  : '''
@@ -265,41 +265,56 @@ def p_decVar3_1(t):
         errorHandling.printError(1, sError, t.lexer.lineno)
         sys.exit()
        # TODO:
-      """
-      iMem = mem.addVariableObjAtr(iTipo)
+
+      iMem = mem.addVariableLocal(iTipo)
       dictionaryClass.setMemObjAtr(sScope, variable, iMem)
-      """
+      
     else:
-      if dictionaryClass.insertVar(sClassName, sScope, variable, iTipo) == 0:
+
+      if iTipo < 4:
+        if dictionaryClass.insertVar(sClassName, sScope, variable, iTipo) == 0:
+          sError = "Variable: " + variable
+          errorHandling.printError(2, sError, t.lexer.lineno)
+          sys.exit()
+        # TODO:
+        iMem = mem.addVariableLocal(iTipo)
+        dictionaryClass.setMemObjFuncVar(sScope, variable, iMem)
+      else:
+        iAtribute = dictionaryClass.getAtribute(iTipo)
+        for i, j in iAtribute.items
+          if dictionaryClass.insertVar(sClassName, sScope, variable + "." + i, iTipo) == 0:
+            sError = "Variable: " + variable
+            errorHandling.printError(2, sError, t.lexer.lineno)
+            sys.exit()
+          iMem = mem.addVariableLocal(j[0])
+          dictionaryClass.setMemObjFuncVar(sScope, variable + "." + i, iMem)
+      
+  else:
+    if iTipo < 4:
+      if dictionaryFunction.insertVar(sScope, variable, iTipo) == 0:
         sError = "Variable: " + variable
         errorHandling.printError(2, sError, t.lexer.lineno)
         sys.exit()
-      # TODO:
-      """
-      iMem = mem.addVariableObjFuncVar(iTipo)
-      dictionaryClass.setMemObjFuncVar(sScope, variable, iMem)
-      """
-  else:
-    if dictionaryFunction.insertVar(sScope, variable, iTipo) == 0:
-      sError = "Variable: " + variable
-      errorHandling.printError(2, sError, t.lexer.lineno)
-      sys.exit()
-    iMem = 0
-    if dictionaryFunction.isLocal(sScope, variable):
-      iMem = mem.addVariableLocal(iTipo)
+      iMem = 0
+      if dictionaryFunction.isLocal(sScope, variable):
+        iMem = mem.addVariableLocal(iTipo)
+      else:
+        iMem = mem.addVariableGlobal(iTipo)
+      dictionaryFunction.setMemVar(sScope, variable, iMem)
     else:
-      print "VAR GLOBAL" + t[-1]
-      iMem = mem.addVariableGlobal(iTipo)
-      print iMem
-      print sScope
-      print variable
-    print dictionaryFunction.setMemVar(sScope, variable, iMem)
-    print dictionaryFunction.getMemVar(sScope, variable)
+      iAtribute = dictionaryClass.getAtribute(iTipo)
+      for i, j in iAtribute.items
+          if dictionaryFunction.insertVar(sScope, variable + "." + i, iTipo) == 0:
+            sError = "Variable: " + variable
+            errorHandling.printError(2, sError, t.lexer.lineno)
+            sys.exit()
+          if dictionaryFunction.isLocal(sScope, variable + "." + i):
+            iMem = mem.addVariableLocal(j[0])
+          else:
+            iMem = mem.addVariableGlobal(j[0])
+          dictionaryFunction.setMemVar(sScope, variable + "." + i, iMem)
 
 
-def p_decVar2Star_1(t):
-  '''decVar2Star  : DOT ID corchetesPosCte decVar2Star
-                  | '''
 
 def p_var_1(t):
   '''var  : getVariableID corchetesPosExp varDotPos'''
@@ -307,12 +322,11 @@ def p_var_1(t):
 
 def p_getVariableID_1(t):
   '''getVariableID  : ID'''
-  print "VARIABLE" + t[1]
-  quVariables.push(t[1])
+  stVariables.push(t[1])
   
 
 def p_varDotPos_1(t):
-  '''varDotPos  : activateIsVarClass DOT var
+  '''varDotPos  : activateIsVarClass DOT dot var
                 | varRevisa'''
 
 def p_activateIsVarClass_1(t):
@@ -324,34 +338,56 @@ def p_varRevisa_1(t):
   '''varRevisa  : '''
   global sClassName
   global bClass
+  global bDot      
+  global bArray
   vartype = 0
   # TODO: Revisar esto
   if bClass:
-    if quVariables.size() == 2:
-      sClass = quVariables.pop()
-      sVariable = quVariables.pop()
-      vartype = dictionaryClass.getAtributeType(dictionaryClass.getVariableType(sClassName, sScope, sClass), sVariable)
-      iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
-      global bArray
+    if bDot:
+      sVariable = stVariables.pop()
+      sClass = stVariables.pop()
+      sObjeto = sClass + "." + sVariable
+      if dictionaryClass.getAccessVar(sClassName, sVariable) == 0:
+        print "Variable privada"
+        sys.exit()
+      iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sObjeto)
+      varType = dictionaryClass.getVariableType(sClass,sScope, sObjeto)
       if not bArray:
-        stID.push([[sClass, iMemoria], vartype, sVariable])
+        stID.push([iMemoria, vartype, sVariable])
+      bArray = False
     else:
-      print "Objeto 1"
-      print quVariables.list
-      #sVariable = quVariables.pop()
-      #vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
-      #iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
-      #stID.push([iMemoria, vartype])
-  else:
-      sVariable = quVariables.pop()
-      vartype = dictionaryFunction.getVariableType(sScope, sVariable)
-      iMemoria = dictionaryFunction.getMemVar(sScope, sVariable)
-      print "Si entre"
-      if not bArray:
-        
+      print "Objeto"
+      sVariable = stVariables.pop()
+      vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
+      iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
+      if not bArray:  
         stID.push([iMemoria, vartype, sVariable])
       else:
-        print "No entre " + str(sVariable)
+        stVariables.pop()
+      bArray = False
+  else:
+    if bDot:
+      sVariable  =stVariables.pop()
+      sClass = stVariables.pop()
+      sObjeto = sClass + "." + sVariable
+      iTipo = dictionaryFunction.getVariableType(sScope, sClass)
+      if dictionaryClass.getAccessVar(iTipo, sVariable) == 0:
+        print "Variable privada"
+        sys.exit()
+      iMemoria = dictionaryFunction.getMemVar(sScope, sObjeto)
+      varType = dictionaryFunction.getVariableType(sScope, sObjeto)
+      if not bArray:  
+        stID.push([iMemoria, vartype, sObjeto])
+      bArray = False
+
+    else:
+      sVariable = stVariables.pop()
+      vartype = dictionaryFunction.getVariableType(sScope, sVariable)
+      iMemoria = dictionaryFunction.getMemVar(sScope, sVariable)
+      if not bArray:  
+        stID.push([iMemoria, vartype, sVariable])
+      else:
+        stVariables.pop()
       bArray = False
 
 
@@ -359,6 +395,7 @@ def p_varRevisa_1(t):
     sError = "Variable: " + sVariable
     errorHandling.printError(8, sError, t.lexer.lineno)
     sys.exit()
+  bDot = False
 
 def p_corchetesPosExp_1(t):
   '''corchetesPosExp  :  CORCHA mandaArrSt expression arrAc CORCHC
@@ -366,30 +403,19 @@ def p_corchetesPosExp_1(t):
 
 def p_mandaArrSt_1(t):
   '''mandaArrSt   : '''
-  # stVariables.push(copy.deepcopy(quVariables))
-  # quVariables.clear()
+  # stVariables.push(copy.deepcopy(stVariables))
+  # stVariables.clear()
 
 
 def p_arrAc_1(t):
   '''arrAc : '''       
-  global quVariables     
+  global stVariables     
   global bArray
   bArray = True
   global sScope
-  print stID.list
-  print quVariables.list
-  print t.lexer.lineno
   var = stID.pop()
-  offset = dictionaryFunction.getVarOffset(sScope, quVariables.top())
-  print "OFFSET " + str(offset)
-  size = dictionaryFunction.getVarSize(sScope, quVariables.top())
-  print "size"  
-  print size
-  print quVariables.list
-  print quVariables.top()
-  print t[-4]
-  print var
-  print size
+  offset = dictionaryFunction.getVarOffset(sScope, stVariables.top())
+  size = dictionaryFunction.getVarSize(sScope, stVariables.top())
   quads.append(typeConv.convertOp("ver"), var[0], 0, size-1)
 
   iDirCte = mem.addVariableConstante(0,offset)
@@ -397,16 +423,13 @@ def p_arrAc_1(t):
   quads.append(typeConv.convertOp("*"), var[0], iDirCte, iDirTemp)
 
   iDirTemp2 = mem.addVariableTemporal(var[1], 0)
-  iMemoria = dictionaryFunction.getMemVar(sScope, quVariables.top())
+  iMemoria = dictionaryFunction.getMemVar(sScope, stVariables.top())
   iDirTemp3 = mem.addVariableConstante(0, iMemoria)
-  iMemoria = dictionaryFunction.getMemVar(sScope, quVariables.top())
+  iMemoria = dictionaryFunction.getMemVar(sScope, stVariables.top())
   quads.append(typeConv.convertOp("+"), iDirTemp3, iDirTemp, iDirTemp2)
   res_type = dictionaryFunction.getVariableType(sScope, t[-3])
-  print "ARREGLOS"
-  print stID.list
   stID.push([[iDirTemp2], var[1], var[0]])
-  print stID.list
-  # quVariables = stVariables.pop()
+  # stVariables = stVariables.pop()
 
 def p_corchetesPosCte_1(t):
   '''corchetesPosCte  : CORCHA CTE_INT cte_int arrInit CORCHC
@@ -414,24 +437,18 @@ def p_corchetesPosCte_1(t):
 
 def p_arrInit_1(t):
   '''arrInit : '''
-  print stID.pop()
+  stID.pop()
   global sScope
   global sClassName
   global iTipo
   typeA = dictionaryFunction.getVariableType(sScope, t[-3])
   if typeA <= 4 :
-    print "size int"
-    print t[-5]
-    print t[-2]
     dictionaryFunction.setVarSizeOff(sScope, t[-5], t[-2], 1)
     global variable
     if dictionaryFunction.isLocal(sScope, variable):
       iMem = mem.addVariableLocal(iTipo,0 ,t[-2]-1)
     else:
       iMem = mem.addVariableGlobal(iTipo, 0 ,t[-2]-1)
-      print iMem
-      print sScope
-      print variable
   else:
     numAt = dictionaryClass.getNumAtribute(t[-4])
     dictionaryFunction.setVarSizeOff(sScope, t[-4], t[-2], numAt)
@@ -457,8 +474,13 @@ def p_genEra_1(t):
   quads.append(typeConv.convertOp("era"), iMem)
 
 def p_funCallStar_1(t):
-  '''funCallStar  : funCallIsObject corchetesPosExp DOT funCallId funCallStar
+  '''funCallStar  : funCallIsObject corchetesPosExp DOT dot funCallId funCallStar
                   | '''
+
+def p_dot_1(t):
+  '''dot  : '''
+  global bDot
+  bDot = True
 
 def p_funCallIsObject_1(t):
   '''funCallIsObject  : '''
@@ -516,9 +538,6 @@ def p_conditionElsePos_1(t):
 
 def p_assign_1(t):
   '''assign   : var equal assignExpID SEMICOLON'''
-  print t.lexer.lineno
-  print "En assign"
-  print quVariables.list
   varR = stID.pop()
   varL = stID.pop()
   
@@ -550,8 +569,6 @@ def p_input_1(t):
 
 def p_output_1(t):
   '''output   : PRINTS PARA expression PARC SEMICOLON'''
-  print "PRINTS"
-  print stID.list
   var = stID.pop()
   quads.append(typeConv.convertOp("prints"), var[0])
 
@@ -886,6 +903,7 @@ def validaReturn(t):
 
   global sScope
   global sClassName
+  global bClass
 
   sError = ""
   iTypeFunc = -1
@@ -898,7 +916,14 @@ def validaReturn(t):
   if isExpression:
     var = stID.pop()
     if iTypeFunc == var[1]: 
-      quads.append(typeConv.convertOp("return"), var[0])
+      if bClass:
+        atributes = dictionaryClass.getAtributes(sClassName, sScope)
+        listat  = []
+        for at, pe in atributes.items()
+          listat.append(dictionaryClass.getMemVarAtr(sClassName, sScope, at))
+        quads.append(typeConv.convertOp("return"), [listat, var[0]])
+      else:
+        quads.append(typeConv.convertOp("return"), var[0])
     else:
       sError = "Error en Zadust 1"
   else:
@@ -943,10 +968,12 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
   global sClassName
   global sScope
 
+  
+  sMethod = stFunc.pop()
   if sClass is None:
     sClass = stFunc.pop()
-  sMethod = stFunc.pop()
 
+  sObjeto = sClass
   sNClass = ""
   if bIsDouble and bClass:
     sClass = dictionaryClass.getVariableType(sClassName, sScope, sClass)
@@ -977,6 +1004,23 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
   varType = dictionaryClass.getMethodReturnType(sClass, sMethod)
   params = dictionaryClass.getParams(sClass, sMethod)
 
+  atributes = dictionaryClass.getAtributes(sClass, sMethod)
+  for at, pe in atributes.items()
+    sObjCall = sObjeto + "." +  at
+    listat = []
+    if bClass:
+      iMem = dictionaryClass.getMemVar(sClassName, sScope, sObjCall)
+      iMem2 = dictionaryFunction.getMemAtr(sClassName, at)
+      listat.append(iMem)
+    else:
+      iMem = dictionaryFunction.getMemVar(sScope, sObjCall)
+      iMem2 = dictionaryClass.getMemAtr(sClass, at)
+      listat.append(iMem)
+
+    quads.append(typeConv.convertOp("param"), iMem, None, iMem2)
+
+  quads.append(27, listat)
+
   validaParams(t, params)
 
   if varType != 4:
@@ -1006,7 +1050,6 @@ def validaFuncion(t):
   # Validar tipos de retorno
   varType = dictionaryFunction.getFunctionReturnType(sScope)
   params = dictionaryFunction.getParams(sScope)
-  print(params)
   if varType == -1:
     sError = "Funcion: " + str(sScope)
     errorHandling.printError(9, sError, t.lexer.lineno)
@@ -1045,6 +1088,7 @@ global bIsExpression
 global bMethodCall
 global bArray
 global bIsVarClass
+global bDot
 
 global sTipo
 global sScope
@@ -1061,6 +1105,7 @@ bIsExpression = True
 bMethodCall = False
 bArray = False
 bIsVarClass = False
+bDot = False
 
 sTipo = ""
 sScope = ""
@@ -1084,7 +1129,7 @@ stFunc = Stack()
 stVariables = Stack()
 
 quParams = Queue()
-quVariables = Stack()
+stVariables = Stack()
 
 parser = yacc.yacc()
 
@@ -1100,11 +1145,6 @@ if __name__ == '__main__':
       print(" ******************************************************* ") 
       yacc.parse(info, tracking=True)
       if errorHandling.hasError() or stOper.size() > 0 or stID.size() > 0 or stSaltos.size() > 0:
-        print "Stacks"
-        print stOper.size()
-        print stID.size()
-        print stSaltos.size()
-        print stID.list
         print(" *************** Compilacion con errores *************** ")
         #sys.exit()
       print(" *************** Compilacion Finalizada **************** ")
