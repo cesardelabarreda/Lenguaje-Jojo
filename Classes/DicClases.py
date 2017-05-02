@@ -62,13 +62,13 @@ class DicClass:
 			return 1
 		return self.classes[classId].getAtributeSize() 
 
-    def getAtributes(self, classId, methodId):
-        if self.existsClass(classId) == 0:
-            return 0
+	def getAtributes(self, classId, methodId):
+		if self.existsClass(classId) == 0:
+			return 0
 
-        if self.classes[classId].existsMethod(methodId):
-            return 1
-        return self.classes[classId].getAtributes() 
+		if self.classes[classId].existsMethod(methodId):
+			return 1
+		return self.classes[classId].getAtributes() 
 
 	def insertHamon(self, classId, classHamon):
 		if self.existsClass(classId) == 0:
@@ -181,7 +181,7 @@ class DicClass:
 
 		for clas in self.classes[classId].classes:
 			iRet = self.setVarSizeOff(self, clas, methodId, varId, iSize, iOffset)
-		 	if iRet != 0:
+			if iRet != 0:
 				return iRet
 		return 0
 
@@ -236,10 +236,10 @@ class DicClass:
 	def pprint(self):
 		iTam = self.size()
 		for clas in self.classes:
-		  self.classes[clas].pprint(clas)
-		  iTam = iTam - 1
-		  if iTam > 0:
-		  	print("\n")
+			self.classes[clas].pprint(clas)
+			iTam = iTam - 1
+			if iTam > 0:
+				print("\n")
 
 	def __repr__(self):
 		return "%s" %(str(self.classes))
