@@ -62,13 +62,13 @@ class DicClass:
 			return 1
 		return self.classes[classId].getAtributeSize() 
 
-    def getAtributes(self, classId, methodId):
-        if self.existsClass(classId) == 0:
-            return 0
+	def getAtributes(self, classId, methodId):
+		if self.existsClass(classId) == 0:
+			return 0
 
-        if self.classes[classId].existsMethod(methodId):
-            return 1
-        return self.classes[classId].getAtributes() 
+		if self.classes[classId].existsMethod(methodId):
+			return 1
+		return self.classes[classId].getAtributes() 
 
 	def insertHamon(self, classId, classHamon):
 		if self.existsClass(classId) == 0:
@@ -171,13 +171,75 @@ class DicClass:
 				return iRet
 		return -1
 
+	def setVarSizeOff(self, classId, methodId, varId, iSize, iOffset):
+		if self.existsClass(classId) == 0:
+			return 0
+
+		iRet = self.classes[classId].setVarSize(methodId, varId, iSize)
+		if iRet != 0:
+			return self.classes[classId].setVarOffset(methodId, varId, iOffset)
+
+		for clas in self.classes[classId].classes:
+			iRet = self.setVarSizeOff(self, clas, methodId, varId, iSize, iOffset)
+			if iRet != 0:
+				return iRet
+		return 0
+
+	def setVarSize(self, classId, methodId, varId, iSize):
+		if self.existsClass(classId) == 0:
+			return 0
+
+		iRet = self.classes[classId].setVarSize(methodId, varId, iSize)
+		if iRet != 0:
+			return self.classes[classId].setVarSize(methodId, varId, iSize)
+
+	def setVarOffset(self, classId, methodId, varId, iOffset):
+		if self.existsClass(classId) == 0:
+			return 0
+
+		iRet = self.classes[classId].setVarOffset(methodId, varId, iOffset)
+		if iRet != 0:
+			return self.classes[classId].setVarOffset(methodId, varId, iOffset)
+
+	def getVarOffset(self, classId, methodId, varId):
+		if self.existsClass(classId) == 0:
+			return 0
+		return self.classes[classId].getVarOffset(methodId, varId)
+
+	def getVarSize(self, classId, methodId, varId):
+		if self.existsClass(classId) == 0:
+			return -1
+		return self.classes[classId].getVarSize(methodId, varId)
+
+
+	def setMemVar(self, classId, methodId, varId, mem):
+		if self.existsClass(classId) == 0:
+			return 0
+		return self.classes[classId].setMemVar(methodId, varId, mem)
+
+	def setMemFunc(self, classId, methodId, mem):
+		if self.existsClass(classId) == 0:
+			return 0
+		return self.classes[classId].setMemFunc(methodId, mem)
+
+
+	def getMemVar(self, classId, methodId, varId):
+		if self.existsClass(classId) == 0:
+			return 0
+		return self.classes[classId].getMemVar(methodId, varId)
+		
+	def getMemFunc(self, classId, methodId):
+		if self.existsClass(classId) == 0:
+			return -1
+		return self.classes[classId].getMemFunc(methodId)
+
 	def pprint(self):
 		iTam = self.size()
 		for clas in self.classes:
-		  self.classes[clas].pprint(clas)
-		  iTam = iTam - 1
-		  if iTam > 0:
-		  	print("\n")
+			self.classes[clas].pprint(clas)
+			iTam = iTam - 1
+			if iTam > 0:
+				print("\n")
 
 	def __repr__(self):
 		return "%s" %(str(self.classes))

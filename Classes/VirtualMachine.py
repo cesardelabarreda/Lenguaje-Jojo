@@ -218,12 +218,12 @@ class VM:
 		if type(oper1) is list:
 			ret = self.mapmemory.getVariableValue(oper1[1])
 			listRet = oper[0]
-			for i in range(len(listRet))
+			for i in range(len(listRet)):
 				oper[0][i] = self.mapmemory.getVariableValue(listRet[i])
 			if ret != None :		
 				self.mapmemory.returnGoSub()
 				listobj = objeto.pop()
-				for i in range(len(listRet))
+				for i in range(len(listRet)):
 					self.mapmemory.setVariableValue(listobj[i], oper1[0][i])
 				global contQuads
 				contQuads = self.stEjecucion.pop()

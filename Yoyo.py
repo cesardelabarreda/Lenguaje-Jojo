@@ -281,7 +281,7 @@ def p_decVar3_1(t):
         dictionaryClass.setMemObjFuncVar(sScope, variable, iMem)
       else:
         iAtribute = dictionaryClass.getAtribute(iTipo)
-        for i, j in iAtribute.items
+        for i, j in iAtribute.items():
           if dictionaryClass.insertVar(sClassName, sScope, variable + "." + i, iTipo) == 0:
             sError = "Variable: " + variable
             errorHandling.printError(2, sError, t.lexer.lineno)
@@ -303,7 +303,7 @@ def p_decVar3_1(t):
       dictionaryFunction.setMemVar(sScope, variable, iMem)
     else:
       iAtribute = dictionaryClass.getAtribute(iTipo)
-      for i, j in iAtribute.items
+      for i, j in iAtribute.items():
           if dictionaryFunction.insertVar(sScope, variable + "." + i, iTipo) == 0:
             sError = "Variable: " + variable
             errorHandling.printError(2, sError, t.lexer.lineno)
@@ -461,8 +461,7 @@ def p_funCall_1(t):
   validaFuncion(t)
 
 def p_funCall2_1(t):
-  '''funCall2  : funCallStar genEra PARA funCallParams PARC'''
-
+  '''funCall2  : funCallStar genEra PARA funCallParamsStart funCallParams PARC'''
 
 def p_funCallId_1(t):
   '''funCallId  : ID'''
@@ -486,6 +485,14 @@ def p_funCallIsObject_1(t):
   '''funCallIsObject  : '''
   global bMethodCall
   bMethodCall = True
+
+def p_funCallParamsStart_1(t):
+  '''funCallParamsStart   : '''
+  global stParams
+  global quParams
+
+  stParams.push(copy.deepcopy(quParams))
+  quParams.clear()
 
 def p_funCallParams_1(t):
   '''funCallParams  : expression genParam funCallParamsStar
@@ -820,7 +827,7 @@ def p_cte_real_1(t):
 def p_cte_bool_1(t):
   '''cte_bool  : '''
   valor = True
-  if t[-1].lower() == "false":
+  if t[-1] == "false":
     valor = False
   iDirCte = mem.addVariableConstante(2,valor)
   stID.push([iDirCte, 2, t[-1]])
@@ -919,7 +926,7 @@ def validaReturn(t):
       if bClass:
         atributes = dictionaryClass.getAtributes(sClassName, sScope)
         listat  = []
-        for at, pe in atributes.items()
+        for at, pe in atributes.items():
           listat.append(dictionaryClass.getMemVarAtr(sClassName, sScope, at))
         quads.append(typeConv.convertOp("return"), [listat, var[0]])
       else:
@@ -941,6 +948,9 @@ def validaReturn(t):
 
 
 def validaParams(t, params):
+  global quParams
+  global stParams
+
   # Validar tipos de parametro y argumento
   i = 0
   while quParams.empty() == False and i < len(params):
@@ -948,8 +958,8 @@ def validaParams(t, params):
     if par[1] != params[i][1]:
       sError = "Parametro numero: " + str(i)
       errorHandling.printError(12, sError, t.lexer.lineno)
-    else: 
-      quads.append(typeConv.convertOp("param"), par[0], None, params[i][0])
+      sys.exit()
+    quads.append(typeConv.convertOp("param"), par[0], None, params[i][0])
     i += 1
 
   # Validar tamanos de argumentos y parametros
@@ -962,6 +972,8 @@ def validaParams(t, params):
     sError = "Argumentos faltantes: " + str(len(params) - i)
     errorHandling.printError(13, sError, t.lexer.lineno)
     sys.exit()
+
+  quParams = stParams.pop()
 
 
 def validaMetodo(t, bIsDouble=False, sClass=None):
@@ -1005,7 +1017,7 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
   params = dictionaryClass.getParams(sClass, sMethod)
 
   atributes = dictionaryClass.getAtributes(sClass, sMethod)
-  for at, pe in atributes.items()
+  for at, pe in atributes.items():
     sObjCall = sObjeto + "." +  at
     listat = []
     if bClass:
@@ -1077,6 +1089,7 @@ global stID
 global stOper
 global stSaltos
 global stVariables
+global stParams
 
 global iTempCont
 global iTipo
@@ -1127,6 +1140,7 @@ stOper = Stack()
 stSaltos = Stack()
 stFunc = Stack()
 stVariables = Stack()
+stParams = Stack()
 
 quParams = Queue()
 stVariables = Stack()

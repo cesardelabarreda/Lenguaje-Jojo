@@ -5,16 +5,21 @@
 func stand sort() {
   @@@
     int i, j, aux;
+    bool b;
   @@@
 
   i = 0;
-  while (i < n) {
+  b = true;
+  while (i < n - 1 && b) {
+    b = false;
     j = i + 1;
     while (j < n) {
       if(arr[i] > arr[j]) {
         aux = arr[i];
         arr[i] = arr[j];
         arr[j] = aux;
+
+        b = true;
       }
       j = j + 1;
     }

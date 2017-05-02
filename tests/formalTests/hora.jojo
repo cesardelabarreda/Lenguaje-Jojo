@@ -1,0 +1,40 @@
+
+class hora {
+	@@@@
+		int h, m;
+	@@@
+	
+	func public void hhora(int h, int m) {
+		h = hh;
+		m = mm;
+	}
+
+	func public void setH(int hh) {
+		h = hh;
+	}
+
+	func public int getH() {
+		zadust h;
+	}
+
+	func public void pprints() {
+		prints(h);
+		prints(m);
+	}
+}
+
+
+public stand jojo() {
+	@@@
+		hora h1, h2;
+	@@@
+
+	gets(h1.h);
+	gets(h1.m);
+	h1.pprint();
+
+	h2.hhora(10, 42);
+	h2.pprint();
+
+	zadust;
+}
