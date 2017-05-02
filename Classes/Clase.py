@@ -113,6 +113,10 @@ class Class:
 			return -1
 		return self.atributes[atributeId].tipo
 
+
+	def getAtributes(self):
+		return self.atributes
+
 	def getVarType(self, methodId, varId):
 		if self.existsMethod(methodId) == 0:
 			return -1

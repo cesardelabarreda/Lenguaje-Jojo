@@ -62,6 +62,14 @@ class DicClass:
 			return 1
 		return self.classes[classId].getAtributeSize() 
 
+    def getAtributes(self, classId, methodId):
+        if self.existsClass(classId) == 0:
+            return 0
+
+        if self.classes[classId].existsMethod(methodId):
+            return 1
+        return self.classes[classId].getAtributes() 
+
 	def insertHamon(self, classId, classHamon):
 		if self.existsClass(classId) == 0:
 			return 0
