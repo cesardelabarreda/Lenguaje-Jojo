@@ -83,7 +83,7 @@ class Quadruple:
 						print(" "),
 				else:
 					print(str(quad[i])),
-					iTam = 14 - len(str(sVal))
+					iTam = 14 - len(str(quad[i]))
 					if (iTam % 2 == 1):
 						iTam = iTam - 3
 						print("  "),
