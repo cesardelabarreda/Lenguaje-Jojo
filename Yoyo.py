@@ -132,6 +132,23 @@ def p_defScopeClass_1(t):
   dictionaryClass.setMemFunc(sClassName, sScope, iMem)
   dictionaryClass.setQuadInicial(sClassName, sScope, quads.size())
 
+  
+
+  atributes = dictionaryClass.getAtributes(sClassName);
+  print atributes
+  print "METO ATRIBUTOS"
+  for at, res in atributes.items():
+    print at
+    print res.tipo
+    if dictionaryClass.insertVar(sClassName, sScope, at, res.tipo) == 0:
+      sError = "Variable: " + variable
+      errorHandling.printError(2, sError, t.lexer.lineno)
+      sys.exit()
+    iMem = mem.addVariableLocal(res.tipo)
+    dictionaryClass.setMemVar(sClassName, sScope, at, res.tipo)
+    dictionaryClass.pprint()
+
+
 
 def p_decVarStar_1(t):
   '''decVarStar   : decVar decVarStar
@@ -265,10 +282,13 @@ def p_decVar3_1(t):
         errorHandling.printError(1, sError, t.lexer.lineno)
         sys.exit()
        # TODO:
-
+      '''
+      print variable
+      print iTipo
+      print t.lexer.lineno
       iMem = mem.addVariableLocal(iTipo)
       dictionaryClass.setMemObjAtr(sScope, variable, iMem)
-      
+      '''
     else:
 
       if iTipo < 4:
@@ -280,9 +300,9 @@ def p_decVar3_1(t):
         iMem = mem.addVariableLocal(iTipo)
         dictionaryClass.setMemObjFuncVar(sScope, variable, iMem)
       else:
-        iAtribute = dictionaryClass.getAtribute(iTipo)
+        iAtribute = dictionaryClass.getAtributes(iTipo)
         for i, j in iAtribute.items():
-          if dictionaryClass.insertVar(sClassName, sScope, variable + "." + i, iTipo) == 0:
+          if dictionaryClass.insertVar(sClassName, sScope, variable + "." + i, j.tipo) == 0:
             sError = "Variable: " + variable
             errorHandling.printError(2, sError, t.lexer.lineno)
             sys.exit()
@@ -302,16 +322,17 @@ def p_decVar3_1(t):
         iMem = mem.addVariableGlobal(iTipo)
       dictionaryFunction.setMemVar(sScope, variable, iMem)
     else:
-      iAtribute = dictionaryClass.getAtribute(iTipo)
+      dictionaryFunction.insertVar(sScope, variable, iTipo)
+      iAtribute = dictionaryClass.getAtributes(iTipo)
       for i, j in iAtribute.items():
-          if dictionaryFunction.insertVar(sScope, variable + "." + i, iTipo) == 0:
+          if dictionaryFunction.insertVar(sScope, variable + "." + i, j.tipo) == 0:
             sError = "Variable: " + variable
             errorHandling.printError(2, sError, t.lexer.lineno)
             sys.exit()
           if dictionaryFunction.isLocal(sScope, variable + "." + i):
-            iMem = mem.addVariableLocal(j[0])
+            iMem = mem.addVariableLocal(j.tipo)
           else:
-            iMem = mem.addVariableGlobal(j[0])
+            iMem = mem.addVariableGlobal(j.tipo)
           dictionaryFunction.setMemVar(sScope, variable + "." + i, iMem)
 
 
@@ -347,7 +368,8 @@ def p_varRevisa_1(t):
       sVariable = stVariables.pop()
       sClass = stVariables.pop()
       sObjeto = sClass + "." + sVariable
-      if dictionaryClass.getAccessVar(sClassName, sVariable) == 0:
+      atributos = dictionaryClass.getAtributes(sClassName)
+      if atributos[sVariable].encap == 1:
         print "Variable privada"
         sys.exit()
       iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sObjeto)
@@ -371,7 +393,8 @@ def p_varRevisa_1(t):
       sClass = stVariables.pop()
       sObjeto = sClass + "." + sVariable
       iTipo = dictionaryFunction.getVariableType(sScope, sClass)
-      if dictionaryClass.getAccessVar(iTipo, sVariable) == 0:
+      atributos = dictionaryClass.getAtributes(sClassName)
+      if atributos[sVariable].encap == 1:
         print "Variable privada"
         sys.exit()
       iMemoria = dictionaryFunction.getMemVar(sScope, sObjeto)
@@ -469,7 +492,15 @@ def p_funCallId_1(t):
 
 def p_genEra_1(t):
   '''genEra   : '''
-  iMem = dictionaryFunction.getMemFunc(stFunc.top())
+  print "FUNCION"
+  print stFunc.top()
+  global bMethodCall
+  global sClassName
+  print sClassName
+  if bMethodCall:
+    iMem = dictionaryClass.getMemFunc(sClassName, stFunc.top())
+  else:
+    iMem = dictionaryFunction.getMemFunc(stFunc.top())
   quads.append(typeConv.convertOp("era"), iMem)
 
 def p_funCallStar_1(t):
@@ -834,8 +865,10 @@ def p_cte_bool_1(t):
 
 def p_cte_str_1(t):
   '''cte_str  : '''
-  iDirCte = mem.addVariableConstante(3, t[-1])
-  stID.push([iDirCte, 3, t[-1]])
+  sCte = t[-1]
+  sCte = sCte[1:-1]
+  iDirCte = mem.addVariableConstante(3, sCte)
+  stID.push([iDirCte, 3, sCte])
 
 def p_accessPos_1(t):
   '''accessPos  : access 
@@ -924,10 +957,10 @@ def validaReturn(t):
     var = stID.pop()
     if iTypeFunc == var[1]: 
       if bClass:
-        atributes = dictionaryClass.getAtributes(sClassName, sScope)
+        atributes = dictionaryClass.getAtributes(sClassName)
         listat  = []
         for at, pe in atributes.items():
-          listat.append(dictionaryClass.getMemVarAtr(sClassName, sScope, at))
+          listat.append(dictionaryClass.getMemVar(sClassName, sScope, at))
         quads.append(typeConv.convertOp("return"), [listat, var[0]])
       else:
         quads.append(typeConv.convertOp("return"), var[0])
@@ -987,9 +1020,12 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
 
   sObjeto = sClass
   sNClass = ""
+  print sClass
   if bIsDouble and bClass:
     sClass = dictionaryClass.getVariableType(sClassName, sScope, sClass)
   elif bIsDouble and not bClass:
+    print "entre funcion"
+    dictionaryFunction.pprint()
     sClass = dictionaryFunction.getVariableType(sScope, sClass)
 
   # Validar que existe la clase
@@ -1001,6 +1037,7 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
     sys.exit()
 
   # Validar que existe el metodo
+  dictionaryClass.pprint()
   bExist = dictionaryClass.existsMethod(sClass, sMethod)
   if not bExist:
     sError = "Metodo: " + sMethod
@@ -1016,17 +1053,17 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
   varType = dictionaryClass.getMethodReturnType(sClass, sMethod)
   params = dictionaryClass.getParams(sClass, sMethod)
 
-  atributes = dictionaryClass.getAtributes(sClass, sMethod)
+  atributes = dictionaryClass.getAtributes(sClass)
+  listat = []
   for at, pe in atributes.items():
     sObjCall = sObjeto + "." +  at
-    listat = []
     if bClass:
       iMem = dictionaryClass.getMemVar(sClassName, sScope, sObjCall)
       iMem2 = dictionaryFunction.getMemAtr(sClassName, at)
       listat.append(iMem)
     else:
       iMem = dictionaryFunction.getMemVar(sScope, sObjCall)
-      iMem2 = dictionaryClass.getMemAtr(sClass, at)
+      iMem2 = dictionaryClass.getMemVar(sClass, sMethod, sObjCall)
       listat.append(iMem)
 
     quads.append(typeConv.convertOp("param"), iMem, None, iMem2)
@@ -1034,11 +1071,16 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
   quads.append(27, listat)
 
   validaParams(t, params)
-
+  print "METODO"
+  print sMethod
+  print "CLASE"
+  print sClass
+  varType = dictionaryClass.getMethodReturnType(sClass, sMethod)
+  print varType
   if varType != 4:
     stID.push([sScope, varType, sScope])
 
-  quads.append(typeConv.convertOp("gosub"), sClass, sMethod)
+  quads.append(typeConv.convertOp("gosub"), sClass, sMethod, dictionaryClass.getQuadInicial(sClass, sMethod))
   bMethodCall = False
 
 def validaFuncion(t):
@@ -1160,6 +1202,10 @@ if __name__ == '__main__':
       yacc.parse(info, tracking=True)
       if errorHandling.hasError() or stOper.size() > 0 or stID.size() > 0 or stSaltos.size() > 0:
         print(" *************** Compilacion con errores *************** ")
+        print stOper.size()
+        print stID.size()
+        print stSaltos.size()
+        print stID.list
         #sys.exit()
       print(" *************** Compilacion Finalizada **************** ")
       print("\n")
