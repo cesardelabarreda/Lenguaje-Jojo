@@ -592,7 +592,7 @@ def p_conditionElsePos_1(t):
                         | LLAVEA actionStar LLAVEC'''
 
 def p_assign_1(t):
-  '''assign   : var equal assignExpID SEMICOLON'''
+  '''assign   : var equal expression SEMICOLON'''
   varR = stID.pop()
   varL = stID.pop()
   
@@ -612,10 +612,6 @@ def p_assign_1(t):
 def p_equal_1(t):
   '''equal : EQUAL'''
   stOper.push(t[1])
-
-def p_assignExpID_1(t):
-  '''assignExpID  : expression
-                  | NEW ID PARA PARC'''
 
 def p_input_1(t):
   '''input  : GETS PARA var PARC SEMICOLON'''
@@ -1230,6 +1226,8 @@ if __name__ == '__main__':
 
       # print (stOper.items)
       # pprint.pprint (stID.items)
+      print "Ejecucion completa"
+      print "<--- To be continued ..."
 
     except EOFError:
         print(EOFError)

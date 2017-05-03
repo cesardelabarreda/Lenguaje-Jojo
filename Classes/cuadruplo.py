@@ -1,3 +1,12 @@
+"""
+Clase Cuadruplo:
+	Esta clase es una implementacion con los metodos genericos que se vieron en clase
+		para poder hacerlos funcionar. La clase solo tiene una lista, la cual cada indice
+		tiene una lista de 4 posiciones. Tambien tiene 2 implementaciones pprint, una para
+		permitir un debugging mas facil y el otro para mostrar lo que literalmente tiene
+		almacenado
+"""
+
 import sys
 import pprint
 from CuboSemantico import TypeConvertion
@@ -83,7 +92,7 @@ class Quadruple:
 						print(" "),
 				else:
 					print(str(quad[i])),
-					iTam = 14 - len(str(sVal))
+					iTam = 14 - len(str(quad[i]))
 					if (iTam % 2 == 1):
 						iTam = iTam - 3
 						print("  "),

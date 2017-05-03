@@ -4,6 +4,20 @@ from Util import Util
 from CuboSemantico import TypeConvertion
 from DataStructures.Dictionary import Dictionary
 from DataStructures.Stack import Stack
+"""
+	Clase MemoryTypes:
+		Es lo mas abajo y base que hay de memoria. Separa en 4 tipos todo. Tiene la cantidad
+			de variables que van de cada tipo, los limites y las bases, ademas de la memoria en si.
+
+		El atributo iBaseVar un mapa que guarda cual es la direccion base de cada uno de los tipos.
+			La llave es el tipo de dato.
+		El atributo iCantVar es un mapa que tiene como llave el tipo de dato y guarda la cantidad
+			de variables que se estan usando.
+		El atributo iLimit es un mapa que tiene como llave el tipo de dato y guarda el maximo valor
+			que se puede llegar a tener un
+
+"""
+
 from DataStructures.Queue import Queue
 
 class MemoryTypes:
@@ -40,7 +54,11 @@ class MemoryTypes:
 
 	def getNextMem(self, iType):
 		return self.iBaseVar[iType] + self.iCantVar[iType]
-		
+	
+	# Cada vez que se va a agregar un arreglo o una variable, se llega a este metodo
+	# 	el cual se encarga de asignar un valor default en memoria (en caso de que)
+	# 	no se le de un valor, para los n valores que se le de (iSize). En caso de
+	# 	que se exceda el tamano maximo, se marca un mensaje de error.
 	def addVariable(self, iType, iValue=0, iSize=1):
 		if iType == 3 and iValue == 0:
 			iValue = ""
@@ -113,6 +131,9 @@ class MemoryFunction:
 	def addVariable(self, iType, iValue=0, iSize=1):
 		return self.mem[self.iBaseFuncIDs].addVariable(iType, iValue, iSize)
 
+	# Cada vez que se crea una funcion, se genera un nuevo ID y se crea el espacio
+	# 	de memoria para esa localidad. Si la cantidad de funciones posibles a declarar
+	#		excede el limite, el programa termina con error.
 	def createFunction(self):
 		if self.iBaseFuncIDs == 1010000:
 			print "Limite de memoria excedido"
@@ -121,6 +142,10 @@ class MemoryFunction:
 		self.mem[self.iBaseFuncIDs] = MemoryTypes(self.iBaseVar, self.iLimit)
 		return self.iBaseFuncIDs
 
+	# Cada vez que se termina de procesar una funcion, se marca como finalizada esa
+	#		funcion y se agrega 1 a la cantidad de funciones totales que se tienen.
+	# 	Tambien se actualizan los rangos para que las proximas funciones puedan ser
+	# 	creadas con exactitud
 	def endFunction(self):
 		iBaseVars = self.getSize()
 
@@ -246,22 +271,31 @@ class MemoryManager:
 		self.stNextFunction = Stack()
 		self.stFunctions = Stack()
 
+	# Cuando se llama a un gosub, se guarda en la pila de funciones la memoria
+	# 	que se esta usando actualmente como local/funcion. Ademas, se saca de la
+	# 	pila de nextfunctions la siguiente funcion a usar. 
 	def moveMemGoSub(self):
 		self.stFunctions.push(self.function)
 		self.function = self.stNextFunction.pop()
 
+	# Cuando se termina una funcion, se obtiene de vuelta la ultima memoria de funcion
+	# 	que se guardo en la pila, de esta forma puede continuar donde quedo ejecutand.
 	def returnGoSub(self):
 		self.function = self.stFunctions.pop()
 
-
+	# Cuando hay un ERA, se mete a la pila de siguientes funciones una copia de la
+	#		funcion a la cual se va a mover ahora la ejecusion.
 	def eraFuncion(self, iFuncID):
 		self.stNextFunction.push(copy.deepcopy(self.mem.getLocal(iFuncID)))
 
+	# Cuando hay un param, se asigna el valor de en memoria a la ultima funcion que
+	# 	se le creo el era.
 	def paramFunction(self, iMemId, iValue):
 		stF = self.stNextFunction.pop()
 		stF.setVariableValue(iMemId, iValue)
 		self.stNextFunction.push(stF)
 
+	# Obtiene un valor dada un Id de memoria.
 	def getVariableValue(self, iMemId):
 		if self.globa.exists(iMemId):
 			return self.globa.getVariableValue(iMemId)
@@ -271,6 +305,7 @@ class MemoryManager:
 			return self.constante.getVariableValue(iMemId)
 		return None
 
+	# Se asigna un valor dada un Id de memoria.
 	def setVariableValue(self, iMemId, iValue):
 		if self.globa.exists(iMemId):
 			return self.globa.setVariableValue(iMemId, iValue)

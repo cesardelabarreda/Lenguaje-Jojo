@@ -1,3 +1,15 @@
+"""
+	Clase Variable
+	La clase variable tiene un atributo tipo para el tipo de dato.
+	Tambien tiene un atributo memoria que almacena la direccion de memoria de 
+		la variable, 
+	Tambien tiene un atributo size que almacena un 0 si no es arreglo, o un
+		entero positivo si almacena un arreglo.
+	El atributo offset empezo siendo util cuando se planeaba tener arreglos de
+		objetos, pero el resulto siendo inutil. No se borra por miedo a que termine
+		siendo importante.
+"""
+
 from CuboSemantico import TypeConvertion
 
 class Variable:

@@ -1,6 +1,23 @@
 from CuboSemantico import TypeConvertion
 from Variable import Variable
 
+"""
+	Clase Funcion:
+	Es un objeto que tiene varios atributos. 
+	Tiene un diccionario de variables, donde la llave es el nombre de la variable 
+		y dentro contiene un objeto Variable. 
+	Tiene una lista de parametros, la cual cada posicion tiene una pareja de valores 
+		donde la primera es una direccion de memoria del parametro y la segunda es el 
+		tipo de parametro. 
+	Tiene un atributo para el tipo de retorno. Tiene un atributo para la direccion 
+		de memoria asociada. Tiene un atributo para el cuadruplo donde inicia.
+	Tiene una memoria de la funcion, que sirve para asociar la funcion cuando se
+		hace el era.
+	Tiene el quadruplo inicial, para poder hacer el gosub especifico al quadruplo.
+"""
+
+
+
 class Function:
 	def __init__(self, funcRetType):
 		self.convert = TypeConvertion()

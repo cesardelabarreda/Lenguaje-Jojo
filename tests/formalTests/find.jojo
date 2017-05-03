@@ -1,0 +1,37 @@
+@@@
+  int arr[11], n;
+@@@
+
+func stand find(int val) {
+  @@@
+    int i;
+  @@@
+
+  i = 0;
+  while(i < n) {
+    if (arr[i] == val) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+
+public stand jojo() {
+  @@@
+    int i;
+    int val;
+  @@@
+
+  gets(n);
+  i = 0;
+  while(i < n) {
+    gets(arr[i]);
+
+    i = i + 1;
+  }
+
+  gets(val);
+  prints(find(val));
+}
