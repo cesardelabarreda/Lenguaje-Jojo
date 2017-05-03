@@ -1226,6 +1226,8 @@ if __name__ == '__main__':
 
       # print (stOper.items)
       # pprint.pprint (stID.items)
+      print "Ejecucion completa"
+      print "<--- To be continued ..."
 
     except EOFError:
         print(EOFError)

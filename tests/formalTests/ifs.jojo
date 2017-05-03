@@ -1,0 +1,40 @@
+public stand jojo() {
+	@@@
+		int n1, n2, n3, ans, ans2;
+	@@@
+
+	n1 = 10;
+	n2 = 20;
+	n3 = 30;
+
+	if (n1 != 10) {
+		ans = 5;
+	}
+	else if (n2 < 15) {
+		ans = 10;
+	}
+	else if (n3 >= 30) {
+		if (n1 > 10) {
+			ans = 15;
+		}
+		else if (n2 == 20) {
+			if (n3 == 30) {
+				ans = 20;
+			}
+			else if (n3 == 31) {
+				ans = 31;
+			}
+		}
+		else {
+			ans = 32;
+			ans2 = 3;
+		}
+		ans2 = 4;
+	}
+	else {
+		ans = -1;
+	}
+
+	prints(ans);
+	prints(ans2);
+}

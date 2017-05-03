@@ -1,7 +1,7 @@
 """
 	Clase Variable
 	La clase variable tiene un atributo tipo para el tipo de dato.
-	Tambien tiene un atributo memoria que almacena la dirección de memoria de 
+	Tambien tiene un atributo memoria que almacena la direccion de memoria de 
 		la variable, 
 	Tambien tiene un atributo size que almacena un 0 si no es arreglo, o un
 		entero positivo si almacena un arreglo.

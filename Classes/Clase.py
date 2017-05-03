@@ -1,13 +1,13 @@
 """
 Clase Clase:
 	Es un objeto que contiene 2 diccionarios: uno del objeto Method y uno del objeto Atribute; 
-		y 1 lista de clases a de las cuales está heredando, que son solamente Strings. Esta clase
+		y 1 lista de clases a de las cuales esta heredando, que son solamente Strings. Esta clase
 		tiene todos los metodos necesarios para poder modificar u obtener informacion de alguno de
 		sus atributos, o de los atributos de sus atributos.
 
 	El diccionario Method tiene como llave el nombre del metodo, y lo que contiene es un objeto
 		Method.
-	El diccionario Atribute tiene como llave el nombre del atriuto, y lo que contiene es un objeto
+	El diccionario Atribute tiene como llave el nombre del atributo, y lo que contiene es un objeto
 		Atribute.
 """
 from Metodo import Method

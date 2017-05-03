@@ -1,3 +1,6 @@
+from __future__ import print_function
+
+
 """
 	Clase Error:
 	La clase error fue pensada con el objetivo de tener un buen manejo de errores.
@@ -13,7 +16,6 @@
 		no son utiles dentro del yacc, solo sirven al desarrollador.
 """
 
-from __future__ import print_function
 import pprint
 import sys
 
