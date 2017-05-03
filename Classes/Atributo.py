@@ -1,4 +1,7 @@
+"""
+Clase atributo:
 
+"""
 from Variable import Variable
 
 class Atribute(Variable):
