@@ -112,7 +112,16 @@ def p_functionClass_1(t):
 
 def p_genEndProc_1(t):
   '''genEndproc   : '''
-  mem.endFunction() 
+  global sClassName
+  global sScope
+  global bClass
+  if bClass:
+        atributes = dictionaryClass.getAtributes(sClassName)
+        listat  = []
+        for at, pe in atributes.items():
+          listat.append(dictionaryClass.getMemVar(sClassName, sScope, at))
+        quads.append(typeConv.convertOp("return"), [listat, None])
+  mem.endFunction()
   quads.append(typeConv.convertOp("endProc"))
 
 def p_defScopeClass_1(t):
@@ -145,8 +154,8 @@ def p_defScopeClass_1(t):
       errorHandling.printError(2, sError, t.lexer.lineno)
       sys.exit()
     iMem = mem.addVariableLocal(res.tipo)
-    dictionaryClass.setMemVar(sClassName, sScope, at, res.tipo)
-    dictionaryClass.pprint()
+    dictionaryClass.setMemVar(sClassName, sScope, at, iMem)
+    #dictionaryClass.pprint()
 
 
 
@@ -1063,9 +1072,16 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
       listat.append(iMem)
     else:
       iMem = dictionaryFunction.getMemVar(sScope, sObjCall)
-      iMem2 = dictionaryClass.getMemVar(sClass, sMethod, sObjCall)
+      print at
+      iMem2 = dictionaryClass.getMemVar(sClass, sMethod, at)
       listat.append(iMem)
 
+    print sClass
+    print sMethod
+    print "MEMORIA1"
+    print iMem
+    print "MEMORIA2"
+    print iMem2
     quads.append(typeConv.convertOp("param"), iMem, None, iMem2)
 
   quads.append(27, listat)
