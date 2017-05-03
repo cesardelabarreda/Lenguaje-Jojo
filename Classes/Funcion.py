@@ -1,3 +1,18 @@
+"""
+	Clase Funcion:
+	Es un objeto que tiene varios atributos. 
+	Tiene un diccionario de variables, donde la llave es el nombre de la variable 
+		y dentro contiene un objeto Variable. 
+	Tiene una lista de parámetros, la cual cada posición tiene una pareja de valores 
+		donde la primera es una dirección de memoria del parámetro y la segunda es el 
+		tipo de parámetro. 
+	Tiene un atributo para el tipo de retorno. Tiene un atributo para la dirección 
+		de memoria asociada. Tiene un atributo para el cuádruplo donde inicia.
+	Tiene una memoria de la funcion, que sirve para asociar la funcion cuando se
+		hace el era.
+	Tiene el quadruplo inicial, para poder hacer el gosub especifico al quadruplo.
+"""
+
 from CuboSemantico import TypeConvertion
 from Variable import Variable
 

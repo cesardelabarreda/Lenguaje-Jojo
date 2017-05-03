@@ -1,3 +1,20 @@
+"""
+	Clase CuboSemantico:
+		La clase contiene solo 1 atributo, un mapa llamado cube. Este mapa tiene un mapa,
+			que a su vez contiene un mapa. Estos son 3 niveles de mapa, y se utiliza para saber
+			si un operando tiene relacion operador y si este tiene relacion con el otro operando.
+			Los tipos se utilizan por el estandar que definimos. En la clase TypeConvertion se
+			puede ver cuales son los tipos y la relacion entre estos. 
+"""
+
+"""
+	Clase TypeConvertion:
+		La clase contiene 3 mapas: uno para operaciones, otro para tipos de acceso y otro
+			para tipo de dato. El manejo de strings dentro de mapas y de memoria puede llegar a
+			ser un poco lento, por lo que se utilizan ints, los cuales son un poco mas rapidos
+			a la hora de hacer operaciones.
+"""
+
 class SemanticCube:
 	def __init__(self):
 		self.cube = {}

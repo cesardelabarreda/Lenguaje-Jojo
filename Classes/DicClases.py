@@ -1,4 +1,10 @@
-
+"""
+Clase DicClass:
+	Es un diccionario cuya llave es el nombre de la clase y dentro contiene un objeto 
+		Clase. Contiene muchos metodos que permiten hacer muchas operaciones con todos 
+		los sub-atributos que tiene el metodo. En algunas de estas se utiliza recursion
+		para poder moverse entre las herencias que tienen los objetos.
+"""
 from Clase import Class
 
 class DicClass:

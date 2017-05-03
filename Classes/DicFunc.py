@@ -1,3 +1,11 @@
+"""
+Clase DicFunction:
+	Es un diccionario cuya llave es el nombre de la funcion y dentro contiene un objeto 
+		Funcion. Contiene muchos metodos que permiten hacer muchas operaciones con todos 
+		los sub-atributos que tiene el metodo. El diccionario se crea automaticamente con
+		1 llave, la cual es "_Global", esto porque aqui se guardan las variables globales.
+"""
+
 from Funcion import Function
 
 class DicFunction:

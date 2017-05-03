@@ -1,6 +1,7 @@
 """
 Clase atributo:
-
+	Hereda de la Clase Variable y ademas tiene implementado el atributo encap, el cual tiene el valor que representa si
+		es publico o privado (0 o 1, respectivamente).
 """
 from Variable import Variable
 

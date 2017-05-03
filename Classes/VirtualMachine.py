@@ -1,3 +1,11 @@
+"""
+	Clase VM:
+	La clase VM recibe el mapa de memoria generado durante compilacion y los
+		cuadruplos que se generaron. Con esto, almacena en atributos esto. Uno
+		es para la memoria, otro para los cuadruplos y el ultimo es la pila de
+		ejecusion. Pareciera que es un switch gigante, sin embargo, se creo a
+		modo de diccionario de funciones, por lo que se puede llamar a qualquiera. 
+"""
 
 from Memoria import MemoryManager
 from Memoria import Memory
