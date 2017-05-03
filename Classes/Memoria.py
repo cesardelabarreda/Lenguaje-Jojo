@@ -1,4 +1,5 @@
 import copy
+import sys
 from Util import Util
 from CuboSemantico import TypeConvertion
 from DataStructures.Dictionary import Dictionary
@@ -50,6 +51,9 @@ class MemoryTypes:
 		
 		self.iCantVar[iType] = self.iCantVar[iType] + iSize
 		if self.iBaseVar[iType] + self.getSizeType(iType) >= self.iLimit[iType]:
+			print "Limite de memoria excedido"
+			print "ReturnType -1"
+			sys.exit()
 			return -1
 		return iMem
 
@@ -110,6 +114,10 @@ class MemoryFunction:
 		return self.mem[self.iBaseFuncIDs].addVariable(iType, iValue, iSize)
 
 	def createFunction(self):
+		if self.iBaseFuncIDs == 1010000:
+			print "Limite de memoria excedido"
+			print "ReturnType -1"
+			sys.exit()
 		self.mem[self.iBaseFuncIDs] = MemoryTypes(self.iBaseVar, self.iLimit)
 		return self.iBaseFuncIDs
 
