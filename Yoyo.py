@@ -349,7 +349,7 @@ def p_var_1(t):
 def p_getVariableID_1(t):
   '''getVariableID  : ID'''
   stVariables.push(t[1])
-  print "PUSH VARIABLES" + t[1]
+  #print "PUSH VARIABLES" + t[1]
   
 
 def p_varDotPos_1(t):
@@ -369,20 +369,20 @@ def p_varRevisa_1(t):
   global bArray
   vartype = 0
   # TODO: Revisar esto
-  if bArray:
-    print "DENTRO ARREGLO"
-  if bDot:
-    print "DENTRO DOT"
+  #if bArray:
+     #print "DENTRO ARREGLO"
+  #if bDot:
+    #print "DENTRO DOT"
   if bClass:
     if bDot:
       sVariable = stVariables.pop()
       sClass = stVariables.pop()
-      print "POP VARIABLES" + sVariable
-      print "POP VARIABLES" + sClass
+      #print "POP VARIABLES" + sVariable
+      #print "POP VARIABLES" + sClass
       sObjeto = sClass + "." + sVariable
       atributos = dictionaryClass.getAtributes(sClassName)
       if atributos[sVariable].encap == 1:
-        print "Variable privada"
+        #print "Variable privada"
         sys.exit()
       iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sObjeto)
       varType = dictionaryClass.getVariableType(sClass,sScope, sObjeto)
@@ -390,28 +390,28 @@ def p_varRevisa_1(t):
         stID.push([iMemoria, vartype, sVariable])
       bArray = False
     else:
-      print "Objeto"
+      #print "Objeto"
       sVariable = stVariables.pop()
-      print "POP VARIABLES" + sVariable
+      #print "POP VARIABLES" + sVariable
       vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
       iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
       if not bArray:  
         stID.push([iMemoria, vartype, sVariable])
       else:
         stVariables.pop()
-        print "POP VARIABLES" + sVariable
+        #print "POP VARIABLES" + sVariable
       bArray = False
   else:
     if bDot:
       sVariable  =stVariables.pop()
       sClass = stVariables.pop()
-      print "POP VARIABLES" + sVariable
-      print "POP VARIABLES" + sClass
+      #print "POP VARIABLES" + sVariable
+      #print "POP VARIABLES" + sClass
       sObjeto = sClass + "." + sVariable
       iTipo = dictionaryFunction.getVariableType(sScope, sClass)
       atributos = dictionaryClass.getAtributes(sClassName)
       if atributos[sVariable].encap == 1:
-        print "Variable privada"
+        #print "Variable privada"
         sys.exit()
       iMemoria = dictionaryFunction.getMemVar(sScope, sObjeto)
       varType = dictionaryFunction.getVariableType(sScope, sObjeto)
@@ -421,7 +421,7 @@ def p_varRevisa_1(t):
 
     else:
       sVariable = stVariables.pop()
-      print "POP VARIABLES" + sVariable
+      #print "POP VARIABLES" + sVariable
       vartype = dictionaryFunction.getVariableType(sScope, sVariable)
       iMemoria = dictionaryFunction.getMemVar(sScope, sVariable)
       if not bArray:  
@@ -431,7 +431,7 @@ def p_varRevisa_1(t):
       #  print "POP VARIABLES" + sVariable
       bArray = False
 
-  print t.lexer.lineno
+  #print t.lexer.lineno
   if vartype == -1:
     sError = "Variable: " + sVariable
     errorHandling.printError(8, sError, t.lexer.lineno)
@@ -996,7 +996,8 @@ def validaReturn(t):
 def validaParams(t, params):
   global quParams
   global stParams
-
+  global sClassName
+  global sScope
   # Validar tipos de parametro y argumento
   i = 0
   while quParams.empty() == False and i < len(params):
@@ -1005,6 +1006,14 @@ def validaParams(t, params):
       sError = "Parametro numero: " + str(i)
       errorHandling.printError(12, sError, t.lexer.lineno)
       sys.exit()
+    #if bClass:
+    #  if dictionaryClass.getVarSize(sClassName, sScope, par[1]) != 0:
+    #    print  "Error: Arrays not allowed for params "
+    #    sys.exit()
+    #else:
+    #  if dictionaryFunction.getVarSize(sScope, par[1]) != 0:
+    #    print  "Error: Arrays not allowed for params "
+    #    sys.exit()
     quads.append(typeConv.convertOp("param"), par[0], None, params[i][0])
     i += 1
 
@@ -1214,7 +1223,7 @@ if __name__ == '__main__':
         #sys.exit()
       print(" *************** Compilacion Finalizada **************** ")
       print("\n")
-      quads.pprint(dictionaryFunction, mem)
+      #quads.pprint(dictionaryFunction, mem)
       #mem.pprint()
       vm = VM(mem, quads)
       vm.run()

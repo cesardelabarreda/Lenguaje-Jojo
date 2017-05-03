@@ -7,6 +7,7 @@
 		modo de diccionario de funciones, por lo que se puede llamar a qualquiera. 
 """
 
+import sys
 from Memoria import MemoryManager
 from Memoria import Memory
 from Cuadruplo import Quadruple
@@ -53,6 +54,9 @@ class VM:
 	def div(self, oper1, oper2, res):
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
+		if Operando2 == 0:
+			print "Error: Division by zero"
+			sys.exit()
 		if Operando1 != None and Operando2 != None :
 			self.mapmemory.setVariableValue(res, Operando1 / Operando2)
 			return 1
@@ -62,6 +66,9 @@ class VM:
 	def mod(self, oper1, oper2, res):
 		Operando1 = self.mapmemory.getVariableValue(oper1)
 		Operando2 = self.mapmemory.getVariableValue(oper2)
+		if Operando2 == 0:
+			print "Error: Division by zero"
+			sys.exit()
 		if Operando1 != None and Operando2 != None :
 			self.mapmemory.setVariableValue(res, Operando1 % Operando2)
 			return 1
@@ -165,12 +172,14 @@ class VM:
 			try:
 				Operando1 = int(Operando1)
 			except ValueError:
+				print "Error: asking for INT"
 				return 0
 
 		if oper2 == 1 :
 			try:
 				Operando1 = float(Operando1)
 			except ValueError:
+				print "Error: asking for REAL"
 				return 0
 
 		if oper2 == 2 :
@@ -178,7 +187,6 @@ class VM:
 				Operando1 = False
 			else:
 				Operando1 = True
-
 		self.mapmemory.setVariableValue(oper1, Operando1)
 		return 1
 
@@ -264,6 +272,9 @@ class VM:
 		if Operando1 != None :
 			if Operando1 >= oper2 and Operando1 <= res:
 				return 1
+			else:
+				print "Error: Array out of bounds"
+				sys.exit()
 		return 0
 
 	def end(self, ope1, oper2, res):
