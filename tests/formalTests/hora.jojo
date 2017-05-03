@@ -27,7 +27,28 @@ class hora {
 public stand jojo() {
 	@@@
 		hora h1, h2;
+		hora h3[5];
+		int i;
 	@@@
+
+	h3[1].h = 5;
+	h3[2].h = 4;
+	h3[3].h = 3;
+	h3[4].h = 2;
+
+
+
+	h3[1].m = 11;
+	h3[2].m = 12;
+	h3[3].m = 14;
+	h3[4].m = 13;
+
+	i = 0;
+
+	while(i<5) {
+		zawarudo h3[i].pprints();
+		i = i + 1;
+	}
 
 	gets(h1.h);
 	gets(h1.m);

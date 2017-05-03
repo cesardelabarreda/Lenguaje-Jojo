@@ -187,10 +187,10 @@ def p_main_1(t):
   '''main   : PUBLIC STAND JOJO defScope gotMain PARA PARC body genEndproc'''
 
 def p_gotMain_1(t):
-	'''gotMain  : '''
-	global sScope
-	quads.fill(0, dictionaryFunction.getMemFunc(sScope), 1)
-	quads.fill(1, quads.size())
+  '''gotMain  : '''
+  global sScope
+  quads.fill(0, dictionaryFunction.getMemFunc(sScope), 1)
+  quads.fill(1, quads.size())
 
 def p_body_1(t):
   '''body   : LLAVEA decVarPos actionStar LLAVEC'''

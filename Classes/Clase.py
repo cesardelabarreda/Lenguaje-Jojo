@@ -121,6 +121,8 @@ class Class:
 			return -1
 		return self.atributes[atributeId].tipo
 
+	def getAtributeSize(self):
+		return len(self.atributes)
 
 	def getAtributes(self):
 		return self.atributes
