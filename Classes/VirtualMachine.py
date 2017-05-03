@@ -235,7 +235,7 @@ class VM:
 				global contQuads
 				contQuads = self.stEjecucion.pop()
 				return 1
-		return 0
+		return 1
 
 	def gosub(self, oper1, oper2, res):
 		self.mapmemory.moveMemGoSub() 
@@ -304,8 +304,8 @@ class VM:
 			# print contQuads
 			quad = self.cuadruplo.quads[contQuads]
 			if quad[0] == 27:
-				objeto.push(oper1)
-				contQuads +=1
+				objeto.push(quad[1])
+				contQuads += 1
 				quad = self.cuadruplo.quads[contQuads]
 			contQuads += 1
 			Operando1 = quad[1]
