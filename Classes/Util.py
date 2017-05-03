@@ -1,3 +1,18 @@
+"""
+	Clase Error:
+	La clase error fue pensada con el objetivo de tener un buen manejo de errores.
+		Debido a la falta de tiempo, nunca fue probada con detenimiento, y es posible
+		que tenga errores. Sin embargo, mantiene los mensajes de error con sus ID's.
+	Un atributo es la cantErrors, la cual cuenta cuantos errores han sido ejecutados.
+	Un atributo error, el cual es una lista que contiene los errores.
+"""
+
+"""
+	Clase Util:
+	La clase util tiene funciones de utilidad al momento del desarrollo. Como tal,
+		no son utiles dentro del yacc, solo sirven al desarrollador.
+"""
+
 from __future__ import print_function
 import pprint
 import sys
