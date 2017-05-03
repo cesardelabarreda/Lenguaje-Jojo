@@ -14,8 +14,20 @@ from DataStructures.Stack import Stack
 		El atributo iCantVar es un mapa que tiene como llave el tipo de dato y guarda la cantidad
 			de variables que se estan usando.
 		El atributo iLimit es un mapa que tiene como llave el tipo de dato y guarda el maximo valor
-			que se puede llegar a tener un
+			que se puede llegar a tener en memoria.
+"""
 
+"""
+	Clase MemoryFunction:
+		Es lo mas abajo y base que hay de memoria. Separa en 4 tipos todo. Tiene la cantidad
+			de variables que van de cada tipo, los limites y las bases, ademas de la memoria en si.
+
+		El atributo iBaseVar un mapa que guarda cual es la direccion base de cada uno de los tipos.
+			La llave es el tipo de dato.
+		El atributo iCantVar es un mapa que tiene como llave el tipo de dato y guarda la cantidad
+			de variables que se estan usando.
+		El atributo iLimit es un mapa que tiene como llave el tipo de dato y guarda el maximo valor
+			que se puede llegar a tener en memoria.
 """
 
 from DataStructures.Queue import Queue
