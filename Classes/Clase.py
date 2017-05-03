@@ -17,6 +17,9 @@ class Class:
 	def emptyClasses(self):
 		return self.classes == []
 
+	def existsFunction(self, methodId):
+		return methodId in self.methods
+
 	def sizeMethods(self):
 		return len(self.methods)
 
@@ -100,6 +103,11 @@ class Class:
 			return 0
 		return self.methods[methodId].insertParam(varId, paramType)
 
+	def actualizaParam(self, methodId, memId):
+		if self.existsMethod(methodId) == 0:
+			return 0
+		return self.methods[methodId].actualizaParam(memId)
+
 	def insertAtribute(self, atrId, atrType, atrEncap):
 		if self.existsAtribute(atrId):
 			return 0
@@ -137,6 +145,19 @@ class Class:
 			return -1
 		return self.methods[methodId].getParams()
 
+
+	def setQuadInicial(self, methodId, iQuad):
+		if self.existsMethod(methodId) == 0:
+			return 0
+		return self.methods[methodId].setQuadInicial(iQuad)
+
+
+	def getQuadInicial(self, methodId):
+		if self.existsMethod(methodId) == 0:
+			return -1
+		return self.methods[methodId].getQuadInicial()
+
+
 	def setVarSizeOff(self, methodId, varId, iSize, iOffset):
 		if self.setVarSize(methodId, varId, iSize) == 0:
 			return 0
@@ -146,42 +167,42 @@ class Class:
 	def setVarSize(self, methodId, varId, iSize):
 		if self.existsFunction(methodId) == 0:
 			return 0
-		return self.functions[methodId].setVarSize(varId, iSize)
+		return self.methods[methodId].setVarSize(varId, iSize)
 
 	def setVarOffset(self, methodId, varId, iOffset):
 		if self.existsFunction(methodId) == 0:
 			return 0
-		return self.functions[methodId].setVarOffset(varId, iOffset)
+		return self.methods[methodId].setVarOffset(varId, iOffset)
 
 	def getVarOffset(self, methodId, varId):
 		if self.existsFunction(methodId) == 0:
 			return 0
-		return self.functions[methodId].getVarOffset(varId)
+		return self.methods[methodId].getVarOffset(varId)
 
 	def getVarSize(self, methodId, varId):
 		if self.existsFunction(methodId) == 0:
 			return -1
-		return self.functions[methodId].getVarSize(varId)
+		return self.methods[methodId].getVarSize(varId)
 
 	def setMemVar(self, methodId, varId, mem):
 		if self.existsFunction(methodId) == 0:
 			return 0
-		return self.functions[methodId].setMemVar(varId, mem)
+		return self.methods[methodId].setMemVar(varId, mem)
 
 	def setMemFunc(self, methodId, mem):
 		if self.existsFunction(methodId) == 0:
 			return 0
-		return self.functions[methodId].setMemFunc(mem)
+		return self.methods[methodId].setMemFunc(mem)
 
 	def getMemVar(self, methodId, varId):
 		if self.existsFunction(methodId) == 0:
 			return 0
-		return self.functions[methodId].getMemVar(varId)
+		return self.methods[methodId].getMemVar(varId)
 		
 	def getMemFunc(self, methodId):
 		if self.existsFunction(methodId) == 0:
 			return -1
-		return self.functions[methodId].getMemFunc()
+		return self.methods[methodId].getMemFunc()
 
 
 	def pprint(self, clas):

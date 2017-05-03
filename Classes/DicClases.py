@@ -62,12 +62,10 @@ class DicClass:
 			return 1
 		return self.classes[classId].getAtributeSize() 
 
-	def getAtributes(self, classId, methodId):
+	def getAtributes(self, classId):
 		if self.existsClass(classId) == 0:
 			return 0
 
-		if self.classes[classId].existsMethod(methodId):
-			return 1
 		return self.classes[classId].getAtributes() 
 
 	def insertHamon(self, classId, classHamon):
@@ -98,6 +96,12 @@ class DicClass:
 		if self.existsClass(classId) == 0:
 			return 0
 		return self.classes[classId].insertParam(methodId, varId, paramType)
+
+
+	def actualizaParam(self, classId, methodId, memId):
+		if self.existsClass(classId) == 0:
+			return 0
+		return self.classes[classId].actualizaParam(methodId ,memId)
 
 	def insertAtribute(self, classId, atrId, atrType, atrEncap):
 		if self.existsClass(classId) == 0:
@@ -171,6 +175,7 @@ class DicClass:
 				return iRet
 		return -1
 
+
 	def setVarSizeOff(self, classId, methodId, varId, iSize, iOffset):
 		if self.existsClass(classId) == 0:
 			return 0
@@ -232,6 +237,17 @@ class DicClass:
 		if self.existsClass(classId) == 0:
 			return -1
 		return self.classes[classId].getMemFunc(methodId)
+
+	def setQuadInicial(self, classId, methodId, iQuad):
+		if self.existsClass(classId) == 0:
+			return -1
+		return self.classes[classId].setQuadInicial(methodId, iQuad)
+
+
+	def getQuadInicial(self, classId, methodId):
+		if self.existsClass(classId) == 0:
+			return -1
+		return self.classes[classId].getQuadInicial(methodId)
 
 	def pprint(self):
 		iTam = self.size()

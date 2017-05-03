@@ -217,17 +217,17 @@ class VM:
 		global objeto
 		if type(oper1) is list:
 			ret = self.mapmemory.getVariableValue(oper1[1])
-			listRet = oper[0]
+			listRet = oper1[0]
 			for i in range(len(listRet)):
-				oper[0][i] = self.mapmemory.getVariableValue(listRet[i])
-			if ret != None :		
-				self.mapmemory.returnGoSub()
-				listobj = objeto.pop()
-				for i in range(len(listRet)):
-					self.mapmemory.setVariableValue(listobj[i], oper1[0][i])
-				global contQuads
-				contQuads = self.stEjecucion.pop()
-				return 1
+				oper1[0][i] = self.mapmemory.getVariableValue(listRet[i])
+		
+			self.mapmemory.returnGoSub()
+			listobj = objeto.pop()
+			for i in range(len(listRet)):
+				self.mapmemory.setVariableValue(listobj[i], oper1[0][i])
+			global contQuads
+			contQuads = self.stEjecucion.pop()
+			return 1
 		else:
 			ret = self.mapmemory.getVariableValue(oper1)
 			if ret != None :		
@@ -235,7 +235,7 @@ class VM:
 				global contQuads
 				contQuads = self.stEjecucion.pop()
 				return 1
-		return 0
+		return 1
 
 	def gosub(self, oper1, oper2, res):
 		self.mapmemory.moveMemGoSub() 
@@ -304,8 +304,8 @@ class VM:
 			# print contQuads
 			quad = self.cuadruplo.quads[contQuads]
 			if quad[0] == 27:
-				objeto.push(oper1)
-				contQuads +=1
+				objeto.push(quad[1])
+				contQuads += 1
 				quad = self.cuadruplo.quads[contQuads]
 			contQuads += 1
 			Operando1 = quad[1]

@@ -1,15 +1,15 @@
 
 class hora {
-	@@@@
+	@@@
 		int h, m;
 	@@@
 	
-	func public void hhora(int h, int m) {
+	func public stand hhora(int hh, int mm) {
 		h = hh;
 		m = mm;
 	}
 
-	func public void setH(int hh) {
+	func public stand setH(int hh) {
 		h = hh;
 	}
 
@@ -17,7 +17,7 @@ class hora {
 		zadust h;
 	}
 
-	func public void pprints() {
+	func public stand pprints() {
 		prints(h);
 		prints(m);
 	}
@@ -31,10 +31,10 @@ public stand jojo() {
 
 	gets(h1.h);
 	gets(h1.m);
-	h1.pprint();
+	zawarudo h1.pprints();
 
-	h2.hhora(10, 42);
-	h2.pprint();
+	zawarudo h2.hhora(10, 42);
+	zawarudo h2.pprints();
 
 	zadust;
 }
