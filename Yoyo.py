@@ -144,11 +144,7 @@ def p_defScopeClass_1(t):
   
 
   atributes = dictionaryClass.getAtributes(sClassName);
-  print atributes
-  print "METO ATRIBUTOS"
   for at, res in atributes.items():
-    print at
-    print res.tipo
     if dictionaryClass.insertVar(sClassName, sScope, at, res.tipo) == 0:
       sError = "Variable: " + variable
       errorHandling.printError(2, sError, t.lexer.lineno)
@@ -353,6 +349,7 @@ def p_var_1(t):
 def p_getVariableID_1(t):
   '''getVariableID  : ID'''
   stVariables.push(t[1])
+  print "PUSH VARIABLES" + t[1]
   
 
 def p_varDotPos_1(t):
@@ -372,10 +369,16 @@ def p_varRevisa_1(t):
   global bArray
   vartype = 0
   # TODO: Revisar esto
+  if bArray:
+    print "DENTRO ARREGLO"
+  if bDot:
+    print "DENTRO DOT"
   if bClass:
     if bDot:
       sVariable = stVariables.pop()
       sClass = stVariables.pop()
+      print "POP VARIABLES" + sVariable
+      print "POP VARIABLES" + sClass
       sObjeto = sClass + "." + sVariable
       atributos = dictionaryClass.getAtributes(sClassName)
       if atributos[sVariable].encap == 1:
@@ -389,17 +392,21 @@ def p_varRevisa_1(t):
     else:
       print "Objeto"
       sVariable = stVariables.pop()
+      print "POP VARIABLES" + sVariable
       vartype = dictionaryClass.getVariableType(sClassName, sScope, sVariable)
       iMemoria = dictionaryClass.getMemVar(sClassName, sScope, sVariable)
       if not bArray:  
         stID.push([iMemoria, vartype, sVariable])
       else:
         stVariables.pop()
+        print "POP VARIABLES" + sVariable
       bArray = False
   else:
     if bDot:
       sVariable  =stVariables.pop()
       sClass = stVariables.pop()
+      print "POP VARIABLES" + sVariable
+      print "POP VARIABLES" + sClass
       sObjeto = sClass + "." + sVariable
       iTipo = dictionaryFunction.getVariableType(sScope, sClass)
       atributos = dictionaryClass.getAtributes(sClassName)
@@ -414,15 +421,17 @@ def p_varRevisa_1(t):
 
     else:
       sVariable = stVariables.pop()
+      print "POP VARIABLES" + sVariable
       vartype = dictionaryFunction.getVariableType(sScope, sVariable)
       iMemoria = dictionaryFunction.getMemVar(sScope, sVariable)
       if not bArray:  
         stID.push([iMemoria, vartype, sVariable])
-      else:
-        stVariables.pop()
+      #else:
+      #  stVariables.pop()
+      #  print "POP VARIABLES" + sVariable
       bArray = False
 
-
+  print t.lexer.lineno
   if vartype == -1:
     sError = "Variable: " + sVariable
     errorHandling.printError(8, sError, t.lexer.lineno)
@@ -501,11 +510,10 @@ def p_funCallId_1(t):
 
 def p_genEra_1(t):
   '''genEra   : '''
-  print "FUNCION"
-  print stFunc.top()
+
   global bMethodCall
   global sClassName
-  print sClassName
+
   if bMethodCall:
     iMem = dictionaryClass.getMemFunc(sClassName, stFunc.top())
   else:
@@ -1029,12 +1037,9 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
 
   sObjeto = sClass
   sNClass = ""
-  print sClass
   if bIsDouble and bClass:
     sClass = dictionaryClass.getVariableType(sClassName, sScope, sClass)
   elif bIsDouble and not bClass:
-    print "entre funcion"
-    dictionaryFunction.pprint()
     sClass = dictionaryFunction.getVariableType(sScope, sClass)
 
   # Validar que existe la clase
@@ -1046,7 +1051,7 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
     sys.exit()
 
   # Validar que existe el metodo
-  dictionaryClass.pprint()
+  
   bExist = dictionaryClass.existsMethod(sClass, sMethod)
   if not bExist:
     sError = "Metodo: " + sMethod
@@ -1072,27 +1077,15 @@ def validaMetodo(t, bIsDouble=False, sClass=None):
       listat.append(iMem)
     else:
       iMem = dictionaryFunction.getMemVar(sScope, sObjCall)
-      print at
       iMem2 = dictionaryClass.getMemVar(sClass, sMethod, at)
       listat.append(iMem)
 
-    print sClass
-    print sMethod
-    print "MEMORIA1"
-    print iMem
-    print "MEMORIA2"
-    print iMem2
     quads.append(typeConv.convertOp("param"), iMem, None, iMem2)
 
   quads.append(27, listat)
 
   validaParams(t, params)
-  print "METODO"
-  print sMethod
-  print "CLASE"
-  print sClass
   varType = dictionaryClass.getMethodReturnType(sClass, sMethod)
-  print varType
   if varType != 4:
     stID.push([sScope, varType, sScope])
 
