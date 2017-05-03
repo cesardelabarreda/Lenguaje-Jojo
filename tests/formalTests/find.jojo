@@ -2,7 +2,7 @@
   int arr[11], n;
 @@@
 
-func stand find(int val) {
+func int find(int val) {
   @@@
     int i;
   @@@
@@ -10,11 +10,12 @@ func stand find(int val) {
   i = 0;
   while(i < n) {
     if (arr[i] == val) {
-      return i;
+      zadust i;
     }
+    i = i + 1;
   }
 
-  return -1;
+  zadust -1;
 }
 
 
@@ -33,5 +34,5 @@ public stand jojo() {
   }
 
   gets(val);
-  prints(find(val));
+  prints(zawarudo find(val));
 }
